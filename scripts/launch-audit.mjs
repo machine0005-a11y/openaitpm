@@ -97,6 +97,13 @@ const checks = [
     "Add npm script idea:ship and scripts/ship-idea.mjs."
   ),
   check(
+    "idea-route-verifier",
+    "Idea route verifier exists",
+    hasPackageScript(packageJson, "idea:verify:routes") && exists("scripts/verify-idea-routes.mjs"),
+    `idea:verify:routes script is ${hasPackageScript(packageJson, "idea:verify:routes") ? "configured" : "missing"}.`,
+    "Add npm script idea:verify:routes and scripts/verify-idea-routes.mjs."
+  ),
+  check(
     "github-connect-helper",
     "GitHub remote connect helper exists",
     hasPackageScript(packageJson, "github:connect") && exists("scripts/connect-github.mjs"),
@@ -147,6 +154,13 @@ const checks = [
     vercelConfig.includes("npm run build"),
     "vercel.json sets the build command.",
     "Add vercel.json with buildCommand npm run build."
+  ),
+  check(
+    "public-site-metadata",
+    "Public sitemap and robots routes exist",
+    exists("src/app/sitemap.ts") && exists("src/app/robots.ts") && exists("src/lib/site.ts"),
+    "sitemap.ts, robots.ts, and site.ts are present.",
+    "Add domain-aware sitemap, robots, and site URL helpers."
   ),
   check(
     "deployment-runbook",

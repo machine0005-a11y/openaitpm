@@ -81,6 +81,14 @@ npm run launch:audit:strict
 
 The audit verifies local repo readiness, idea content, helper scripts, dynamic routes, GitHub workflows, Vercel config, and deployment docs. It intentionally reports `NOT READY` until a real GitHub `origin` remote is configured.
 
+Verify the public route contract directly:
+
+```bash
+npm run idea:verify:routes
+```
+
+The route verifier checks every `src/content/ideas/*.json` file and prints the public URL that will resolve under `openAITpm.com`.
+
 ## Vercel Setup
 
 Create a Vercel project from this GitHub repository.

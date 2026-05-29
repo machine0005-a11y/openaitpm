@@ -116,6 +116,12 @@ Audit launch readiness for the GitHub-to-domain loop:
 npm run launch:audit
 ```
 
+Verify that every checked-in idea has a valid public route:
+
+```bash
+npm run idea:verify:routes
+```
+
 ## Prisma
 
 The schema is domain-empty in Gate 0 by design. Gate 1 introduces `User`, `Moment`, `MomentSummary`, `AudioAsset`, and `Event`.

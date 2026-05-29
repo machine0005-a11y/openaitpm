@@ -31,9 +31,11 @@ const readinessChecks = [
   { label: "Local commit", state: "pass" },
   { label: "Idea content files", state: "pass" },
   { label: "Idea ship helper", state: "pass" },
+  { label: "Idea route verifier", state: "pass" },
   { label: "Dynamic route", state: "pass" },
   { label: "Auto-PR workflow", state: "pass" },
   { label: "Launch bootstrap helper", state: "pass" },
+  { label: "Sitemap and robots", state: "pass" },
   { label: "Vercel config", state: "pass" },
   { label: "GitHub origin remote", state: "missing" }
 ];
