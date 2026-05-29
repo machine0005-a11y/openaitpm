@@ -11,8 +11,8 @@ import {
 } from "lucide-react";
 
 const branchSteps = [
-  "Create an idea branch like idea/enterprise-leadership-context-os.",
-  "Add or edit src/content/ideas/<idea-name>.json.",
+  "Run npm run idea:ship -- --push \"My Idea Name\".",
+  "The helper creates an idea/<idea-name> branch and commits the page JSON.",
   "Push the branch to GitHub.",
   "GitHub Actions opens or updates a pull request into main.",
   "The workflow runs npm run verify so the PR records build status."
@@ -29,6 +29,7 @@ const domainSteps = [
 const readinessChecks = [
   { label: "Local commit", state: "pass" },
   { label: "Idea content files", state: "pass" },
+  { label: "Idea ship helper", state: "pass" },
   { label: "Dynamic route", state: "pass" },
   { label: "Auto-PR workflow", state: "pass" },
   { label: "Vercel config", state: "pass" },

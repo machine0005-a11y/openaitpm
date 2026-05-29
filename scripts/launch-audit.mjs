@@ -66,7 +66,7 @@ const checks = [
     "Git remote origin is configured",
     Boolean(originRemote),
     originRemote || "No origin remote configured.",
-    "Create the OpenAITPM GitHub repo, then run git remote add origin <repo-url>."
+    "Create the OpenAITPM GitHub repo, then run npm run github:connect -- <repo-url>."
   ),
   check(
     "idea-content",
@@ -88,6 +88,13 @@ const checks = [
     hasPackageScript(packageJson, "idea:new") && exists("scripts/create-idea.mjs"),
     `idea:new script is ${hasPackageScript(packageJson, "idea:new") ? "configured" : "missing"}.`,
     "Add npm script idea:new and scripts/create-idea.mjs."
+  ),
+  check(
+    "idea-ship-helper",
+    "Idea branch ship helper exists",
+    hasPackageScript(packageJson, "idea:ship") && exists("scripts/ship-idea.mjs"),
+    `idea:ship script is ${hasPackageScript(packageJson, "idea:ship") ? "configured" : "missing"}.`,
+    "Add npm script idea:ship and scripts/ship-idea.mjs."
   ),
   check(
     "github-connect-helper",

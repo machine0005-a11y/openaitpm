@@ -67,6 +67,14 @@ npm run idea:new -- "Investor Update Room"
 
 That creates `src/content/ideas/investor-update-room.json`, which renders at `/investor-update-room`.
 
+Create the branch, idea file, and commit in one move:
+
+```bash
+npm run idea:ship -- "Investor Update Room"
+```
+
+After `origin` is connected, use `npm run idea:ship -- --push "Investor Update Room"` to push the branch and trigger the automatic PR/build workflow.
+
 ## GitHub to Domain Flow
 
 The workflow in `.github/workflows/idea-pr.yml` runs on pushed non-main branches, opens or updates a pull request into `main`, and then verifies the app with `npm run verify`.

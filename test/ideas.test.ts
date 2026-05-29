@@ -43,6 +43,19 @@ describe("OpenAITPM idea routing", () => {
     expect(output).toContain("Branch: idea/investor-update-room");
   });
 
+  it("dry-runs the idea shipping flow without changing git state", () => {
+    const output = execFileSync("node", [
+      "scripts/ship-idea.mjs",
+      "--dry-run",
+      "Customer Renewal Room"
+    ]).toString();
+
+    expect(output).toContain("Would run: git checkout -b idea/customer-renewal-room main");
+    expect(output).toContain("Would create src/content/ideas/customer-renewal-room.json");
+    expect(output).toContain("Would run: git commit -m Add Customer Renewal Room idea page");
+    expect(output).toContain("PR trigger: push idea/customer-renewal-room to GitHub.");
+  });
+
   it("audits launch readiness and reports missing external setup", () => {
     const output = execFileSync("node", ["scripts/launch-audit.mjs", "--json"]).toString();
     const report = JSON.parse(output) as {
@@ -53,6 +66,7 @@ describe("OpenAITPM idea routing", () => {
 
     expect(byId.get("dynamic-route")).toMatchObject({ status: "pass" });
     expect(byId.get("auto-pr-workflow")).toMatchObject({ status: "pass" });
+    expect(byId.get("idea-ship-helper")).toMatchObject({ status: "pass" });
     expect(byId.get("github-connect-helper")).toMatchObject({ status: "pass" });
     expect(byId.get("git-origin")).toMatchObject({ status: "fail" });
     expect(report.ready).toBe(false);

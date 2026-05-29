@@ -15,6 +15,16 @@ https://openAITpm.com/<idea-name>
 
 ## Branch to PR Flow
 
+Use the one-command path for normal idea shipping:
+
+```bash
+npm run idea:ship -- --push "Investor Update Room"
+```
+
+That command creates `idea/investor-update-room`, writes `src/content/ideas/investor-update-room.json`, commits it, and pushes the branch. The push triggers `.github/workflows/idea-pr.yml`.
+
+Manual equivalent:
+
 1. Create an idea branch:
 
 ```bash
@@ -47,11 +57,7 @@ Use `npm run github:connect -- --push git@github.com:<owner>/<repo>.git` to conn
 Then create idea branches from `main` and push them:
 
 ```bash
-git checkout -b idea/investor-update-room
-npm run idea:new -- "Investor Update Room"
-git add src/content/ideas/investor-update-room.json
-git commit -m "Add investor update room idea page"
-git push -u origin idea/investor-update-room
+npm run idea:ship -- --push "Investor Update Room"
 ```
 
 The branch push is the moment GitHub creates or refreshes the PR and runs the build.
