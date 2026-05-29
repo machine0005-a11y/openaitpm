@@ -75,6 +75,13 @@ When the GitHub repository is connected to Vercel, PRs get preview builds and me
 
 See `docs/OPENAITPM_DEPLOYMENT.md` for the deployment runbook.
 
+Connect the local repo to the real GitHub repository once that repository exists:
+
+```bash
+npm run github:connect -- git@github.com:<owner>/<repo>.git
+git push -u origin main
+```
+
 ## Verification
 
 ```bash

@@ -90,6 +90,13 @@ const checks = [
     "Add npm script idea:new and scripts/create-idea.mjs."
   ),
   check(
+    "github-connect-helper",
+    "GitHub remote connect helper exists",
+    hasPackageScript(packageJson, "github:connect") && exists("scripts/connect-github.mjs"),
+    `github:connect script is ${hasPackageScript(packageJson, "github:connect") ? "configured" : "missing"}.`,
+    "Add npm script github:connect and scripts/connect-github.mjs."
+  ),
+  check(
     "verify-script",
     "Full verification script exists",
     hasPackageScript(packageJson, "verify"),
@@ -131,7 +138,7 @@ const checks = [
     "deployment-runbook",
     "Deployment runbook documents domain and remote setup",
     deploymentDocs.includes("openAITpm.com") &&
-      deploymentDocs.includes("git remote add origin") &&
+      deploymentDocs.includes("npm run github:connect") &&
       deploymentDocs.includes("Vercel"),
     "docs/OPENAITPM_DEPLOYMENT.md covers GitHub, Vercel, and DNS setup.",
     "Update the OpenAITPM deployment runbook."

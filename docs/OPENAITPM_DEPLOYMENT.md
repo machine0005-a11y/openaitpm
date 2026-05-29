@@ -38,11 +38,11 @@ npm run idea:new -- "Enterprise Leadership Context OS"
 This local folder currently needs a GitHub remote before the PR loop can run. After creating the correct GitHub repository, connect it once:
 
 ```bash
-git remote add origin git@github.com:<owner>/<repo>.git
-git add .
-git commit -m "Launch OpenAITPM idea pages"
+npm run github:connect -- git@github.com:<owner>/<repo>.git
 git push -u origin main
 ```
+
+Use `npm run github:connect -- --push git@github.com:<owner>/<repo>.git` to connect and push in one command.
 
 Then create idea branches from `main` and push them:
 

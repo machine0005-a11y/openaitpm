@@ -53,7 +53,20 @@ describe("OpenAITPM idea routing", () => {
 
     expect(byId.get("dynamic-route")).toMatchObject({ status: "pass" });
     expect(byId.get("auto-pr-workflow")).toMatchObject({ status: "pass" });
+    expect(byId.get("github-connect-helper")).toMatchObject({ status: "pass" });
     expect(byId.get("git-origin")).toMatchObject({ status: "fail" });
     expect(report.ready).toBe(false);
+  });
+
+  it("dry-runs GitHub remote connection helper", () => {
+    const output = execFileSync("node", [
+      "scripts/connect-github.mjs",
+      "--dry-run",
+      "git@github.com:machine0005-a11y/openaitpm.git"
+    ]).toString();
+
+    expect(output).toContain("Would run: git remote add origin");
+    expect(output).toContain("git@github.com:machine0005-a11y/openaitpm.git");
+    expect(output).toContain("dry run");
   });
 });
