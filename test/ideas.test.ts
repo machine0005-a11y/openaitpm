@@ -124,4 +124,26 @@ describe("OpenAITPM idea routing", () => {
     expect(output).toContain("Would create src/content/ideas/customer-renewal-room.json");
     expect(output).toContain("Bootstrap target: git@github.com:machine0005-a11y/openaitpm.git (dry run).");
   });
+
+  it("dry-runs production smoke checks for public routes", () => {
+    const output = execFileSync("node", [
+      "scripts/smoke-production.mjs",
+      "--dry-run",
+      "--json"
+    ]).toString();
+    const report = JSON.parse(output) as {
+      live: boolean;
+      baseUrl: string;
+      checks: Array<{ label: string; url: string; status: string }>;
+    };
+
+    expect(report.live).toBe(false);
+    expect(report.baseUrl).toBe("https://openaitpm.com");
+    expect(report.checks.map((check) => check.label)).toContain(
+      "idea:enterprise-leadership-context-os"
+    );
+    expect(report.checks.map((check) => check.url)).toContain(
+      "https://openaitpm.com/enterprise-leadership-context-os"
+    );
+  });
 });

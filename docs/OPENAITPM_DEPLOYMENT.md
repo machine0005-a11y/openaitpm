@@ -139,3 +139,17 @@ https://openAITpm.com/person-moment-music
 ```
 
 Each route should render the idea page, and each pull request should show a successful build check plus a Vercel preview.
+
+Run the production smoke checker:
+
+```bash
+npm run smoke:production
+```
+
+Dry-run the same checks before the domain is live:
+
+```bash
+npm run smoke:production -- --dry-run
+```
+
+The `.github/workflows/production-smoke.yml` workflow can be triggered manually. Scheduled checks stay quiet until the repository variable `PRODUCTION_SMOKE_ENABLED` is set to `true`; set `NEXT_PUBLIC_SITE_URL` as a repository variable if production should be checked against a non-default URL.

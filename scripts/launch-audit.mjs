@@ -47,6 +47,9 @@ const currentBranch = runGit(["branch", "--show-current"]);
 const workflow = exists(".github/workflows/idea-pr.yml")
   ? readText(".github/workflows/idea-pr.yml")
   : "";
+const productionSmokeWorkflow = exists(".github/workflows/production-smoke.yml")
+  ? readText(".github/workflows/production-smoke.yml")
+  : "";
 const ciWorkflow = exists(".github/workflows/ci.yml") ? readText(".github/workflows/ci.yml") : "";
 const vercelConfig = exists("vercel.json") ? readText("vercel.json") : "";
 const deploymentDocs = exists("docs/OPENAITPM_DEPLOYMENT.md")
@@ -130,6 +133,15 @@ const checks = [
     hasPackageScript(packageJson, "verify"),
     `verify script is ${hasPackageScript(packageJson, "verify") ? "configured" : "missing"}.`,
     "Add npm run verify with lint, typecheck, test, and build."
+  ),
+  check(
+    "production-smoke",
+    "Production smoke checker exists",
+    hasPackageScript(packageJson, "smoke:production") &&
+      exists("scripts/smoke-production.mjs") &&
+      productionSmokeWorkflow.includes("npm run smoke:production"),
+    `smoke:production script is ${hasPackageScript(packageJson, "smoke:production") ? "configured" : "missing"}.`,
+    "Add npm script smoke:production, scripts/smoke-production.mjs, and the production smoke workflow."
   ),
   check(
     "auto-pr-workflow",

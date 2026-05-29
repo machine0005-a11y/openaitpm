@@ -24,7 +24,8 @@ const domainSteps = [
   "Enable pull request previews and keep main as the production branch.",
   "Add openAITpm.com and www.openAITpm.com in Vercel.",
   "Point DNS at the exact Vercel records shown in the domain screen.",
-  "Merge the PR so production serves openAITpm.com/<idea-name>."
+  "Merge the PR so production serves openAITpm.com/<idea-name>.",
+  "Run npm run smoke:production or the Production Smoke workflow."
 ];
 
 const readinessChecks = [
@@ -36,6 +37,7 @@ const readinessChecks = [
   { label: "Auto-PR workflow", state: "pass" },
   { label: "Launch bootstrap helper", state: "pass" },
   { label: "Sitemap and robots", state: "pass" },
+  { label: "Production smoke checker", state: "pass" },
   { label: "Vercel config", state: "pass" },
   { label: "GitHub origin remote", state: "missing" }
 ];

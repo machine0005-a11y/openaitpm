@@ -20,6 +20,7 @@
     "launch:bootstrap": "node scripts/bootstrap-launch.mjs",
     "launch:audit": "node scripts/launch-audit.mjs",
     "launch:audit:strict": "node scripts/launch-audit.mjs --strict",
+    "smoke:production": "node scripts/smoke-production.mjs",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:seed": "tsx prisma/seed.ts"

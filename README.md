@@ -128,6 +128,14 @@ Preview the route-aware PR body GitHub Actions will write:
 npm run idea:pr-body -- --all --branch idea/investor-update-room
 ```
 
+Dry-run the production smoke checks:
+
+```bash
+npm run smoke:production -- --dry-run
+```
+
+After Vercel and DNS are live, run `npm run smoke:production` or trigger the `Production Smoke` GitHub workflow manually.
+
 ## Prisma
 
 The schema is domain-empty in Gate 0 by design. Gate 1 introduces `User`, `Moment`, `MomentSummary`, `AudioAsset`, and `Event`.
