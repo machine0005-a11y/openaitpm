@@ -50,6 +50,9 @@ const workflow = exists(".github/workflows/idea-pr.yml")
 const productionSmokeWorkflow = exists(".github/workflows/production-smoke.yml")
   ? readText(".github/workflows/production-smoke.yml")
   : "";
+const vercelDeployWorkflow = exists(".github/workflows/vercel-deploy.yml")
+  ? readText(".github/workflows/vercel-deploy.yml")
+  : "";
 const ciWorkflow = exists(".github/workflows/ci.yml") ? readText(".github/workflows/ci.yml") : "";
 const vercelConfig = exists("vercel.json") ? readText("vercel.json") : "";
 const deploymentDocs = exists("docs/OPENAITPM_DEPLOYMENT.md")
@@ -173,6 +176,15 @@ const checks = [
     vercelConfig.includes("npm run build"),
     "vercel.json sets the build command.",
     "Add vercel.json with buildCommand npm run build."
+  ),
+  check(
+    "vercel-deploy-workflow",
+    "Optional Vercel deploy workflow exists",
+    vercelDeployWorkflow.includes("npx vercel deploy") &&
+      vercelDeployWorkflow.includes("VERCEL_TOKEN") &&
+      vercelDeployWorkflow.includes("npm run verify"),
+    ".github/workflows/vercel-deploy.yml verifies and deploys when Vercel secrets are configured.",
+    "Add a Vercel deploy workflow gated on Vercel secrets."
   ),
   check(
     "public-site-metadata",

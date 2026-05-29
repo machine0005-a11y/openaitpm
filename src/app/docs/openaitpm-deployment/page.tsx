@@ -22,6 +22,7 @@ const branchSteps = [
 const domainSteps = [
   "Create a Vercel project from the GitHub repository.",
   "Enable pull request previews and keep main as the production branch.",
+  "Add VERCEL_TOKEN, VERCEL_PROJECT_ID, and VERCEL_ORG_ID as GitHub secrets.",
   "Add openAITpm.com and www.openAITpm.com in Vercel.",
   "Point DNS at the exact Vercel records shown in the domain screen.",
   "Merge the PR so production serves openAITpm.com/<idea-name>.",

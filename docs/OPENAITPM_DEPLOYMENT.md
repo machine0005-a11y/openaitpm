@@ -109,6 +109,21 @@ Use these settings:
 - Production branch: `main`
 - Pull request previews: enabled
 
+You can use the Vercel GitHub app or the included `.github/workflows/vercel-deploy.yml` workflow.
+
+For the workflow path, add these GitHub secrets:
+
+- `VERCEL_TOKEN`
+- `VERCEL_PROJECT_ID`
+- `VERCEL_ORG_ID`
+
+Optional GitHub variables:
+
+- `NEXT_PUBLIC_SITE_URL`: defaults to `https://openaitpm.com`
+- `PRODUCTION_SMOKE_ENABLED`: set to `true` after DNS is live
+
+Without the Vercel secrets, the workflow still runs `npm run verify` and skips deployment instead of failing.
+
 ## Domain Setup
 
 In Vercel, add:

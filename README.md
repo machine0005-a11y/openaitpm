@@ -83,6 +83,12 @@ When the GitHub repository is connected to Vercel, PRs get preview builds and me
 
 See `docs/OPENAITPM_DEPLOYMENT.md` for the deployment runbook.
 
+Deployment can happen through either the Vercel GitHub app or `.github/workflows/vercel-deploy.yml`. The workflow stays in verify-only mode until these GitHub secrets exist:
+
+- `VERCEL_TOKEN`
+- `VERCEL_PROJECT_ID`
+- `VERCEL_ORG_ID`
+
 Connect the local repo to the real GitHub repository once that repository exists:
 
 ```bash

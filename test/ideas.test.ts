@@ -93,6 +93,7 @@ describe("OpenAITPM idea routing", () => {
     expect(byId.get("idea-route-verifier")).toMatchObject({ status: "pass" });
     expect(byId.get("route-aware-pr-body")).toMatchObject({ status: "pass" });
     expect(byId.get("public-site-metadata")).toMatchObject({ status: "pass" });
+    expect(byId.get("vercel-deploy-workflow")).toMatchObject({ status: "pass" });
     expect(byId.get("github-connect-helper")).toMatchObject({ status: "pass" });
     expect(byId.get("git-origin")).toMatchObject({ status: "fail" });
     expect(report.ready).toBe(false);

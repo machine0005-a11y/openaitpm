@@ -1,0 +1,52 @@
+name: Vercel Deploy
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      VERCEL_TOKEN_PRESENT: ${{ secrets.VERCEL_TOKEN != '' }}
+      VERCEL_PROJECT_ID_PRESENT: ${{ secrets.VERCEL_PROJECT_ID != '' }}
+      VERCEL_ORG_ID_PRESENT: ${{ secrets.VERCEL_ORG_ID != '' }}
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      NEXT_PUBLIC_SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL || 'https://openaitpm.com' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+      - run: npm run verify
+
+      - name: Check Vercel secrets
+        id: vercel_secrets
+        run: |
+          if [ "$VERCEL_TOKEN_PRESENT" = "true" ] && [ "$VERCEL_PROJECT_ID_PRESENT" = "true" ] && [ "$VERCEL_ORG_ID_PRESENT" = "true" ]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "Vercel deployment skipped. Configure VERCEL_TOKEN, VERCEL_PROJECT_ID, and VERCEL_ORG_ID secrets to enable deployment."
+          fi
+
+      - name: Pull Vercel environment
+        if: steps.vercel_secrets.outputs.ready == 'true'
+        run: npx vercel pull --yes --environment=${{ github.ref == 'refs/heads/main' && 'production' || 'preview' }} --token="$VERCEL_TOKEN"
+
+      - name: Build with Vercel
+        if: steps.vercel_secrets.outputs.ready == 'true'
+        run: npx vercel build ${{ github.ref == 'refs/heads/main' && '--prod' || '' }} --token="$VERCEL_TOKEN"
+
+      - name: Deploy to Vercel
+        if: steps.vercel_secrets.outputs.ready == 'true'
+        run: npx vercel deploy --prebuilt ${{ github.ref == 'refs/heads/main' && '--prod' || '' }} --token="$VERCEL_TOKEN"
