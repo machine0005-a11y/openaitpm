@@ -15,6 +15,7 @@
     "idea:new": "node scripts/create-idea.mjs",
     "idea:ship": "node scripts/ship-idea.mjs",
     "github:connect": "node scripts/connect-github.mjs",
+    "launch:bootstrap": "node scripts/bootstrap-launch.mjs",
     "launch:audit": "node scripts/launch-audit.mjs",
     "launch:audit:strict": "node scripts/launch-audit.mjs --strict",
     "prisma:generate": "prisma generate",

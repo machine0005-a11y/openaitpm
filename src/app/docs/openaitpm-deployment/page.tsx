@@ -11,7 +11,8 @@ import {
 } from "lucide-react";
 
 const branchSteps = [
-  "Run npm run idea:ship -- --push \"My Idea Name\".",
+  "First run npm run launch:bootstrap -- --push <repo-url>.",
+  "Then run npm run idea:ship -- --push \"My Idea Name\".",
   "The helper creates an idea/<idea-name> branch and commits the page JSON.",
   "Push the branch to GitHub.",
   "GitHub Actions opens or updates a pull request into main.",
@@ -32,6 +33,7 @@ const readinessChecks = [
   { label: "Idea ship helper", state: "pass" },
   { label: "Dynamic route", state: "pass" },
   { label: "Auto-PR workflow", state: "pass" },
+  { label: "Launch bootstrap helper", state: "pass" },
   { label: "Vercel config", state: "pass" },
   { label: "GitHub origin remote", state: "missing" }
 ];

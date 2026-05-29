@@ -104,6 +104,13 @@ const checks = [
     "Add npm script github:connect and scripts/connect-github.mjs."
   ),
   check(
+    "launch-bootstrap-helper",
+    "First-time launch bootstrap helper exists",
+    hasPackageScript(packageJson, "launch:bootstrap") && exists("scripts/bootstrap-launch.mjs"),
+    `launch:bootstrap script is ${hasPackageScript(packageJson, "launch:bootstrap") ? "configured" : "missing"}.`,
+    "Add npm script launch:bootstrap and scripts/bootstrap-launch.mjs."
+  ),
+  check(
     "verify-script",
     "Full verification script exists",
     hasPackageScript(packageJson, "verify"),
@@ -145,7 +152,7 @@ const checks = [
     "deployment-runbook",
     "Deployment runbook documents domain and remote setup",
     deploymentDocs.includes("openAITpm.com") &&
-      deploymentDocs.includes("npm run github:connect") &&
+      deploymentDocs.includes("npm run launch:bootstrap") &&
       deploymentDocs.includes("Vercel"),
     "docs/OPENAITPM_DEPLOYMENT.md covers GitHub, Vercel, and DNS setup.",
     "Update the OpenAITPM deployment runbook."

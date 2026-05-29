@@ -48,11 +48,14 @@ npm run idea:new -- "Enterprise Leadership Context OS"
 This local folder currently needs a GitHub remote before the PR loop can run. After creating the correct GitHub repository, connect it once:
 
 ```bash
-npm run github:connect -- git@github.com:<owner>/<repo>.git
-git push -u origin main
+npm run launch:bootstrap -- --push git@github.com:<owner>/<repo>.git
 ```
 
-Use `npm run github:connect -- --push git@github.com:<owner>/<repo>.git` to connect and push in one command.
+To connect the repo, push `main`, create the first idea branch, and trigger the first PR/build path:
+
+```bash
+npm run launch:bootstrap -- --push --idea "Investor Update Room" git@github.com:<owner>/<repo>.git
+```
 
 Then create idea branches from `main` and push them:
 
@@ -76,7 +79,7 @@ Use the strict version in release checks:
 npm run launch:audit:strict
 ```
 
-The audit verifies local repo readiness, idea content, dynamic routes, GitHub workflows, Vercel config, and deployment docs. It intentionally reports `NOT READY` until a real GitHub `origin` remote is configured.
+The audit verifies local repo readiness, idea content, helper scripts, dynamic routes, GitHub workflows, Vercel config, and deployment docs. It intentionally reports `NOT READY` until a real GitHub `origin` remote is configured.
 
 ## Vercel Setup
 

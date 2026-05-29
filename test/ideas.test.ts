@@ -83,4 +83,19 @@ describe("OpenAITPM idea routing", () => {
     expect(output).toContain("git@github.com:machine0005-a11y/openaitpm.git");
     expect(output).toContain("dry run");
   });
+
+  it("dry-runs first-time launch bootstrap with a first idea", () => {
+    const output = execFileSync("node", [
+      "scripts/bootstrap-launch.mjs",
+      "--dry-run",
+      "--idea",
+      "Customer Renewal Room",
+      "git@github.com:machine0005-a11y/openaitpm.git"
+    ]).toString();
+
+    expect(output).toContain("Would run: git remote add origin");
+    expect(output).toContain("Would run: git checkout -b idea/customer-renewal-room main");
+    expect(output).toContain("Would create src/content/ideas/customer-renewal-room.json");
+    expect(output).toContain("Bootstrap target: git@github.com:machine0005-a11y/openaitpm.git (dry run).");
+  });
 });
