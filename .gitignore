@@ -1,0 +1,11 @@
+.next
+node_modules
+dist
+coverage
+.env
+.env*.local
+generated
+src/generated
+uploads
+.aitpm-data
+*.tsbuildinfo

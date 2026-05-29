@@ -1,0 +1,22 @@
+{
+  "slug": "person-moment-music",
+  "name": "Person-Moment Music",
+  "status": "draft",
+  "tagline": "A privacy-first way to turn personal moments into validated music specs.",
+  "thesis": "Capture a private moment, convert it into a safe structured music specification, render playable audio, and share only what the user approves.",
+  "audience": "Creators, memory keepers, music-curious consumers, and social sharing users.",
+  "sourceBranch": "idea/person-moment-music",
+  "repoPath": "src/content/ideas/person-moment-music.json",
+  "primaryCta": "Open music concept",
+  "secondaryCta": "Review gates",
+  "proofPoints": [
+    "Raw journal text stays private by default.",
+    "MusicSpec JSON is validated before audio generation.",
+    "Distribution centers on moments rather than playlist catalog behavior."
+  ],
+  "launchChecks": [
+    { "label": "Gate 0 foundation", "state": "done" },
+    { "label": "Auth and moments", "state": "active" },
+    { "label": "Async audio rendering", "state": "next" }
+  ]
+}

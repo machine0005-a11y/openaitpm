@@ -1,0 +1,22 @@
+{
+  "slug": "enterprise-leadership-context-os",
+  "name": "Enterprise Leadership Context OS",
+  "status": "building",
+  "tagline": "A permissioned AI chief of staff for decision-ready executive context.",
+  "thesis": "Turn fragmented meetings, messages, CRM records, tickets, docs, and support signals into an executive brief with decisions, risks, owners, actions, and evidence.",
+  "audience": "CEOs, CROs, CTOs, COOs, chiefs of staff, and enterprise operating leaders.",
+  "sourceBranch": "idea/enterprise-leadership-context-os",
+  "repoPath": "src/content/ideas/enterprise-leadership-context-os.json",
+  "primaryCta": "Open decision room",
+  "secondaryCta": "View evidence model",
+  "proofPoints": [
+    "CRM says a renewal is healthy while cross-system context shows rising churn risk.",
+    "Every recommendation carries evidence, confidence, freshness, and permission checks.",
+    "Follow-up actions are drafted first, then written back only after approval."
+  ],
+  "launchChecks": [
+    { "label": "Dynamic route exists", "state": "done" },
+    { "label": "Mock decision brief data", "state": "active" },
+    { "label": "Real connector adapters", "state": "next" }
+  ]
+}

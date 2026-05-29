@@ -1,0 +1,22 @@
+{
+  "slug": "aitpm-family-project-room",
+  "name": "AITPM Family Project Room",
+  "status": "preview",
+  "tagline": "Invite an AI TPM into a family or friend group and get one shared project link.",
+  "thesis": "Make project coordination feel like adding a trusted TPM to an existing group chat, then letting people connect calendars, email, files, and updates when they choose.",
+  "audience": "Families, friend groups, community organizers, and lightweight project teams.",
+  "sourceBranch": "idea/aitpm-family-project-room",
+  "repoPath": "src/content/ideas/aitpm-family-project-room.json",
+  "primaryCta": "Open group dashboard",
+  "secondaryCta": "Invite AI TPM",
+  "proofPoints": [
+    "A single shared link becomes the living dashboard for the group.",
+    "People can join, connect accounts, and keep visibility scoped to the project.",
+    "The AI TPM asks clarifying questions before creating plans, reminders, and updates."
+  ],
+  "launchChecks": [
+    { "label": "Friendly shared-link shell", "state": "done" },
+    { "label": "OAuth onboarding map", "state": "active" },
+    { "label": "iMessage invite bridge", "state": "next" }
+  ]
+}

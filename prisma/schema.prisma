@@ -1,0 +1,11 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// Gate 0 intentionally contains no domain models.
+// Gate 1 adds User, Moment, MomentSummary, AudioAsset, and Event.

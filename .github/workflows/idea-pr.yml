@@ -1,0 +1,82 @@
+name: Idea PR Build
+
+on:
+  push:
+    branches-ignore:
+      - main
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  verify-and-open-pr:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: idea-pr-${{ github.ref }}
+      cancel-in-progress: true
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Open or update pull request
+        id: idea_pr
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const branch = context.ref.replace("refs/heads/", "");
+            const head = `${owner}:${branch}`;
+            const slug = branch.split("/").slice(1).join("-") || branch;
+            const titleName = slug
+              .replace(/[-_]+/g, " ")
+              .replace(/\b\w/g, (letter) => letter.toUpperCase());
+
+            const body = [
+              "Automated OpenAITPM idea-page PR.",
+              "",
+              `- Branch: \`${branch}\``,
+              `- Expected route: \`/${slug}\``,
+              "- Build: this workflow runs `npm run verify` after opening or refreshing the PR.",
+              "- Preview: Vercel will attach a deployment when the repository is connected."
+            ].join("\n");
+
+            const existing = await github.rest.pulls.list({
+              owner,
+              repo,
+              state: "open",
+              head,
+              base: "main"
+            });
+
+            if (existing.data.length > 0) {
+              await github.rest.pulls.update({
+                owner,
+                repo,
+                pull_number: existing.data[0].number,
+                body
+              });
+              core.notice(`Updated PR #${existing.data[0].number}`);
+              return existing.data[0].html_url;
+            }
+
+            const created = await github.rest.pulls.create({
+              owner,
+              repo,
+              title: `Launch idea page: ${titleName}`,
+              head: branch,
+              base: "main",
+              body,
+              draft: false
+            });
+
+            core.notice(`Created PR #${created.data.number}`);
+            return created.data.html_url;
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+      - run: npm run verify
