@@ -89,6 +89,14 @@ npm run idea:verify:routes
 
 The route verifier checks every `src/content/ideas/*.json` file and prints the public URL that will resolve under `openAITpm.com`.
 
+Preview the PR body generated from checked-in idea routes:
+
+```bash
+npm run idea:pr-body -- --all --branch idea/investor-update-room
+```
+
+In GitHub Actions the workflow compares the branch against `origin/main` and lists the changed idea URLs in the pull request body.
+
 ## Vercel Setup
 
 Create a Vercel project from this GitHub repository.

@@ -64,6 +64,21 @@ describe("OpenAITPM idea routing", () => {
     expect(output).toContain("https://openaitpm.com/aitpm-family-project-room");
   });
 
+  it("generates a route-aware PR body from checked-in ideas", () => {
+    const output = execFileSync("node", [
+      "scripts/pr-route-summary.mjs",
+      "--all",
+      "--branch",
+      "idea/customer-renewal-room"
+    ]).toString();
+
+    expect(output).toContain("Automated OpenAITPM idea-page PR.");
+    expect(output).toContain("- Branch: `idea/customer-renewal-room`");
+    expect(output).toContain("## Public routes");
+    expect(output).toContain("https://openaitpm.com/enterprise-leadership-context-os");
+    expect(output).toContain("https://openaitpm.com/aitpm-family-project-room");
+  });
+
   it("audits launch readiness and reports missing external setup", () => {
     const output = execFileSync("node", ["scripts/launch-audit.mjs", "--json"]).toString();
     const report = JSON.parse(output) as {
@@ -76,6 +91,7 @@ describe("OpenAITPM idea routing", () => {
     expect(byId.get("auto-pr-workflow")).toMatchObject({ status: "pass" });
     expect(byId.get("idea-ship-helper")).toMatchObject({ status: "pass" });
     expect(byId.get("idea-route-verifier")).toMatchObject({ status: "pass" });
+    expect(byId.get("route-aware-pr-body")).toMatchObject({ status: "pass" });
     expect(byId.get("public-site-metadata")).toMatchObject({ status: "pass" });
     expect(byId.get("github-connect-helper")).toMatchObject({ status: "pass" });
     expect(byId.get("git-origin")).toMatchObject({ status: "fail" });

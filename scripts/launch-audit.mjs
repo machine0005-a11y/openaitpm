@@ -104,6 +104,13 @@ const checks = [
     "Add npm script idea:verify:routes and scripts/verify-idea-routes.mjs."
   ),
   check(
+    "route-aware-pr-body",
+    "Route-aware PR body generator exists",
+    hasPackageScript(packageJson, "idea:pr-body") && exists("scripts/pr-route-summary.mjs"),
+    `idea:pr-body script is ${hasPackageScript(packageJson, "idea:pr-body") ? "configured" : "missing"}.`,
+    "Add npm script idea:pr-body and scripts/pr-route-summary.mjs."
+  ),
+  check(
     "github-connect-helper",
     "GitHub remote connect helper exists",
     hasPackageScript(packageJson, "github:connect") && exists("scripts/connect-github.mjs"),

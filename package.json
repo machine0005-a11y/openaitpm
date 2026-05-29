@@ -15,6 +15,7 @@
     "idea:new": "node scripts/create-idea.mjs",
     "idea:ship": "node scripts/ship-idea.mjs",
     "idea:verify:routes": "node scripts/verify-idea-routes.mjs",
+    "idea:pr-body": "node scripts/pr-route-summary.mjs",
     "github:connect": "node scripts/connect-github.mjs",
     "launch:bootstrap": "node scripts/bootstrap-launch.mjs",
     "launch:audit": "node scripts/launch-audit.mjs",

@@ -122,6 +122,12 @@ Verify that every checked-in idea has a valid public route:
 npm run idea:verify:routes
 ```
 
+Preview the route-aware PR body GitHub Actions will write:
+
+```bash
+npm run idea:pr-body -- --all --branch idea/investor-update-room
+```
+
 ## Prisma
 
 The schema is domain-empty in Gate 0 by design. Gate 1 introduces `User`, `Moment`, `MomentSummary`, `AudioAsset`, and `Event`.

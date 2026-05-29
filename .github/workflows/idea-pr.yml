@@ -17,12 +17,23 @@ jobs:
       cancel-in-progress: true
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Generate route-aware PR body
+        run: node scripts/pr-route-summary.mjs --branch "${GITHUB_REF_NAME}" --compare "origin/main...HEAD" > /tmp/openaitpm-pr-body.md
 
       - name: Open or update pull request
         id: idea_pr
         uses: actions/github-script@v7
         with:
           script: |
+            const fs = require("fs");
             const owner = context.repo.owner;
             const repo = context.repo.repo;
             const branch = context.ref.replace("refs/heads/", "");
@@ -31,15 +42,7 @@ jobs:
             const titleName = slug
               .replace(/[-_]+/g, " ")
               .replace(/\b\w/g, (letter) => letter.toUpperCase());
-
-            const body = [
-              "Automated OpenAITPM idea-page PR.",
-              "",
-              `- Branch: \`${branch}\``,
-              `- Expected route: \`/${slug}\``,
-              "- Build: this workflow runs `npm run verify` after opening or refreshing the PR.",
-              "- Preview: Vercel will attach a deployment when the repository is connected."
-            ].join("\n");
+            const body = fs.readFileSync("/tmp/openaitpm-pr-body.md", "utf8");
 
             const existing = await github.rest.pulls.list({
               owner,
@@ -72,11 +75,6 @@ jobs:
 
             core.notice(`Created PR #${created.data.number}`);
             return created.data.html_url;
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
 
       - run: npm ci
       - run: npm run verify
