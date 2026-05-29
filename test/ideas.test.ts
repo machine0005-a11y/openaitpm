@@ -42,4 +42,18 @@ describe("OpenAITPM idea routing", () => {
     expect(output).toContain("Route: /investor-update-room");
     expect(output).toContain("Branch: idea/investor-update-room");
   });
+
+  it("audits launch readiness and reports missing external setup", () => {
+    const output = execFileSync("node", ["scripts/launch-audit.mjs", "--json"]).toString();
+    const report = JSON.parse(output) as {
+      ready: boolean;
+      checks: Array<{ id: string; status: "pass" | "fail"; detail: string }>;
+    };
+    const byId = new Map(report.checks.map((check) => [check.id, check]));
+
+    expect(byId.get("dynamic-route")).toMatchObject({ status: "pass" });
+    expect(byId.get("auto-pr-workflow")).toMatchObject({ status: "pass" });
+    expect(byId.get("git-origin")).toMatchObject({ status: "fail" });
+    expect(report.ready).toBe(false);
+  });
 });

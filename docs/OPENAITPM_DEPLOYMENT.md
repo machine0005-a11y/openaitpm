@@ -56,6 +56,22 @@ git push -u origin idea/investor-update-room
 
 The branch push is the moment GitHub creates or refreshes the PR and runs the build.
 
+## Launch Readiness Audit
+
+Run this before declaring the publishing loop live:
+
+```bash
+npm run launch:audit
+```
+
+Use the strict version in release checks:
+
+```bash
+npm run launch:audit:strict
+```
+
+The audit verifies local repo readiness, idea content, dynamic routes, GitHub workflows, Vercel config, and deployment docs. It intentionally reports `NOT READY` until a real GitHub `origin` remote is configured.
+
 ## Vercel Setup
 
 Create a Vercel project from this GitHub repository.

@@ -1,12 +1,21 @@
 import Link from "next/link";
-import { ArrowRight, CheckCircle2, Globe2, GitBranch, GitPullRequestArrow } from "lucide-react";
+import {
+  AlertCircle,
+  ArrowRight,
+  CheckCircle2,
+  ClipboardCheck,
+  Globe2,
+  GitBranch,
+  GitPullRequestArrow,
+  Terminal
+} from "lucide-react";
 
 const branchSteps = [
   "Create an idea branch like idea/enterprise-leadership-context-os.",
-  "Add or edit the page data in the repo.",
+  "Add or edit src/content/ideas/<idea-name>.json.",
   "Push the branch to GitHub.",
-  "GitHub Actions runs npm run verify.",
-  "If the build passes, the workflow opens or updates a pull request into main."
+  "GitHub Actions opens or updates a pull request into main.",
+  "The workflow runs npm run verify so the PR records build status."
 ];
 
 const domainSteps = [
@@ -15,6 +24,15 @@ const domainSteps = [
   "Add openAITpm.com and www.openAITpm.com in Vercel.",
   "Point DNS at the exact Vercel records shown in the domain screen.",
   "Merge the PR so production serves openAITpm.com/<idea-name>."
+];
+
+const readinessChecks = [
+  { label: "Local commit", state: "pass" },
+  { label: "Idea content files", state: "pass" },
+  { label: "Dynamic route", state: "pass" },
+  { label: "Auto-PR workflow", state: "pass" },
+  { label: "Vercel config", state: "pass" },
+  { label: "GitHub origin remote", state: "missing" }
 ];
 
 export default function DeploymentRunbookPage() {
@@ -79,7 +97,53 @@ export default function DeploymentRunbookPage() {
         </article>
       </section>
 
-      <section className="mx-auto max-w-5xl px-5 pb-12 md:px-8">
+      <section className="mx-auto grid max-w-5xl gap-5 px-5 pb-8 md:px-8 lg:grid-cols-[0.95fr_1.05fr]">
+        <article className="rounded-lg border border-[var(--line)] bg-[var(--panel)] p-6">
+          <div className="flex items-center gap-3">
+            <ClipboardCheck aria-hidden="true" className="h-5 w-5 text-[var(--accent)]" />
+            <h2 className="text-xl font-semibold">Launch Readiness Audit</h2>
+          </div>
+          <p className="mt-4 text-sm leading-6 text-[var(--ink-soft)]">
+            Run this any time to see whether the repo is ready for the real
+            openAITpm.com publishing loop.
+          </p>
+          <Link
+            className="mt-5 flex items-center gap-3 rounded-lg border border-[var(--line)] bg-[var(--background)] p-4 text-sm font-semibold transition hover:border-[var(--accent)] hover:bg-white"
+            href="/docs/openaitpm-deployment#owner-access"
+          >
+            <Terminal aria-hidden="true" className="h-4 w-4 text-[var(--accent)]" />
+            npm run launch:audit
+          </Link>
+        </article>
+
+        <article className="rounded-lg border border-[var(--line)] bg-[var(--panel)] p-6">
+          <h2 className="text-xl font-semibold">Current State</h2>
+          <div className="mt-5 grid gap-3">
+            {readinessChecks.map((check) => (
+              <Link
+                className="flex items-center gap-3 rounded-lg border border-[var(--line)] bg-[var(--background)] p-4 text-sm transition hover:border-[var(--accent)] hover:bg-white"
+                href={check.state === "pass" ? "/enterprise-leadership-context-os" : "#owner-access"}
+                key={check.label}
+              >
+                {check.state === "pass" ? (
+                  <CheckCircle2
+                    aria-hidden="true"
+                    className="h-4 w-4 shrink-0 text-[var(--accent)]"
+                  />
+                ) : (
+                  <AlertCircle aria-hidden="true" className="h-4 w-4 shrink-0 text-[var(--clay)]" />
+                )}
+                <span>{check.label}</span>
+                <span className="ml-auto rounded-lg bg-[var(--panel-muted)] px-2 py-1 text-xs text-[var(--ink-soft)]">
+                  {check.state}
+                </span>
+              </Link>
+            ))}
+          </div>
+        </article>
+      </section>
+
+      <section className="mx-auto max-w-5xl px-5 pb-12 md:px-8" id="owner-access">
         <article className="rounded-lg border border-[var(--line)] bg-[var(--panel)] p-6">
           <h2 className="text-xl font-semibold">Owner Access Still Required</h2>
           <p className="mt-4 text-sm leading-6 text-[var(--ink-soft)]">

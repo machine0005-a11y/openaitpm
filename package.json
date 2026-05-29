@@ -13,6 +13,8 @@
     "test:watch": "vitest",
     "verify": "npm run lint && npm run typecheck && npm test && npm run build",
     "idea:new": "node scripts/create-idea.mjs",
+    "launch:audit": "node scripts/launch-audit.mjs",
+    "launch:audit:strict": "node scripts/launch-audit.mjs --strict",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:seed": "tsx prisma/seed.ts"
