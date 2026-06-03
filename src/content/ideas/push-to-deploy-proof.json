@@ -1,0 +1,22 @@
+{
+  "slug": "push-to-deploy-proof",
+  "name": "Push To Deploy Proof",
+  "status": "preview",
+  "tagline": "Proof that a git push auto-updates openaitpm.com within ~40 seconds, no human in the loop.",
+  "thesis": "This page did not exist until a commit was pushed to machine0005-a11y/openaitpm. Vercel's GitHub integration detected the push, ran npm run build, and published it automatically. That is the whole openaitpm pipeline: code in, live URL out.",
+  "audience": "Anyone verifying the continuous-deploy loop is real.",
+  "sourceBranch": "idea/push-to-deploy-proof",
+  "repoPath": "src/content/ideas/push-to-deploy-proof.json",
+  "primaryCta": "View live",
+  "secondaryCta": "See the commit",
+  "proofPoints": [
+    "Created by a git push, not a manual upload.",
+    "Vercel auto-built and deployed it on push to main.",
+    "Reachable at openaitpm.vercel.app/push-to-deploy-proof seconds later."
+  ],
+  "launchChecks": [
+    { "label": "Idea page generated", "state": "done" },
+    { "label": "Auto-deployed via Vercel", "state": "active" },
+    { "label": "Live on openaitpm.com domain", "state": "next" }
+  ]
+}
