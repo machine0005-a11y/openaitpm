@@ -1,4 +1,4 @@
-const fallbackSiteUrl = "https://openaitpm.com";
+const fallbackSiteUrl = "https://www.ideamuses.com";
 
 export function getSiteUrl(): string {
   const configuredUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();
@@ -12,4 +12,4 @@ export function getAbsoluteUrl(path: string): string {
   return `${getSiteUrl()}${normalizedPath}`;
 }
 
-export const displayDomain = "openAITpm.com";
+export const displayDomain = "ideamuses.com";
