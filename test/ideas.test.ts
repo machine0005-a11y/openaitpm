@@ -58,10 +58,12 @@ describe("OpenAITPM idea routing", () => {
 
   it("verifies checked-in idea routes", () => {
     const output = execFileSync("node", ["scripts/verify-idea-routes.mjs"]).toString();
+    const ideaCount = listIdeaPages().length;
 
-    expect(output).toContain("Verified 3 idea route(s):");
+    expect(output).toContain(`Verified ${ideaCount} idea route(s):`);
     expect(output).toContain("https://openaitpm.com/enterprise-leadership-context-os");
     expect(output).toContain("https://openaitpm.com/aitpm-family-project-room");
+    expect(output).toContain("https://openaitpm.com/meet-the-dat");
   });
 
   it("generates a route-aware PR body from checked-in ideas", () => {
@@ -94,6 +96,7 @@ describe("OpenAITPM idea routing", () => {
     expect(byId.get("route-aware-pr-body")).toMatchObject({ status: "pass" });
     expect(byId.get("public-site-metadata")).toMatchObject({ status: "pass" });
     expect(byId.get("vercel-deploy-workflow")).toMatchObject({ status: "pass" });
+    expect(byId.get("launch-checklist")).toMatchObject({ status: "pass" });
     expect(byId.get("github-connect-helper")).toMatchObject({ status: "pass" });
     expect(byId.get("git-origin")).toMatchObject({ status: "fail" });
     expect(report.ready).toBe(false);

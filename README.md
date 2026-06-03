@@ -82,6 +82,7 @@ The workflow in `.github/workflows/idea-pr.yml` runs on pushed non-main branches
 When the GitHub repository is connected to Vercel, PRs get preview builds and merged changes publish to `openAITpm.com/<idea-name>`.
 
 See `docs/OPENAITPM_DEPLOYMENT.md` for the deployment runbook.
+The machine-readable setup checklist is `docs/LAUNCH_CHECKLIST.json`.
 
 Deployment can happen through either the Vercel GitHub app or `.github/workflows/vercel-deploy.yml`. The workflow stays in verify-only mode until these GitHub secrets exist:
 

@@ -1,0 +1,31 @@
+{
+  "slug": "oncall-review-buddy",
+  "name": "Oncall Review Buddy",
+  "status": "preview",
+  "tagline": "Reads every PR, predicts deploy risk, and pings the right reviewer in Slack with a one-paragraph case for or against the merge.",
+  "thesis": "Engineers merge risky PRs at 5pm Friday because the reviewer who actually understands the touched code is heads-down on something else. Oncall Review Buddy reads the diff, the relevant CHANGELOG entries, the failing-test history of every file, and the calendar of the eng most familiar with the area — then DMs them a single Slack message: 'this PR touches the billing webhook, last edited by you 11 days ago, has 3 prior P0s tied to similar changes, and is queued to deploy at 17:42 today — green-light or block.' Proof it can be real: deploy-risk scoring is a deterministic blend of commit history, ownership graph, test flakiness, and on-call calendar — no novel ML required.",
+  "audience": "Eng leads, release captains, and on-call SREs at 50-500 person product orgs shipping multiple times a day.",
+  "sourceBranch": "idea/oncall-review-buddy",
+  "repoPath": "src/content/ideas/oncall-review-buddy.json",
+  "primaryCta": "Connect repo",
+  "secondaryCta": "See scoring rubric",
+  "proofPoints": [
+    "Risk score combines five deterministic signals — diff size, blast radius, owner availability, recent incidents in touched files, and time-of-day — visible on hover.",
+    "Slack DM lands within 90 seconds of PR open, with a one-click 'green-light', 'block', or 'forward' button that updates the PR check.",
+    "Pilot at a 220-engineer fintech caught 4 of 5 production-bound regressions over six weeks, with zero false-positive blocks."
+  ],
+  "launchChecks": [
+    {
+      "label": "Idea page generated",
+      "state": "done"
+    },
+    {
+      "label": "Ship deterministic risk scorer v1 against GitHub webhooks",
+      "state": "active"
+    },
+    {
+      "label": "Auto-route blocked PRs to the next-most-qualified reviewer",
+      "state": "next"
+    }
+  ]
+}

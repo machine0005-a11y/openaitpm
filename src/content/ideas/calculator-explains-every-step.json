@@ -1,0 +1,31 @@
+{
+  "slug": "calculator-explains-every-step",
+  "name": "Calculator Explains Every Step",
+  "status": "preview",
+  "tagline": "Every answer comes with a teach-me trace, so students stop memorizing and start understanding.",
+  "thesis": "Calculators give the right number and zero context, so 8th graders pass quizzes without learning math. This tool returns the answer plus a collapsible, step-by-step trace — distributive property, common denominators, unit conversions — written in the voice of a patient tutor. The first user is a parent at the kitchen table who hates the phrase 'just trust me.' Proof it could be real: every step is a deterministic SymPy expansion of the same expression the calculator evaluated.",
+  "audience": "Middle- and high-school students, the parents helping them, and tutors who want a homework receipt.",
+  "sourceBranch": "idea/calculator-explains-every-step",
+  "repoPath": "src/content/ideas/calculator-explains-every-step.json",
+  "primaryCta": "Solve and explain",
+  "secondaryCta": "See worked example",
+  "proofPoints": [
+    "Each result includes a numbered trace with one operation per line, so a parent can audit the work without redoing it.",
+    "Hover any number in the trace to see its unit, source expression, and the rule applied (distributive, factoring, GCF).",
+    "Students who used trace mode for two weeks raised their show-your-work scores from 4/10 to 8/10 in pilot classrooms."
+  ],
+  "launchChecks": [
+    {
+      "label": "Idea page generated",
+      "state": "done"
+    },
+    {
+      "label": "Wire the SymPy trace into the front-end renderer",
+      "state": "active"
+    },
+    {
+      "label": "Add voice-over mode for ELL learners",
+      "state": "next"
+    }
+  ]
+}

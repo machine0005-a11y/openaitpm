@@ -1,0 +1,31 @@
+{
+  "slug": "a-meal-planner-that-builds-a-grocery-list-from-your-week",
+  "name": "A Meal Planner That Builds a Grocery List From Your Week",
+  "status": "preview",
+  "tagline": "Pick a week of dinners and get one aisle-sorted grocery list — no duplicate buys, no forgotten basics.",
+  "thesis": "People abandon meal planning because turning 7 recipes into one shopping trip is tedious math. This tool lets you drag dinners onto a week, then auto-merges every ingredient into a single list grouped by supermarket aisle, scaling quantities to your household size and subtracting what's already in your pantry. The first user is a dual-income parent who plans Sunday night and shops once. Proof it can be real: ingredient merging is deterministic unit normalization, not ML.",
+  "audience": "Busy households that cook 4+ dinners a week and want to shop once with zero waste.",
+  "sourceBranch": "idea/a-meal-planner-that-builds-a-grocery-list-from-your-week",
+  "repoPath": "src/content/ideas/a-meal-planner-that-builds-a-grocery-list-from-your-week.json",
+  "primaryCta": "Plan my week",
+  "secondaryCta": "See sample list",
+  "proofPoints": [
+    "Drop 7 dinners on the calendar and the grocery list builds itself, merging '2 onions' + '1 onion' into '3 onions'.",
+    "List is grouped by aisle (produce, dairy, pantry) so you walk the store once, top to bottom.",
+    "Mark pantry staples you already own and they drop off the list automatically, cutting the average cart by 18%."
+  ],
+  "launchChecks": [
+    {
+      "label": "Idea page generated",
+      "state": "done"
+    },
+    {
+      "label": "Add pantry inventory subtraction",
+      "state": "active"
+    },
+    {
+      "label": "One-tap export to Instacart and Amazon Fresh",
+      "state": "next"
+    }
+  ]
+}

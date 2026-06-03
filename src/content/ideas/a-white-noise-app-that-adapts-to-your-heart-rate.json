@@ -1,0 +1,31 @@
+{
+  "slug": "a-white-noise-app-that-adapts-to-your-heart-rate",
+  "name": "A White Noise App That Adapts to Your Heart Rate",
+  "status": "preview",
+  "tagline": "A sleep and focus soundscape that gently slows down as your body settles.",
+  "thesis": "Most white-noise apps are static loops, even when the listener is still wired or already drifting off. This product uses wearable heart-rate signals to adjust tempo, texture, and volume over time, helping the soundscape match the user's state instead of forcing the user to pick another preset. The first user is someone who already wears an Apple Watch or Fitbit at night and wants a calmer wind-down routine.",
+  "audience": "People who use wearables, sleep aids, focus playlists, and bedtime routines but want sound that responds to them.",
+  "sourceBranch": "idea/a-white-noise-app-that-adapts-to-your-heart-rate",
+  "repoPath": "src/content/ideas/a-white-noise-app-that-adapts-to-your-heart-rate.json",
+  "primaryCta": "Try it now",
+  "secondaryCta": "See how it works",
+  "proofPoints": [
+    "Heart-rate zones map to deterministic sound presets, so the first prototype can work before advanced ML exists.",
+    "The app can start with Apple Health or Fitbit imports before adding live wearable streaming.",
+    "Users can see exactly when and why the sound changed, keeping the experience explainable."
+  ],
+  "launchChecks": [
+    {
+      "label": "Idea page generated",
+      "state": "done"
+    },
+    {
+      "label": "Build wearable data import demo",
+      "state": "active"
+    },
+    {
+      "label": "Add adaptive sound preset engine",
+      "state": "next"
+    }
+  ]
+}

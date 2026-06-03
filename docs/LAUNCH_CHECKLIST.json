@@ -1,0 +1,60 @@
+{
+  "product": "OpenAITPM",
+  "productionDomain": "openAITpm.com",
+  "canonicalSiteUrl": "https://openaitpm.com",
+  "requiredGitHub": {
+    "defaultBranch": "main",
+    "remote": "origin",
+    "branchPattern": "idea/<idea-name>",
+    "requiredWorkflows": [
+      ".github/workflows/ci.yml",
+      ".github/workflows/idea-pr.yml",
+      ".github/workflows/vercel-deploy.yml",
+      ".github/workflows/production-smoke.yml"
+    ],
+    "requiredSecrets": [
+      "VERCEL_TOKEN",
+      "VERCEL_PROJECT_ID",
+      "VERCEL_ORG_ID"
+    ],
+    "optionalVariables": [
+      "NEXT_PUBLIC_SITE_URL",
+      "PRODUCTION_SMOKE_ENABLED"
+    ],
+    "requiredPermissions": [
+      "Actions enabled",
+      "Read and write workflow permissions",
+      "Pull requests write permission for GITHUB_TOKEN"
+    ]
+  },
+  "requiredVercel": {
+    "framework": "Next.js",
+    "productionBranch": "main",
+    "buildCommand": "npm run build",
+    "installCommand": "npm ci",
+    "domains": [
+      "openAITpm.com",
+      "www.openAITpm.com"
+    ],
+    "deploymentPaths": [
+      "pull request preview deployments",
+      "production deployment from main"
+    ]
+  },
+  "requiredCommands": [
+    "npm run launch:bootstrap -- --push git@github.com:<owner>/<repo>.git",
+    "npm run idea:ship -- --push \"My Idea Name\"",
+    "npm run verify",
+    "npm run smoke:production"
+  ],
+  "acceptanceEvidence": [
+    "git remote -v shows origin",
+    "GitHub branch push creates or updates a PR",
+    "PR body lists openAITpm.com/<idea-name>",
+    "GitHub Actions runs npm run verify",
+    "Vercel preview deploys PR",
+    "main deploys production",
+    "https://openAITpm.com/<idea-name> returns HTTP 200",
+    "npm run smoke:production passes"
+  ]
+}

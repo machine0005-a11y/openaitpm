@@ -67,6 +67,8 @@ The branch push is the moment GitHub creates or refreshes the PR and runs the bu
 
 ## Launch Readiness Audit
 
+The machine-readable setup checklist lives in `docs/LAUNCH_CHECKLIST.json`.
+
 Run this before declaring the publishing loop live:
 
 ```bash

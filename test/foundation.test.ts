@@ -16,7 +16,8 @@ describe("Gate 0 foundation", () => {
       "PRIVACY.md",
       "INTEGRATIONS.md",
       "DEMO.md",
-      "ECONOMICS.md"
+      "ECONOMICS.md",
+      "LAUNCH_CHECKLIST.json"
     ];
 
     for (const doc of requiredDocs) {

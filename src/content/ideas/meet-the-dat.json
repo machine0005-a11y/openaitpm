@@ -1,0 +1,31 @@
+{
+  "slug": "meet-the-dat",
+  "name": "Meet The Dat",
+  "status": "preview",
+  "tagline": "A fictional educational concept page that explains a playful science design idea with clear safety framing.",
+  "thesis": "Meet The Dat is a classroom-style prototype that turns an imaginative prompt into a polished, shareable idea page while making the fictional boundary explicit. It preserves the existing single-page concept as an OpenAITPM idea route instead of occupying the production launchpad root.",
+  "audience": "Students, parents, teachers, and creative builders who want a safe example of turning a rough concept into a customer-readable webpage.",
+  "sourceBranch": "idea/meet-the-dat",
+  "repoPath": "src/content/ideas/meet-the-dat.json",
+  "primaryCta": "Open concept",
+  "secondaryCta": "Review safety note",
+  "proofPoints": [
+    "The page keeps the concept explicitly fictional and educational.",
+    "The idea can be served at openAITpm.com/meet-the-dat without replacing the OpenAITPM root page.",
+    "The launch system preserves customer-facing copy, proof points, and next launch checks for the route."
+  ],
+  "launchChecks": [
+    {
+      "label": "Preserve concept as routed idea",
+      "state": "done"
+    },
+    {
+      "label": "Add bespoke illustrations or generated assets",
+      "state": "active"
+    },
+    {
+      "label": "Collect classroom feedback",
+      "state": "next"
+    }
+  ]
+}

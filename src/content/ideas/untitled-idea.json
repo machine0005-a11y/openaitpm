@@ -1,0 +1,31 @@
+{
+  "slug": "untitled-idea",
+  "name": "Untitled Idea",
+  "status": "preview",
+  "tagline": "A safe fallback page for rough notes, blank submissions, and ideas that need a title later.",
+  "thesis": "Untitled Idea proves the launch system can keep even messy first drafts shareable without breaking the customer-facing site. Instead of publishing broken copy, the route becomes a clean holding page until the owner adds a real title, sharper thesis, and launch plan.",
+  "audience": "Builders who text or paste a rough idea before they know what to call it.",
+  "sourceBranch": "idea/untitled-idea",
+  "repoPath": "src/content/ideas/untitled-idea.json",
+  "primaryCta": "Try it now",
+  "secondaryCta": "See how it works",
+  "proofPoints": [
+    "The route stays valid even when the original idea input is empty or malformed.",
+    "The page explains that it is a draft instead of pretending the concept is finished.",
+    "A later commit can replace the fallback copy without changing the public URL."
+  ],
+  "launchChecks": [
+    {
+      "label": "Fallback idea page generated",
+      "state": "done"
+    },
+    {
+      "label": "Add real title and target customer",
+      "state": "active"
+    },
+    {
+      "label": "Replace fallback copy with customer-ready positioning",
+      "state": "next"
+    }
+  ]
+}

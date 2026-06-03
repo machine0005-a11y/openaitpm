@@ -58,6 +58,22 @@ const vercelConfig = exists("vercel.json") ? readText("vercel.json") : "";
 const deploymentDocs = exists("docs/OPENAITPM_DEPLOYMENT.md")
   ? readText("docs/OPENAITPM_DEPLOYMENT.md")
   : "";
+const launchChecklist = exists("docs/LAUNCH_CHECKLIST.json")
+  ? JSON.parse(readText("docs/LAUNCH_CHECKLIST.json"))
+  : null;
+
+function checklistHasEvery(path, values) {
+  let cursor = launchChecklist;
+  for (const part of path) {
+    cursor = cursor?.[part];
+  }
+
+  if (!Array.isArray(cursor)) {
+    return false;
+  }
+
+  return values.every((value) => cursor.includes(value));
+}
 
 const checks = [
   check(
@@ -201,6 +217,27 @@ const checks = [
       deploymentDocs.includes("Vercel"),
     "docs/OPENAITPM_DEPLOYMENT.md covers GitHub, Vercel, and DNS setup.",
     "Update the OpenAITPM deployment runbook."
+  ),
+  check(
+    "launch-checklist",
+    "Machine-readable launch checklist exists",
+    Boolean(launchChecklist) &&
+      launchChecklist.productionDomain === "openAITpm.com" &&
+      launchChecklist.canonicalSiteUrl === "https://openaitpm.com" &&
+      checklistHasEvery(["requiredGitHub", "requiredSecrets"], [
+        "VERCEL_TOKEN",
+        "VERCEL_PROJECT_ID",
+        "VERCEL_ORG_ID"
+      ]) &&
+      checklistHasEvery(["requiredGitHub", "requiredWorkflows"], [
+        ".github/workflows/ci.yml",
+        ".github/workflows/idea-pr.yml",
+        ".github/workflows/vercel-deploy.yml",
+        ".github/workflows/production-smoke.yml"
+      ]) &&
+      checklistHasEvery(["requiredVercel", "domains"], ["openAITpm.com", "www.openAITpm.com"]),
+    "docs/LAUNCH_CHECKLIST.json captures required GitHub, Vercel, and domain setup.",
+    "Add docs/LAUNCH_CHECKLIST.json with required GitHub secrets, workflows, Vercel settings, and domains."
   )
 ];
 

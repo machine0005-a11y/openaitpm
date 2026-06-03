@@ -1,0 +1,31 @@
+{
+  "slug": "a-personal-crm-that-reminds-you-to-follow-up-with-friends",
+  "name": "A Personal CRM That Reminds You to Follow Up With Friends",
+  "status": "preview",
+  "tagline": "A personal CRM that nudges you to reach out before a friendship goes quiet — not after.",
+  "thesis": "Acquaintances drift because there's no system reminding you to check in until it's awkwardly overdue. This tool tracks the people you care about, learns your natural cadence with each one (weekly for a best friend, quarterly for a mentor), and surfaces a short daily 'reach out' list with context from your last conversation. The first user is someone who just moved cities and refuses to lose their people. Proof it can be real: cadence is a simple per-contact interval with last-contact decay, no surveillance required.",
+  "audience": "People with wide networks — founders, organizers, recent movers — who hate that staying close feels like a chore.",
+  "sourceBranch": "idea/a-personal-crm-that-reminds-you-to-follow-up-with-friends",
+  "repoPath": "src/content/ideas/a-personal-crm-that-reminds-you-to-follow-up-with-friends.json",
+  "primaryCta": "Add your people",
+  "secondaryCta": "See today's list",
+  "proofPoints": [
+    "Set a cadence per person and get a daily list of who's due, capped at 3 so it never feels like homework.",
+    "Each reminder shows your last note — 'she started a new job at Figma' — so the message writes itself.",
+    "A 'going quiet' alert flags relationships slipping past 2x their normal interval before they fully lapse."
+  ],
+  "launchChecks": [
+    {
+      "label": "Idea page generated",
+      "state": "done"
+    },
+    {
+      "label": "Ship the daily reach-out digest",
+      "state": "active"
+    },
+    {
+      "label": "Auto-draft check-in messages from last-conversation notes",
+      "state": "next"
+    }
+  ]
+}
