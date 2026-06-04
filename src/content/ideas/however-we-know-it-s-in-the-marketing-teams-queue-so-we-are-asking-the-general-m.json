@@ -1,0 +1,31 @@
+{
+  "slug": "however-we-know-it-s-in-the-marketing-teams-queue-so-we-are-asking-the-general-m",
+  "name": "However We Know It S In The Marketing Teams Queue So We Are Asking The General M",
+  "status": "preview",
+  "tagline": "However We Know It S In The Marketing Teams Queue So We Are Asking The General M: ��\u0000However we know it’s in",
+  "thesis": "However We Know It S In The Marketing Teams Queue So We Are Asking The General M turns \"��\u0000However we know it’s in the marketing teams queue so we are asking the general manager of Irvine company to re ping the marketing team to set up time… we meet up with Fred tomorrow\" into a working product. Target users get a focused tool that solves the core job on day one, with a clear path from prototype to production.",
+  "audience": "Early adopters who feel this pain today and want a tool that already works.",
+  "sourceBranch": "idea/however-we-know-it-s-in-the-marketing-teams-queue-so-we-are-asking-the-general-m",
+  "repoPath": "src/content/ideas/however-we-know-it-s-in-the-marketing-teams-queue-so-we-are-asking-the-general-m.json",
+  "primaryCta": "Try it now",
+  "secondaryCta": "See how it works",
+  "proofPoints": [
+    "A working prototype exists the moment you text the idea.",
+    "Every page ships with a concrete next milestone, not a maybe.",
+    "Built and served automatically, end to end, with no manual steps."
+  ],
+  "launchChecks": [
+    {
+      "label": "Idea page generated",
+      "state": "done"
+    },
+    {
+      "label": "Validate with first 10 real users",
+      "state": "active"
+    },
+    {
+      "label": "Add the most-requested integration",
+      "state": "next"
+    }
+  ]
+}
