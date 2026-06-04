@@ -1,0 +1,31 @@
+{
+  "slug": "i-haven-t-heard-back-yet-and-i-ve-been-swamped-on-a-few-projects-so-not-today",
+  "name": "I Haven T Heard Back Yet And I Ve Been Swamped On A Few Projects So Not Today",
+  "status": "preview",
+  "tagline": "I Haven T Heard Back Yet And I Ve Been Swamped On A Few Projects So Not Today: I haven’t heard back yet and ",
+  "thesis": "I Haven T Heard Back Yet And I Ve Been Swamped On A Few Projects So Not Today turns \"I haven’t heard back yet and I’ve been swamped on a few projects so not today\" into a working product. Target users get a focused tool that solves the core job on day one, with a clear path from prototype to production.",
+  "audience": "Early adopters who feel this pain today and want a tool that already works.",
+  "sourceBranch": "idea/i-haven-t-heard-back-yet-and-i-ve-been-swamped-on-a-few-projects-so-not-today",
+  "repoPath": "src/content/ideas/i-haven-t-heard-back-yet-and-i-ve-been-swamped-on-a-few-projects-so-not-today.json",
+  "primaryCta": "Try it now",
+  "secondaryCta": "See how it works",
+  "proofPoints": [
+    "A working prototype exists the moment you text the idea.",
+    "Every page ships with a concrete next milestone, not a maybe.",
+    "Built and served automatically, end to end, with no manual steps."
+  ],
+  "launchChecks": [
+    {
+      "label": "Idea page generated",
+      "state": "done"
+    },
+    {
+      "label": "Validate with first 10 real users",
+      "state": "active"
+    },
+    {
+      "label": "Add the most-requested integration",
+      "state": "next"
+    }
+  ]
+}
