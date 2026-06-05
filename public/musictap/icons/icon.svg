@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="MusicTap icon">
+  <rect width="512" height="512" rx="96" fill="#15171a"/>
+  <path d="M138 338c0-34 27-61 61-61 14 0 27 5 38 13V134h150v58H295v146c0 34-27 61-61 61s-96-27-96-61Z" fill="#f5c446"/>
+  <path d="M117 248c0-72 58-130 130-130" fill="none" stroke="#ff5a5f" stroke-width="38" stroke-linecap="round"/>
+  <path d="M117 248c0 72 58 130 130 130" fill="none" stroke="#00a896" stroke-width="38" stroke-linecap="round"/>
+</svg>
