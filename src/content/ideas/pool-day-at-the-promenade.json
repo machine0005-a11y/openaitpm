@@ -1,31 +1,22 @@
 {
   "slug": "pool-day-at-the-promenade",
-  "name": "Pool Day At The Promenade",
+  "name": "Pool Day at the Promenade",
   "status": "preview",
-  "tagline": "Pool Day At The Promenade: pool day at the promenade",
-  "thesis": "Pool Day At The Promenade turns \"pool day at the promenade\" into a working product. Target users get a focused tool that solves the core job on day one, with a clear path from prototype to production.",
-  "audience": "Early adopters who feel this pain today and want a tool that already works.",
+  "tagline": "Plan the perfect pool day at the Promenade — weather window, who's in, what to pack, all in one shared link.",
+  "thesis": "Group pool days die in the group chat: nobody knows the best hour, who's actually coming, or who's bringing the cooler. Pool Day at the Promenade turns one idea into a shared plan page — it picks the warmest low-UV window for the day, runs a one-tap headcount, and auto-builds a packing list split across whoever's in. The first user is the friend who always ends up organizing; they send one link instead of 40 texts.",
+  "audience": "Friend groups, families, and building residents planning a day at the Promenade pool or any shared pool spot.",
   "sourceBranch": "idea/pool-day-at-the-promenade",
   "repoPath": "src/content/ideas/pool-day-at-the-promenade.json",
-  "primaryCta": "Try it now",
-  "secondaryCta": "See how it works",
+  "primaryCta": "Start the plan",
+  "secondaryCta": "See who's in",
   "proofPoints": [
-    "A working prototype exists the moment you text the idea.",
-    "Every page ships with a concrete next milestone, not a maybe.",
-    "Built and served automatically, end to end, with no manual steps."
+    "Pulls the day's hourly forecast and highlights the warmest window with the lowest UV, so you pick the right 2-3 hours to be there.",
+    "One-tap RSVP gives a live headcount — no more counting thumbs-up emojis in the group chat.",
+    "Auto-splits a packing list (cooler, towels, speaker, sunscreen) across everyone who's coming so nothing's doubled or forgotten."
   ],
   "launchChecks": [
-    {
-      "label": "Idea page generated",
-      "state": "done"
-    },
-    {
-      "label": "Validate with first 10 real users",
-      "state": "active"
-    },
-    {
-      "label": "Add the most-requested integration",
-      "state": "next"
-    }
+    { "label": "Shared plan page generated", "state": "done" },
+    { "label": "Wire live weather + UV window", "state": "active" },
+    { "label": "Add calendar invite + reminder push", "state": "next" }
   ]
 }
