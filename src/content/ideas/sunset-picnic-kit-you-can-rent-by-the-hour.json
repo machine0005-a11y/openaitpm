@@ -1,0 +1,31 @@
+{
+  "slug": "sunset-picnic-kit-you-can-rent-by-the-hour",
+  "name": "Sunset Picnic Kit You Can Rent By The Hour",
+  "status": "preview",
+  "tagline": "Sunset Picnic Kit You Can Rent By The Hour: sunset picnic kit you can rent by the hour",
+  "thesis": "Sunset Picnic Kit You Can Rent By The Hour turns \"sunset picnic kit you can rent by the hour\" into a working product. Target users get a focused tool that solves the core job on day one, with a clear path from prototype to production.",
+  "audience": "Early adopters who feel this pain today and want a tool that already works.",
+  "sourceBranch": "idea/sunset-picnic-kit-you-can-rent-by-the-hour",
+  "repoPath": "src/content/ideas/sunset-picnic-kit-you-can-rent-by-the-hour.json",
+  "primaryCta": "Try it now",
+  "secondaryCta": "See how it works",
+  "proofPoints": [
+    "A working prototype exists the moment you text the idea.",
+    "Every page ships with a concrete next milestone, not a maybe.",
+    "Built and served automatically, end to end, with no manual steps."
+  ],
+  "launchChecks": [
+    {
+      "label": "Idea page generated",
+      "state": "done"
+    },
+    {
+      "label": "Validate with first 10 real users",
+      "state": "active"
+    },
+    {
+      "label": "Add the most-requested integration",
+      "state": "next"
+    }
+  ]
+}
