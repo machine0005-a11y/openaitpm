@@ -1,0 +1,31 @@
+{
+  "slug": "personalized-stock-watchlist-page-tracking-snap-at-6-hood-at-85-and-rh-at-150-in",
+  "name": "Personalized Stock Watchlist Page Tracking Snap At 6 Hood At 85 And Rh At 150 In",
+  "status": "preview",
+  "tagline": "Personalized Stock Watchlist Page Tracking Snap At 6 Hood At 85 And Rh At 150 In: Personalized stock watchli",
+  "thesis": "Personalized Stock Watchlist Page Tracking Snap At 6 Hood At 85 And Rh At 150 In turns \"Personalized stock watchlist page tracking SNAP at $6, HOOD at $85, and RH at $150 in one consolidated view.\" into a working product. Target users get a focused tool that solves the core job on day one, with a clear path from prototype to production.",
+  "audience": "Early adopters who feel this pain today and want a tool that already works.",
+  "sourceBranch": "idea/personalized-stock-watchlist-page-tracking-snap-at-6-hood-at-85-and-rh-at-150-in",
+  "repoPath": "src/content/ideas/personalized-stock-watchlist-page-tracking-snap-at-6-hood-at-85-and-rh-at-150-in.json",
+  "primaryCta": "Try it now",
+  "secondaryCta": "See how it works",
+  "proofPoints": [
+    "A working prototype exists the moment you text the idea.",
+    "Every page ships with a concrete next milestone, not a maybe.",
+    "Built and served automatically, end to end, with no manual steps."
+  ],
+  "launchChecks": [
+    {
+      "label": "Idea page generated",
+      "state": "done"
+    },
+    {
+      "label": "Validate with first 10 real users",
+      "state": "active"
+    },
+    {
+      "label": "Add the most-requested integration",
+      "state": "next"
+    }
+  ]
+}
