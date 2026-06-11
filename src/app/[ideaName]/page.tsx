@@ -42,6 +42,7 @@ export default async function IdeaRoute({ params }: IdeaRouteProps) {
         theme={{ from: theme.from, to: theme.to, ink: theme.ink }}
         priceLabel={PRICE_LABEL}
         demo={!stripeConfigured()}
+        heroImage={idea.heroImage}
       />
     );
   }

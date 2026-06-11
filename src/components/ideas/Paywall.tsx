@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Lock, Sparkles } from "lucide-react";
+import Image from "next/image";
+import { ArrowRight, Lock, Orbit, Sparkles, Zap } from "lucide-react";
 
 type PaywallProps = {
   slug: string;
@@ -10,6 +11,7 @@ type PaywallProps = {
   theme: { from: string; to: string; ink: string };
   priceLabel: string;
   demo: boolean;
+  heroImage?: string | null;
 };
 
 // Apple Pay glyph (official mark style, drawn inline so no external asset).
@@ -22,10 +24,9 @@ function ApplePayMark() {
   );
 }
 
-export function Paywall({ slug, name, theme, priceLabel, demo }: PaywallProps) {
+export function Paywall({ slug, name, theme, priceLabel, demo, heroImage }: PaywallProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const grad = `linear-gradient(135deg, ${theme.from} 0%, ${theme.to} 100%)`;
 
   async function unlock() {
     setLoading(true);
@@ -52,57 +53,56 @@ export function Paywall({ slug, name, theme, priceLabel, demo }: PaywallProps) {
   }
 
   return (
-    <main className="relative min-h-screen overflow-hidden" style={{ background: grad }}>
-      <div aria-hidden className="pointer-events-none absolute -right-24 -top-24 h-96 w-96 rounded-full opacity-40 blur-3xl" style={{ background: theme.to }} />
-      <div aria-hidden className="pointer-events-none absolute -bottom-32 -left-20 h-96 w-96 rounded-full opacity-30 blur-3xl" style={{ background: theme.from }} />
-
-      <div className="relative mx-auto flex min-h-screen max-w-md flex-col items-center justify-center px-6 py-16 text-center">
-        <div className="grid h-16 w-16 place-items-center rounded-2xl bg-white/20 backdrop-blur-sm">
-          <Lock aria-hidden className="h-8 w-8 text-white" />
-        </div>
-
-        <p className="mt-6 inline-flex items-center gap-1.5 rounded-full bg-white/90 px-3 py-1 text-xs font-bold uppercase tracking-wide" style={{ color: theme.ink }}>
-          <Sparkles aria-hidden className="h-3.5 w-3.5" />
-          Idea locked
-        </p>
-
-        <h1 className="mt-5 text-4xl font-black leading-tight text-white drop-shadow-sm md:text-5xl">
-          {name}
-        </h1>
-        <p className="mt-4 text-lg font-medium text-white/90">
-          Your idea is built and ready. Unlock the full page for {priceLabel}.
-        </p>
-
-        <button
-          onClick={unlock}
-          disabled={loading}
-          className="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-black px-6 py-4 text-lg font-semibold text-white shadow-xl transition hover:-translate-y-0.5 disabled:opacity-60"
-        >
-          {loading ? (
-            "Starting…"
-          ) : (
-            <>
-              <ApplePayMark />
-              <span className="ml-1">· Unlock for {priceLabel}</span>
-            </>
-          )}
-        </button>
-
-        <p className="mt-4 text-sm text-white/80">
-          One-time payment. Instant access on this device.
-        </p>
-
-        {demo ? (
-          <p className="mt-3 rounded-lg bg-black/20 px-3 py-2 text-xs font-medium text-white/90">
-            Demo mode — no card is charged. Add Stripe keys to take real Apple Pay payments.
-          </p>
-        ) : null}
-
-        {error ? <p className="mt-3 text-sm font-semibold text-white">{error}</p> : null}
-
-        <Link href="/" className="mt-10 text-sm font-semibold text-white/80 underline-offset-4 hover:underline">
-          ← ideamuses.com
+    <main className="locked-preview" style={{ "--idea-from": theme.from, "--idea-to": theme.to } as React.CSSProperties}>
+      <div aria-hidden className="idea-hero-grid" />
+      <div className="locked-preview-wrap">
+        <Link href="/" className="idea-brand">
+          <span className="idea-brand-mark"><Orbit aria-hidden className="h-4 w-4" /></span>
+          ideamuses
         </Link>
+
+        <div className="locked-preview-layout">
+          <section className="locked-preview-copy">
+            <p className="idea-kicker"><Sparkles aria-hidden className="h-3.5 w-3.5" /> Built from one text</p>
+            <h1>{name}</h1>
+            <p>Your idea is alive. Open the complete concept, product thesis, proof points, and launch path.</p>
+
+            <div className="locked-offer-card">
+              <div className="locked-offer-icon"><Lock aria-hidden className="h-5 w-5" /></div>
+              <div>
+                <span>Full concept access</span>
+                <strong>Unlock the complete page</strong>
+              </div>
+              <span className="locked-price">{priceLabel}</span>
+            </div>
+
+            <button onClick={unlock} disabled={loading} className="locked-pay-button">
+              {loading ? "Starting…" : <><ApplePayMark /><span>Unlock for {priceLabel}</span><ArrowRight className="ml-auto h-5 w-5" /></>}
+            </button>
+            <p className="locked-fine-print">One-time payment. Instant access on this device.</p>
+            {demo ? <p className="locked-demo">Demo mode. No card is charged.</p> : null}
+            {error ? <p className="mt-3 text-sm font-semibold text-white">{error}</p> : null}
+          </section>
+
+          <section className="locked-visual">
+            {heroImage ? (
+              <Image src={heroImage} alt={`Visual concept for ${name}`} fill priority sizes="(max-width: 900px) 100vw, 50vw" className="object-cover" />
+            ) : (
+              <div className="idea-fallback-art" aria-label={`Visual concept for ${name}`}>
+                <div className="idea-orbit idea-orbit-one" />
+                <div className="idea-orbit idea-orbit-two" />
+                <div className="idea-art-card idea-art-card-back"><Zap className="h-7 w-7" /></div>
+                <div className="idea-art-card idea-art-card-main">
+                  <span>PRIVATE PREVIEW / 01</span>
+                  <strong>{name}</strong>
+                  <div className="idea-art-line" />
+                  <small>A complete product direction, ready to explore.</small>
+                </div>
+              </div>
+            )}
+            <div className="locked-visual-label"><span>Visual concept</span><strong>Ready to open</strong></div>
+          </section>
+        </div>
       </div>
     </main>
   );

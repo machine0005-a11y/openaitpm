@@ -100,9 +100,33 @@ textarea:focus-visible {
 .idea-pointer { position: absolute; right: 42px; bottom: 80px; width: 42px; height: 42px; filter: drop-shadow(0 4px 10px rgba(0,0,0,.4)); transform: rotate(-12deg); }
 .idea-audience-card { border-radius: 28px; transform: rotate(2deg); }
 
+.locked-preview { --idea-from: #7c3aed; --idea-to: #db2777; position: relative; min-height: 100vh; overflow: hidden; color: white; background: radial-gradient(circle at 75% 15%, color-mix(in srgb, var(--idea-to) 70%, white), transparent 30%), radial-gradient(circle at 0 100%, var(--idea-from), transparent 34%), #090b13; }
+.locked-preview-wrap { position: relative; z-index: 1; max-width: 1380px; min-height: 100vh; margin: 0 auto; padding: 28px 40px 46px; }
+.locked-preview-layout { display: grid; min-height: calc(100vh - 100px); align-items: center; gap: clamp(48px, 8vw, 120px); grid-template-columns: minmax(0, .82fr) minmax(430px, 1.18fr); }
+.locked-preview-copy h1 { max-width: 720px; margin-top: 24px; font-size: clamp(4.2rem, 8vw, 8.5rem); font-weight: 850; line-height: .87; letter-spacing: -.075em; text-wrap: balance; }
+.locked-preview-copy > p:not(.idea-kicker):not(.locked-fine-print):not(.locked-demo) { max-width: 590px; margin-top: 24px; color: rgba(255,255,255,.7); font-size: 1.16rem; line-height: 1.6; }
+.locked-offer-card { display: flex; max-width: 590px; align-items: center; gap: 14px; margin-top: 30px; border: 1px solid rgba(255,255,255,.16); border-radius: 20px; padding: 14px; background: rgba(255,255,255,.08); backdrop-filter: blur(18px); }
+.locked-offer-icon { display: grid; width: 46px; height: 46px; flex: 0 0 auto; place-items: center; border-radius: 14px; background: white; color: #11131a; }
+.locked-offer-card div:nth-child(2) { display: flex; min-width: 0; flex-direction: column; }
+.locked-offer-card span { color: rgba(255,255,255,.55); font-size: .68rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+.locked-offer-card strong { margin-top: 3px; font-size: .95rem; }
+.locked-offer-card .locked-price { margin-left: auto; color: white; font-size: 1rem; letter-spacing: 0; }
+.locked-pay-button { display: flex; width: 100%; max-width: 590px; align-items: center; justify-content: center; gap: 10px; margin-top: 12px; border: 0; border-radius: 20px; padding: 17px 20px; background: white; color: #0a0b10; font-size: 1rem; font-weight: 800; box-shadow: 0 18px 50px rgba(0,0,0,.28); cursor: pointer; transition: transform .2s ease, box-shadow .2s ease; }
+.locked-pay-button:hover { transform: translateY(-3px); box-shadow: 0 24px 60px rgba(0,0,0,.34); }
+.locked-pay-button:disabled { cursor: wait; opacity: .65; }
+.locked-fine-print, .locked-demo { margin-top: 12px; color: rgba(255,255,255,.52); font-size: .72rem; }
+.locked-demo { display: inline-block; border-radius: 999px; padding: 6px 9px; background: rgba(255,255,255,.1); }
+.locked-visual { position: relative; min-height: min(720px, calc(100vh - 150px)); overflow: hidden; border: 1px solid rgba(255,255,255,.2); border-radius: 38px; background: rgba(255,255,255,.08); box-shadow: 0 60px 140px rgba(0,0,0,.46), 0 0 110px color-mix(in srgb, var(--idea-to) 35%, transparent); transform: rotate(2deg); }
+.locked-visual::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgba(6,8,14,.78), transparent 40%); pointer-events: none; }
+.locked-visual-label { position: absolute; z-index: 2; right: 28px; bottom: 28px; left: 28px; display: flex; align-items: end; justify-content: space-between; }
+.locked-visual-label span { color: rgba(255,255,255,.6); font-size: .66rem; font-weight: 800; letter-spacing: .15em; text-transform: uppercase; }
+.locked-visual-label strong { font-size: 1.2rem; }
+
 @media (max-width: 960px) {
   .idea-hero-layout { grid-template-columns: 1fr; padding-top: 70px; }
   .idea-visual-shell { min-height: 460px; transform: none; }
+  .locked-preview-layout { grid-template-columns: 1fr; padding-top: 72px; }
+  .locked-visual { min-height: 540px; transform: none; }
 }
 
 @media (max-width: 620px) {
@@ -113,4 +137,9 @@ textarea:focus-visible {
   .idea-art-card-main { top: 105px; right: 32px; left: 32px; min-height: 190px; padding: 22px; }
   .idea-art-card-back { top: 38px; right: 25px; }
   .idea-visual-caption { right: 18px; bottom: 18px; left: 18px; }
+  .locked-preview-wrap { padding: 22px 20px 30px; }
+  .locked-preview-layout { padding-top: 54px; }
+  .locked-preview-copy h1 { font-size: clamp(3.7rem, 19vw, 5.8rem); }
+  .locked-visual { min-height: 400px; border-radius: 24px; }
+  .locked-visual-label { right: 18px; bottom: 18px; left: 18px; }
 }
