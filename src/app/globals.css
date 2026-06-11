@@ -44,3 +44,73 @@ textarea:focus-visible {
 ::selection {
   background: #bfe8df;
 }
+
+.idea-hero {
+  --idea-from: #7c3aed;
+  --idea-to: #db2777;
+  --idea-glow: rgba(124, 58, 237, .45);
+  position: relative;
+  overflow: hidden;
+  min-height: 720px;
+  color: white;
+  background:
+    radial-gradient(circle at 72% 20%, color-mix(in srgb, var(--idea-to) 76%, white) 0, transparent 30%),
+    radial-gradient(circle at 10% 95%, var(--idea-from) 0, transparent 36%),
+    linear-gradient(135deg, #090b13 0%, color-mix(in srgb, var(--idea-from) 30%, #090b13) 52%, #090b13 100%);
+}
+
+.idea-hero-grid {
+  position: absolute;
+  inset: 0;
+  opacity: .28;
+  background-image: linear-gradient(rgba(255,255,255,.08) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.08) 1px, transparent 1px);
+  background-size: 70px 70px;
+  mask-image: linear-gradient(to bottom, black, transparent 82%);
+}
+
+.idea-brand { display: inline-flex; align-items: center; gap: 10px; color: white; font-size: .8rem; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
+.idea-brand-mark { display: grid; width: 34px; height: 34px; place-items: center; border: 1px solid rgba(255,255,255,.28); border-radius: 50%; background: rgba(255,255,255,.1); backdrop-filter: blur(14px); }
+.idea-hero-layout { display: grid; align-items: center; gap: clamp(40px, 7vw, 100px); min-height: 620px; padding: 54px 0 70px; grid-template-columns: minmax(0, .92fr) minmax(420px, 1.08fr); }
+.idea-hero-copy h1 { max-width: 780px; margin-top: 22px; font-size: clamp(4rem, 8vw, 8.2rem); font-weight: 850; line-height: .88; letter-spacing: -.075em; text-wrap: balance; }
+.idea-hero-copy > p { max-width: 650px; margin-top: 28px; color: rgba(255,255,255,.82); font-size: clamp(1.2rem, 2vw, 1.65rem); font-weight: 500; line-height: 1.45; text-wrap: balance; }
+.idea-kicker, .idea-route { display: inline-flex; align-items: center; gap: 7px; border: 1px solid rgba(255,255,255,.18); border-radius: 999px; padding: 8px 12px; background: rgba(255,255,255,.1); color: rgba(255,255,255,.9); font-size: .7rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; backdrop-filter: blur(14px); }
+.idea-route { color: rgba(255,255,255,.62); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 0; text-transform: none; }
+.idea-primary-cta, .idea-secondary-cta { display: inline-flex; align-items: center; gap: 9px; border-radius: 999px; padding: 14px 20px; font-weight: 800; transition: transform .2s ease, background .2s ease; }
+.idea-primary-cta { background: white; box-shadow: 0 16px 40px rgba(0,0,0,.24); }
+.idea-secondary-cta { border: 1px solid rgba(255,255,255,.22); background: rgba(255,255,255,.08); color: white; backdrop-filter: blur(14px); }
+.idea-primary-cta:hover, .idea-secondary-cta:hover { transform: translateY(-3px); }
+.idea-secondary-cta:hover { background: rgba(255,255,255,.15); }
+
+.idea-visual-shell { position: relative; min-height: 510px; overflow: hidden; border: 1px solid rgba(255,255,255,.22); border-radius: 34px; background: rgba(255,255,255,.08); box-shadow: 0 50px 120px rgba(0,0,0,.38), 0 0 90px var(--idea-glow); transform: rotate(2deg); }
+.idea-visual-shell::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(to top, rgba(5,7,13,.7), transparent 42%); }
+.idea-visual-caption { position: absolute; z-index: 3; right: 24px; bottom: 24px; left: 24px; display: flex; align-items: end; justify-content: space-between; gap: 20px; color: white; }
+.idea-visual-caption span { color: rgba(255,255,255,.62); font-size: .68rem; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
+.idea-visual-caption strong { max-width: 180px; font-size: 1.1rem; line-height: 1.1; text-align: right; }
+.idea-fallback-art { position: absolute; inset: 0; overflow: hidden; background: radial-gradient(circle at 60% 38%, color-mix(in srgb, var(--idea-to) 74%, white), transparent 30%), linear-gradient(145deg, color-mix(in srgb, var(--idea-from) 76%, #0a0d17), #080a10 72%); }
+.idea-orbit { position: absolute; border: 1px solid rgba(255,255,255,.3); border-radius: 50%; }
+.idea-orbit-one { width: 520px; height: 520px; top: -100px; left: -80px; }
+.idea-orbit-two { width: 310px; height: 310px; right: -60px; bottom: 10px; }
+.idea-art-card { position: absolute; border: 1px solid rgba(255,255,255,.25); background: rgba(255,255,255,.12); color: white; box-shadow: 0 24px 70px rgba(0,0,0,.3); backdrop-filter: blur(24px); }
+.idea-art-card-back { top: 80px; right: 55px; display: grid; width: 100px; height: 100px; place-items: center; border-radius: 28px; transform: rotate(12deg); }
+.idea-art-card-main { top: 150px; right: 70px; left: 70px; display: flex; min-height: 235px; flex-direction: column; border-radius: 28px; padding: 28px; transform: rotate(-5deg); }
+.idea-art-card-main span { font-size: .64rem; font-weight: 800; letter-spacing: .16em; opacity: .6; }
+.idea-art-card-main strong { max-width: 360px; margin-top: 20px; font-size: clamp(2rem, 4vw, 3.2rem); line-height: .95; letter-spacing: -.055em; }
+.idea-art-card-main small { max-width: 350px; margin-top: 14px; line-height: 1.4; opacity: .68; }
+.idea-art-line { width: 100%; height: 1px; margin-top: auto; background: rgba(255,255,255,.25); }
+.idea-pointer { position: absolute; right: 42px; bottom: 80px; width: 42px; height: 42px; filter: drop-shadow(0 4px 10px rgba(0,0,0,.4)); transform: rotate(-12deg); }
+.idea-audience-card { border-radius: 28px; transform: rotate(2deg); }
+
+@media (max-width: 960px) {
+  .idea-hero-layout { grid-template-columns: 1fr; padding-top: 70px; }
+  .idea-visual-shell { min-height: 460px; transform: none; }
+}
+
+@media (max-width: 620px) {
+  .idea-hero { min-height: auto; }
+  .idea-hero-layout { min-height: 0; padding: 52px 0 46px; }
+  .idea-hero-copy h1 { font-size: clamp(3.5rem, 18vw, 5.4rem); }
+  .idea-visual-shell { min-height: 370px; border-radius: 24px; }
+  .idea-art-card-main { top: 105px; right: 32px; left: 32px; min-height: 190px; padding: 22px; }
+  .idea-art-card-back { top: 38px; right: 25px; }
+  .idea-visual-caption { right: 18px; bottom: 18px; left: 18px; }
+}

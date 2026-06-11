@@ -23,6 +23,7 @@ export type IdeaPage = {
   secondaryCta: string;
   proofPoints: string[];
   launchChecks: IdeaMilestone[];
+  heroImage?: string | null;
 };
 
 type IdeaFile = Omit<IdeaPage, "route"> & {
@@ -83,7 +84,8 @@ function readIdeaFiles(): IdeaPage[] {
         primaryCta: parsed.primaryCta ?? "Open idea page",
         secondaryCta: parsed.secondaryCta ?? "Review launch plan",
         proofPoints: parsed.proofPoints,
-        launchChecks: parsed.launchChecks
+        launchChecks: parsed.launchChecks,
+        heroImage: parsed.heroImage ?? null
       };
     })
     .sort((first, second) => first.name.localeCompare(second.name));
@@ -115,7 +117,8 @@ function buildGeneratedIdea(slugInput: string): IdeaPage {
       { label: "Generated route", state: "done" },
       { label: "Custom catalog content", state: "active" },
       { label: "Customer-ready proof", state: "next" }
-    ]
+    ],
+    heroImage: null
   };
 }
 

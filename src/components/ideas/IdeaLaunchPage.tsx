@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { ArrowRight, CheckCircle2, CircleDot, Clock3, Sparkles, MessageSquareText } from "lucide-react";
+import Image from "next/image";
+import { ArrowRight, CheckCircle2, CircleDot, Clock3, Sparkles, MessageSquareText, MousePointer2, Orbit, Zap } from "lucide-react";
 import type { IdeaPage, IdeaStatus } from "@/lib/ideas/catalog";
 import { themeFor } from "@/lib/ideas/theme";
 
@@ -27,82 +28,90 @@ type IdeaLaunchPageProps = {
 export function IdeaLaunchPage({ idea, relatedIdeas = [] }: IdeaLaunchPageProps) {
   const t = themeFor(idea.slug);
   const grad = `linear-gradient(135deg, ${t.from} 0%, ${t.to} 100%)`;
+  const heroStyle = { "--idea-from": t.from, "--idea-to": t.to, "--idea-glow": t.glow } as React.CSSProperties;
 
   return (
     <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
-      {/* HERO — full-bleed gradient */}
-      <section className="relative overflow-hidden" style={{ background: grad }}>
-        {/* decorative blobs */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute -right-24 -top-24 h-96 w-96 rounded-full opacity-40 blur-3xl"
-          style={{ background: t.to }}
-        />
-        <div
-          aria-hidden
-          className="pointer-events-none absolute -bottom-32 -left-20 h-96 w-96 rounded-full opacity-30 blur-3xl"
-          style={{ background: t.from }}
-        />
-
-        <div className="relative mx-auto max-w-5xl px-6 py-16 md:py-24">
+      <section className="idea-hero" style={heroStyle}>
+        <div aria-hidden className="idea-hero-grid" />
+        <div className="relative mx-auto max-w-7xl px-6 py-6 md:px-10 md:py-10">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 rounded-full bg-white/20 px-4 py-2 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/30"
+            className="idea-brand"
           >
-            <ArrowRight aria-hidden className="h-4 w-4 rotate-180" />
-            ideamuses.com
+            <span className="idea-brand-mark"><Orbit aria-hidden className="h-4 w-4" /></span>
+            ideamuses
           </Link>
 
-          <div className="mt-8 flex flex-wrap items-center gap-3">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-white/90 px-3 py-1 text-xs font-bold uppercase tracking-wide" style={{ color: t.ink }}>
-              <Sparkles aria-hidden className="h-3.5 w-3.5" />
-              {statusCopy[idea.status]}
-            </span>
-            <span className="rounded-full bg-black/20 px-3 py-1 font-mono text-xs text-white/90">
-              ideamuses.com{idea.route}
-            </span>
-          </div>
+          <div className="idea-hero-layout">
+            <div className="idea-hero-copy">
+              <div className="flex flex-wrap items-center gap-3">
+                <span className="idea-kicker">
+                  <Sparkles aria-hidden className="h-3.5 w-3.5" />
+                  {statusCopy[idea.status]} concept
+                </span>
+                <span className="idea-route">ideamuses.com{idea.route}</span>
+              </div>
+              <h1>{idea.name}</h1>
+              <p>{idea.tagline}</p>
+              <div className="mt-9 flex flex-wrap gap-3">
+                <a href={`sms:${TEXT_NUMBER_TEL}`} className="idea-primary-cta" style={{ color: t.ink }}>
+                  <MessageSquareText aria-hidden className="h-5 w-5" />
+                  {idea.primaryCta}
+                </a>
+                <a href="#proof" className="idea-secondary-cta">
+                  {idea.secondaryCta}
+                  <ArrowRight aria-hidden className="h-5 w-5" />
+                </a>
+              </div>
+            </div>
 
-          <h1 className="mt-6 max-w-4xl text-5xl font-black leading-[1.05] tracking-tight text-white drop-shadow-sm md:text-7xl">
-            {idea.name}
-          </h1>
-          <p className="mt-6 max-w-2xl text-xl font-medium leading-8 text-white/95 md:text-2xl">
-            {idea.tagline}
-          </p>
-
-          <div className="mt-10 flex flex-wrap gap-3">
-            <a
-              href={`sms:${TEXT_NUMBER_TEL}`}
-              className="inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3.5 text-base font-bold shadow-lg transition hover:-translate-y-0.5"
-              style={{ color: t.ink }}
-            >
-              <MessageSquareText aria-hidden className="h-5 w-5" />
-              {idea.primaryCta}
-            </a>
-            <a
-              href="#proof"
-              className="inline-flex items-center gap-2 rounded-xl border border-white/40 bg-white/10 px-6 py-3.5 text-base font-bold text-white backdrop-blur-sm transition hover:bg-white/20"
-            >
-              {idea.secondaryCta}
-              <ArrowRight aria-hidden className="h-5 w-5" />
-            </a>
+            <div className="idea-visual-shell">
+              {idea.heroImage ? (
+                <Image
+                  src={idea.heroImage}
+                  alt={`Visual concept for ${idea.name}`}
+                  fill
+                  priority
+                  sizes="(max-width: 900px) 100vw, 50vw"
+                  className="object-cover"
+                />
+              ) : (
+                <div className="idea-fallback-art" aria-label={`Visual concept for ${idea.name}`}>
+                  <div className="idea-orbit idea-orbit-one" />
+                  <div className="idea-orbit idea-orbit-two" />
+                  <div className="idea-art-card idea-art-card-back"><Zap className="h-7 w-7" /></div>
+                  <div className="idea-art-card idea-art-card-main">
+                    <span>01 / CONCEPT</span>
+                    <strong>{idea.name}</strong>
+                    <div className="idea-art-line" />
+                    <small>{idea.tagline}</small>
+                  </div>
+                  <MousePointer2 className="idea-pointer" />
+                </div>
+              )}
+              <div className="idea-visual-caption">
+                <span>Visual prototype</span>
+                <strong>Built from one text</strong>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* THESIS */}
-      <section className="mx-auto max-w-5xl px-6 py-16">
-        <div className="grid gap-8 lg:grid-cols-[1.3fr_0.7fr]">
+      <section className="mx-auto max-w-6xl px-6 py-20">
+        <div className="grid gap-10 lg:grid-cols-[1.35fr_0.65fr]">
           <div>
             <h2 className="text-sm font-bold uppercase tracking-widest" style={{ color: t.from }}>
               The idea
             </h2>
-            <p className="mt-4 text-2xl font-medium leading-9 text-[var(--foreground)]">
+            <p className="mt-5 max-w-3xl text-2xl font-medium leading-10 text-[var(--foreground)] md:text-3xl">
               {idea.thesis}
             </p>
           </div>
           <div
-            className="self-start rounded-2xl p-6 text-white shadow-xl"
+            className="idea-audience-card self-start p-7 text-white"
             style={{ background: grad, boxShadow: `0 20px 40px -12px ${t.glow}` }}
           >
             <h3 className="text-xs font-bold uppercase tracking-widest text-white/80">Who it&rsquo;s for</h3>
@@ -113,7 +122,7 @@ export function IdeaLaunchPage({ idea, relatedIdeas = [] }: IdeaLaunchPageProps)
 
       {/* PROOF POINTS — big colorful cards */}
       <section id="proof" className="border-y border-[var(--line)] bg-[var(--panel)]">
-        <div className="mx-auto max-w-5xl px-6 py-16">
+        <div className="mx-auto max-w-6xl px-6 py-20">
           <h2 className="text-center text-3xl font-black tracking-tight">Why it works</h2>
           <div className="mt-10 grid gap-5 md:grid-cols-3">
             {idea.proofPoints.map((point, i) => (
@@ -142,7 +151,7 @@ export function IdeaLaunchPage({ idea, relatedIdeas = [] }: IdeaLaunchPageProps)
       </section>
 
       {/* ROADMAP */}
-      <section className="mx-auto max-w-5xl px-6 py-16">
+      <section className="mx-auto max-w-6xl px-6 py-20">
         <h2 className="text-3xl font-black tracking-tight">What&rsquo;s next</h2>
         <div className="mt-8 grid gap-4">
           {idea.launchChecks.map((check) => {
