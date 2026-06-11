@@ -1,0 +1,31 @@
+{
+  "slug": "a-quiet-hours-mode-that-auto-mutes-group-chats-during-dinner",
+  "name": "A Quiet Hours Mode That Auto Mutes Group Chats During Dinner",
+  "status": "preview",
+  "tagline": "A Quiet Hours Mode That Auto Mutes Group Chats During Dinner — a quiet-hours mode that auto-mutes group chat",
+  "thesis": "A Quiet Hours Mode That Auto Mutes Group Chats During Dinner turns \"a quiet-hours mode that auto-mutes group chats during dinner\" into a working product. The first user gets a focused tool that nails the core job on day one, with a clear path from prototype to production.",
+  "audience": "Early adopters who feel this pain today and want a tool that already works.",
+  "sourceBranch": "idea/a-quiet-hours-mode-that-auto-mutes-group-chats-during-dinner",
+  "repoPath": "src/content/ideas/a-quiet-hours-mode-that-auto-mutes-group-chats-during-dinner.json",
+  "primaryCta": "Try it now",
+  "secondaryCta": "See how it works",
+  "proofPoints": [
+    "A working prototype exists the moment you text the idea.",
+    "Every page ships with a concrete next milestone, not a maybe.",
+    "Built and served automatically, end to end, with no manual steps."
+  ],
+  "launchChecks": [
+    {
+      "label": "Idea page generated",
+      "state": "done"
+    },
+    {
+      "label": "Validate with first 10 real users",
+      "state": "active"
+    },
+    {
+      "label": "Add the most-requested integration",
+      "state": "next"
+    }
+  ]
+}
