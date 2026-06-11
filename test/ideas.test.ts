@@ -81,7 +81,7 @@ describe("OpenAITPM idea routing", () => {
     expect(output).toContain("https://openaitpm.com/aitpm-family-project-room");
   });
 
-  it("audits launch readiness and reports missing external setup", () => {
+  it("audits launch readiness for the connected repository", () => {
     const output = execFileSync("node", ["scripts/launch-audit.mjs", "--json"]).toString();
     const report = JSON.parse(output) as {
       ready: boolean;
@@ -98,8 +98,8 @@ describe("OpenAITPM idea routing", () => {
     expect(byId.get("vercel-deploy-workflow")).toMatchObject({ status: "pass" });
     expect(byId.get("launch-checklist")).toMatchObject({ status: "pass" });
     expect(byId.get("github-connect-helper")).toMatchObject({ status: "pass" });
-    expect(byId.get("git-origin")).toMatchObject({ status: "fail" });
-    expect(report.ready).toBe(false);
+    expect(byId.get("git-origin")).toMatchObject({ status: "pass" });
+    expect(report.ready).toBe(true);
   });
 
   it("dry-runs GitHub remote connection helper", () => {

@@ -86,7 +86,9 @@ function ensureRepoUrl(value) {
 }
 
 function connectOrigin(value) {
-  const existingOrigin = safeGit(["remote", "get-url", "origin"]);
+  // A dry run demonstrates first-time bootstrap steps regardless of the
+  // current checkout's remote configuration.
+  const existingOrigin = dryRun ? "" : safeGit(["remote", "get-url", "origin"]);
 
   if (existingOrigin && existingOrigin !== value && !replace) {
     console.error(`origin is already set to ${existingOrigin}`);

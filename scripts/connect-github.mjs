@@ -50,7 +50,9 @@ if (!repoUrl.includes("github.com") || !repoUrl.endsWith(".git")) {
 
 const currentBranch = safeGit(["branch", "--show-current"]);
 const latestCommit = safeGit(["rev-parse", "--short", "HEAD"]);
-const existingOrigin = safeGit(["remote", "get-url", "origin"]);
+// A dry run demonstrates the first-time connection flow without being coupled
+// to the current checkout's already-configured remote.
+const existingOrigin = dryRun ? "" : safeGit(["remote", "get-url", "origin"]);
 
 if (!latestCommit) {
   console.error("No local commit exists yet. Commit the launchpad before connecting GitHub.");

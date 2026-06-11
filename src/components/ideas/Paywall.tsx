@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { Lock, Sparkles } from "lucide-react";
 
 type PaywallProps = {
@@ -99,9 +100,9 @@ export function Paywall({ slug, name, theme, priceLabel, demo }: PaywallProps) {
 
         {error ? <p className="mt-3 text-sm font-semibold text-white">{error}</p> : null}
 
-        <a href="/" className="mt-10 text-sm font-semibold text-white/80 underline-offset-4 hover:underline">
+        <Link href="/" className="mt-10 text-sm font-semibold text-white/80 underline-offset-4 hover:underline">
           ← ideamuses.com
-        </a>
+        </Link>
       </div>
     </main>
   );
