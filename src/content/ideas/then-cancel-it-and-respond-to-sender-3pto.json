@@ -1,0 +1,32 @@
+{
+  "slug": "then-cancel-it-and-respond-to-sender-3pto",
+  "name": "Then Cancel It And Respond To Sender",
+  "status": "preview",
+  "tagline": "Then Cancel It And Respond To Sender — Then cancel it and respond to sender",
+  "thesis": "Then Cancel It And Respond To Sender turns \"Then cancel it and respond to sender\" into a working product. The first user gets a focused tool that nails the core job on day one, with a clear path from prototype to production.",
+  "audience": "Early adopters who feel this pain today and want a tool that already works.",
+  "sourceBranch": "idea/then-cancel-it-and-respond-to-sender-3pto",
+  "repoPath": "src/content/ideas/then-cancel-it-and-respond-to-sender-3pto.json",
+  "primaryCta": "Try it now",
+  "secondaryCta": "See how it works",
+  "proofPoints": [
+    "A working prototype exists the moment you text the idea.",
+    "Every page ships with a concrete next milestone, not a maybe.",
+    "Built and served automatically, end to end, with no manual steps."
+  ],
+  "heroImage": null,
+  "launchChecks": [
+    {
+      "label": "Idea page generated",
+      "state": "done"
+    },
+    {
+      "label": "Validate with first 10 real users",
+      "state": "active"
+    },
+    {
+      "label": "Add the most-requested integration",
+      "state": "next"
+    }
+  ]
+}
