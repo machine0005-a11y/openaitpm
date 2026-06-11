@@ -1,0 +1,31 @@
+{
+  "slug": "christina",
+  "name": "Christina",
+  "status": "live",
+  "tagline": "Hospitality that feels like home.",
+  "thesis": "Christina turns lived experience across cultures, family, restaurants, and customer service into practical guidance that helps every guest feel welcome.",
+  "audience": "Restaurants, service teams, hosts, and customers seeking a warmer human experience.",
+  "sourceBranch": "idea/christina",
+  "repoPath": "src/content/ideas/christina.json",
+  "primaryCta": "Ask Christina",
+  "secondaryCta": "Discover her approach",
+  "proofPoints": [
+    "Optional voice input makes it natural to bring a real customer-service moment.",
+    "Practical guidance focuses on the feeling each service choice creates.",
+    "Christina's story can grow through truthful updates without invented biography."
+  ],
+  "launchChecks": [
+    {
+      "label": "Voice-led prototype generated",
+      "state": "done"
+    },
+    {
+      "label": "Christina reviews and adds her own stories",
+      "state": "active"
+    },
+    {
+      "label": "Validate with hospitality teams and guests",
+      "state": "next"
+    }
+  ]
+}
