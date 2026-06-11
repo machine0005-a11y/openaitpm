@@ -306,6 +306,79 @@
       transform: scale(1);
     }
 
+    .provider-player {
+      background: var(--surface);
+      border-radius: 8px;
+      padding: 10px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
+    }
+
+    .provider-player[hidden] {
+      display: none;
+    }
+
+    .provider-mount {
+      min-height: 152px;
+      overflow: hidden;
+      border-radius: 8px;
+      background: #101214;
+      display: grid;
+      place-items: center;
+    }
+
+    .provider-mount.youtube {
+      min-height: 200px;
+      aspect-ratio: 16 / 9;
+    }
+
+    .provider-mount iframe {
+      display: block;
+      width: 100%;
+      height: 100%;
+      min-height: 152px;
+      border: 0;
+    }
+
+    .provider-mount.youtube iframe {
+      min-height: 200px;
+    }
+
+    .provider-bar {
+      min-height: 38px;
+      margin-top: 8px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .provider-label {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 750;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .provider-open {
+      min-height: 36px;
+      padding: 0 12px;
+      border-radius: 8px;
+      background: var(--ink);
+      color: var(--surface);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 850;
+      display: inline-grid;
+      place-items: center;
+    }
+
+    body.provider-active .arena {
+      min-height: clamp(270px, 40svh, 390px);
+    }
+
     .controls {
       background: var(--surface);
       border-radius: 8px;
@@ -584,6 +657,14 @@
       <div class="feedback" id="feedback">Perfect</div>
     </section>
 
+    <section class="provider-player" id="providerPlayer" aria-label="Music player" hidden>
+      <div class="provider-mount" id="providerMount"></div>
+      <div class="provider-bar">
+        <div class="provider-label" id="providerLabel"></div>
+        <a class="provider-open" id="providerOpen" href="#" target="_blank" rel="noopener">Open app</a>
+      </div>
+    </section>
+
     <section class="controls" aria-label="Transport">
       <div class="progress" aria-hidden="true"><span id="progress"></span></div>
       <div class="transport-row">
@@ -629,7 +710,7 @@
           <span class="source-mark" aria-hidden="true"></span>
           <span>
             <span class="source-title">Paste link</span>
-            <span class="source-sub">Spotify, YouTube, or YouTube Music</span>
+            <span class="source-sub">Spotify, YouTube, YouTube Music, or Apple Music</span>
           </span>
         </button>
       </div>
@@ -665,6 +746,8 @@
       startedAt: 0,
       pausedAt: 0,
       running: false,
+      playbackType: "demo",
+      linkedItem: null,
       events: [],
       hitIds: new Set(),
       missedIds: new Set(),
@@ -689,6 +772,10 @@
       status: document.getElementById("status"),
       playButton: document.getElementById("playButton"),
       restartButton: document.getElementById("restartButton"),
+      providerPlayer: document.getElementById("providerPlayer"),
+      providerMount: document.getElementById("providerMount"),
+      providerLabel: document.getElementById("providerLabel"),
+      providerOpen: document.getElementById("providerOpen"),
       drawer: document.getElementById("drawer"),
       linkForm: document.getElementById("linkForm"),
       linkInput: document.getElementById("linkInput"),
@@ -696,6 +783,11 @@
       fileInput: document.getElementById("fileInput"),
       audio: document.getElementById("audio")
     };
+
+    let youtubeApiPromise = null;
+    let youtubePlayer = null;
+    let spotifyApiPromise = null;
+    let spotifyController = null;
 
     function generateBeatmap(bpm, duration, seed) {
       const interval = 60 / bpm;
@@ -757,21 +849,25 @@
       }
     }
 
-    function start() {
+    function start(controlProvider = true) {
       if (state.running) return;
       state.running = true;
       state.startedAt = performance.now() - state.pausedAt * 1000;
-      els.audio.play().catch(() => {});
+      if (state.playbackType === "local") {
+        els.audio.play().catch(() => {});
+      }
+      if (controlProvider) playProvider();
       setPlayIcon(true);
       loop();
     }
 
-    function pause() {
+    function pause(controlProvider = true) {
       if (!state.running) return;
       state.pausedAt = clock();
       state.running = false;
       cancelAnimationFrame(state.raf);
       els.audio.pause();
+      if (controlProvider) pauseProvider();
       setPlayIcon(false);
       render();
     }
@@ -786,8 +882,203 @@
       state.hitIds = new Set();
       state.missedIds = new Set();
       els.audio.currentTime = 0;
+      restartProvider();
       renderStats();
       render();
+    }
+
+    function syncProviderPosition(position, duration, isPaused) {
+      if (Number.isFinite(duration) && duration > 1 && Math.abs(duration - state.duration) > 1) {
+        state.duration = duration;
+        state.events = generateBeatmap(state.bpm, state.duration, state.linkedItem?.seed || 19);
+      }
+
+      if (Number.isFinite(position) && position >= 0) {
+        state.pausedAt = Math.min(position, state.duration);
+        if (state.running) {
+          state.startedAt = performance.now() - state.pausedAt * 1000;
+        }
+      }
+
+      if (isPaused === false && !state.running) start(false);
+      if (isPaused === true && state.running) pause(false);
+    }
+
+    function playProvider() {
+      if (state.playbackType === "youtube" && youtubePlayer?.playVideo) {
+        youtubePlayer.playVideo();
+      }
+      if (state.playbackType === "spotify" && spotifyController?.resume) {
+        spotifyController.resume();
+      }
+    }
+
+    function pauseProvider() {
+      if (state.playbackType === "youtube" && youtubePlayer?.pauseVideo) {
+        youtubePlayer.pauseVideo();
+      }
+      if (state.playbackType === "spotify" && spotifyController?.pause) {
+        spotifyController.pause();
+      }
+    }
+
+    function restartProvider() {
+      if (state.playbackType === "youtube" && youtubePlayer?.seekTo) {
+        youtubePlayer.seekTo(0, true);
+        youtubePlayer.pauseVideo();
+      }
+      if (state.playbackType === "spotify" && spotifyController?.restart) {
+        spotifyController.restart();
+        spotifyController.pause();
+      }
+    }
+
+    function clearProvider() {
+      if (youtubePlayer?.destroy) youtubePlayer.destroy();
+      if (spotifyController?.destroy) spotifyController.destroy();
+      youtubePlayer = null;
+      spotifyController = null;
+      els.providerMount.innerHTML = "";
+      els.providerMount.className = "provider-mount";
+      els.providerPlayer.hidden = true;
+      document.body.classList.remove("provider-active");
+    }
+
+    function showProvider(item, mountClass) {
+      els.providerPlayer.hidden = false;
+      els.providerMount.className = `provider-mount ${mountClass || ""}`.trim();
+      els.providerLabel.textContent = `${item.provider} ${item.kind}`;
+      els.providerOpen.href = item.originalUrl;
+      document.body.classList.add("provider-active");
+    }
+
+    function ensureYouTubeApi() {
+      if (window.YT?.Player) return Promise.resolve(window.YT);
+      if (youtubeApiPromise) return youtubeApiPromise;
+      youtubeApiPromise = new Promise((resolve, reject) => {
+        const timeout = window.setTimeout(() => reject(new Error("YouTube player timed out.")), 12000);
+        window.onYouTubeIframeAPIReady = () => {
+          window.clearTimeout(timeout);
+          resolve(window.YT);
+        };
+        const script = document.createElement("script");
+        script.src = "https://www.youtube.com/iframe_api";
+        script.async = true;
+        script.onerror = () => {
+          window.clearTimeout(timeout);
+          reject(new Error("YouTube player could not load."));
+        };
+        document.head.appendChild(script);
+      });
+      return youtubeApiPromise;
+    }
+
+    async function mountYouTube(item) {
+      showProvider(item, "youtube");
+      els.providerMount.innerHTML = '<div id="youtubePlayerMount"></div>';
+      try {
+        const YT = await ensureYouTubeApi();
+        if (state.linkedItem !== item) return;
+        youtubePlayer = new YT.Player("youtubePlayerMount", {
+          width: "100%",
+          height: "100%",
+          videoId: item.videoId || "",
+          playerVars: {
+            playsinline: 1,
+            controls: 1,
+            rel: 0,
+            origin: window.location.origin,
+            ...(item.playlistId ? { listType: "playlist", list: item.playlistId } : {})
+          },
+          events: {
+            onReady: event => {
+              const duration = event.target.getDuration();
+              syncProviderPosition(0, duration, true);
+              els.status.textContent = `${item.provider} player ready`;
+              if (state.running) event.target.playVideo();
+            },
+            onStateChange: event => {
+              if (event.data === YT.PlayerState.PLAYING) {
+                syncProviderPosition(event.target.getCurrentTime(), event.target.getDuration(), false);
+              } else if (event.data === YT.PlayerState.PAUSED || event.data === YT.PlayerState.ENDED) {
+                syncProviderPosition(event.target.getCurrentTime(), event.target.getDuration(), true);
+              }
+            },
+            onError: () => {
+              els.status.textContent = "YouTube blocked this embed - open it in YouTube";
+            }
+          }
+        });
+      } catch (error) {
+        els.status.textContent = error.message;
+      }
+    }
+
+    function ensureSpotifyApi() {
+      if (spotifyApiPromise) return spotifyApiPromise;
+      spotifyApiPromise = new Promise((resolve, reject) => {
+        const timeout = window.setTimeout(() => reject(new Error("Spotify player timed out.")), 12000);
+        window.onSpotifyIframeApiReady = api => {
+          window.clearTimeout(timeout);
+          resolve(api);
+        };
+        const script = document.createElement("script");
+        script.src = "https://open.spotify.com/embed/iframe-api/v1";
+        script.async = true;
+        script.onerror = () => {
+          window.clearTimeout(timeout);
+          reject(new Error("Spotify player could not load."));
+        };
+        document.head.appendChild(script);
+      });
+      return spotifyApiPromise;
+    }
+
+    async function mountSpotify(item) {
+      showProvider(item, "spotify");
+      els.providerMount.innerHTML = '<div id="spotifyPlayerMount"></div>';
+      try {
+        const IFrameAPI = await ensureSpotifyApi();
+        if (state.linkedItem !== item) return;
+        IFrameAPI.createController(
+          document.getElementById("spotifyPlayerMount"),
+          { uri: item.spotifyUri, width: "100%", height: 152 },
+          controller => {
+            if (state.linkedItem !== item) {
+              controller.destroy();
+              return;
+            }
+            spotifyController = controller;
+            controller.addListener("ready", () => {
+              els.status.textContent = "Spotify player ready";
+              if (state.running) controller.resume();
+            });
+            controller.addListener("playback_update", event => {
+              const update = event.data;
+              syncProviderPosition(update.position / 1000, update.duration / 1000, update.isPaused);
+            });
+          }
+        );
+      } catch (error) {
+        els.status.textContent = error.message;
+      }
+    }
+
+    function mountAppleMusic(item) {
+      showProvider(item, "apple");
+      const iframe = document.createElement("iframe");
+      iframe.src = item.embedUrl;
+      iframe.title = "Apple Music player";
+      iframe.allow = "autoplay *; encrypted-media *; fullscreen *";
+      iframe.loading = "eager";
+      els.providerMount.replaceChildren(iframe);
+      els.status.textContent = "Apple Music player ready";
+    }
+
+    function mountLinkedProvider(item) {
+      if (item.flavor === "spotify") return mountSpotify(item);
+      if (item.flavor === "apple") return mountAppleMusic(item);
+      return mountYouTube(item);
     }
 
     function tap(lane) {
@@ -925,11 +1216,14 @@
 
     function loadDemo() {
       restart();
+      clearProvider();
       state.trackTitle = "Neon Pocket";
       state.artist = "FingerTapper";
       state.source = "Demo";
       state.bpm = 124;
       state.duration = 96;
+      state.playbackType = "demo";
+      state.linkedItem = null;
       state.events = generateBeatmap(state.bpm, state.duration, 19);
       els.audio.removeAttribute("src");
       els.status.textContent = "124 BPM - generated preview";
@@ -940,6 +1234,7 @@
     function loadLocalFile(file) {
       if (!file) return;
       restart();
+      clearProvider();
       const url = URL.createObjectURL(file);
       els.audio.src = url;
       els.audio.onloadedmetadata = () => {
@@ -949,6 +1244,8 @@
         state.trackTitle = file.name.replace(/\.[^.]+$/, "");
         state.artist = "Local File";
         state.source = "Browser";
+        state.playbackType = "local";
+        state.linkedItem = null;
         state.events = generateBeatmap(state.bpm, state.duration, seed);
         els.status.textContent = `${state.bpm} BPM - local preview`;
         closeDrawer();
@@ -965,7 +1262,11 @@
 
       const spotifyUri = value.match(/^spotify:(track|playlist|album):([A-Za-z0-9]+)$/i);
       if (spotifyUri) {
-        return linkedItem("Spotify", spotifyUri[1], spotifyUri[2], "spotify");
+        const [, kind, id] = spotifyUri;
+        return linkedItem("Spotify", kind, id, "spotify", {
+          originalUrl: `https://open.spotify.com/${kind}/${id}`,
+          spotifyUri: `spotify:${kind}:${id}`
+        });
       }
 
       let url;
@@ -979,14 +1280,21 @@
       const pathParts = url.pathname.split("/").filter(Boolean);
 
       if (host === "open.spotify.com") {
-        const [kind, id] = pathParts;
+        const spotifyParts = pathParts[0]?.startsWith("intl-") ? pathParts.slice(1) : pathParts;
+        const [kind, id] = spotifyParts;
         if (["track", "playlist", "album"].includes(kind) && id) {
-          return linkedItem("Spotify", kind, id, "spotify");
+          return linkedItem("Spotify", kind, id, "spotify", {
+            originalUrl: value,
+            spotifyUri: `spotify:${kind}:${id}`
+          });
         }
       }
 
       if (host === "youtu.be" && pathParts[0]) {
-        return linkedItem("YouTube", "video", pathParts[0], "youtube");
+        return linkedItem("YouTube", "video", pathParts[0], "youtube", {
+          originalUrl: value,
+          videoId: pathParts[0]
+        });
       }
 
       if (host === "youtube.com" || host === "m.youtube.com" || host === "music.youtube.com") {
@@ -997,26 +1305,53 @@
         const isRadioMix = playlistId && (playlistId.startsWith("RD") || url.searchParams.get("start_radio") === "1");
 
         if (playlistId && pathParts[0] === "playlist") {
-          return linkedItem(provider, "playlist", playlistId, flavor);
+          return linkedItem(provider, "playlist", playlistId, flavor, {
+            originalUrl: value,
+            playlistId
+          });
         }
 
         if (isRadioMix) {
-          return linkedItem(provider, "mix", playlistId, flavor);
+          return linkedItem(provider, "mix", playlistId, flavor, {
+            originalUrl: value,
+            playlistId,
+            videoId
+          });
         }
 
         if (videoId) {
-          return linkedItem(provider, "video", videoId, flavor);
+          return linkedItem(provider, "video", videoId, flavor, {
+            originalUrl: value,
+            videoId,
+            playlistId
+          });
         }
 
         if (playlistId) {
-          return linkedItem(provider, "playlist", playlistId, flavor);
+          return linkedItem(provider, "playlist", playlistId, flavor, {
+            originalUrl: value,
+            playlistId
+          });
         }
       }
 
-      throw new Error("Supported links: Spotify tracks/playlists/albums and YouTube videos/playlists.");
+      if (host === "music.apple.com" || host === "embed.music.apple.com") {
+        const kind = pathParts.find(part => ["album", "playlist", "song"].includes(part)) || "music";
+        const id = url.searchParams.get("i") || pathParts[pathParts.length - 1];
+        if (id) {
+          const embedUrl = new URL(value);
+          embedUrl.hostname = "embed.music.apple.com";
+          return linkedItem("Apple Music", kind, id, "apple", {
+            originalUrl: value,
+            embedUrl: embedUrl.toString()
+          });
+        }
+      }
+
+      throw new Error("Supported links: Spotify, YouTube, YouTube Music, and Apple Music.");
     }
 
-    function linkedItem(provider, kind, id, flavor) {
+    function linkedItem(provider, kind, id, flavor, playback = {}) {
       const normalizedKind = kind === "track" ? "song" : kind;
       const titleKind = normalizedKind === "mix" ? "mix" : normalizedKind;
       const title = `${provider} ${titleKind}`;
@@ -1030,21 +1365,26 @@
         title,
         bpm: bpmChoices[seed % bpmChoices.length],
         duration: ["playlist", "mix"].includes(normalizedKind) ? 128 : 92,
-        seed
+        seed,
+        ...playback
       };
     }
 
     function loadLinkedItem(item) {
       restart();
+      clearProvider();
       state.trackTitle = item.title;
       state.artist = ["playlist", "mix"].includes(item.kind) ? "Imported playlist" : "Imported song";
       state.source = item.provider;
       state.bpm = item.bpm;
       state.duration = item.duration;
+      state.playbackType = item.flavor === "spotify" ? "spotify" : item.flavor === "apple" ? "apple" : "youtube";
+      state.linkedItem = item;
       state.events = generateBeatmap(item.bpm, item.duration, item.seed);
       els.audio.removeAttribute("src");
-      els.status.textContent = `${item.provider} ${item.kind} - generated beatmap`;
-      els.linkHint.textContent = `${item.provider} link added`;
+      els.status.textContent = `Loading ${item.provider} player`;
+      els.linkHint.textContent = `${item.provider} player added`;
+      mountLinkedProvider(item);
       closeDrawer();
       render();
     }
@@ -1066,8 +1406,8 @@
     document.getElementById("demoSource").addEventListener("click", loadDemo);
     document.getElementById("localSource").addEventListener("click", () => els.fileInput.click());
     document.getElementById("appleSource").addEventListener("click", () => {
-      els.status.textContent = "Apple Music connects in the native iOS project";
-      closeDrawer();
+      els.linkInput.placeholder = "https://music.apple.com/...";
+      els.linkInput.focus();
     });
     document.getElementById("pasteSource").addEventListener("click", () => {
       els.linkInput.focus();
