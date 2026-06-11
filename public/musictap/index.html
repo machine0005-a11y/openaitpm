@@ -704,7 +704,7 @@
           <span class="source-mark" aria-hidden="true"></span>
           <span>
             <span class="source-title">Apple Music</span>
-            <span class="source-sub">Native iOS build connects with MusicKit</span>
+            <span class="source-sub">Songs, albums, and playlists</span>
           </span>
         </button>
         <button class="source" id="pasteSource">
@@ -1050,6 +1050,7 @@
               return;
             }
             spotifyController = controller;
+            els.status.textContent = "Spotify player ready";
             controller.addListener("ready", () => {
               els.status.textContent = "Spotify player ready";
               if (state.running) controller.resume();
