@@ -1,0 +1,31 @@
+{
+  "slug": "skill-soul-marketplace",
+  "name": "Humanware",
+  "status": "live",
+  "tagline": "Great agents need great humans.",
+  "thesis": "Humanware is a consent-first marketplace where real people publish licensed SKILL.md expertise and optional SOUL.md interaction principles, let teams test bounded versions, and provide creator-approved updates through a subscription relationship.",
+  "audience": "Agent builders seeking trusted human expertise and creators with a repeatable craft worth licensing.",
+  "sourceBranch": "idea/skill-soul-marketplace",
+  "repoPath": "src/content/ideas/skill-soul-marketplace.json",
+  "primaryCta": "Explore marketplace",
+  "secondaryCta": "Become a creator",
+  "proofPoints": [
+    "Every listing stays connected to a verified human source, license, consent scope, and version history.",
+    "Teams can preview and test a bounded version before introducing it to their agent systems.",
+    "Creators approve updates, retain credit, and can define prohibited uses or revoke future distribution."
+  ],
+  "launchChecks": [
+    {
+      "label": "Consent-first marketplace prototype generated",
+      "state": "done"
+    },
+    {
+      "label": "Validate creator licensing and update controls",
+      "state": "active"
+    },
+    {
+      "label": "Pilot sandbox trials with agent builders",
+      "state": "next"
+    }
+  ]
+}
