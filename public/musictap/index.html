@@ -1010,6 +1010,7 @@
             }
           }
         });
+        els.status.textContent = `${item.provider} player connected`;
       } catch (error) {
         els.status.textContent = error.message;
       }
