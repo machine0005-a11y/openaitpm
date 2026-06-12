@@ -833,7 +833,7 @@
               <span class="provider-state" id="spotifyState">Paste links</span>
             </span>
           </button>
-          <button class="connect-button" type="button" data-connect-provider="spotify">Sign in</button>
+          <button class="connect-button" type="button" data-connect-provider="spotify">Open</button>
         </div>
         <div class="provider-option" data-provider="youtube">
           <button class="provider-main" type="button" data-select-provider="youtube" aria-label="Use YouTube Music">
@@ -843,7 +843,7 @@
               <span class="provider-state" id="youtubeState">Paste links</span>
             </span>
           </button>
-          <button class="connect-button" type="button" data-connect-provider="youtube">Sign in</button>
+          <button class="connect-button" type="button" data-connect-provider="youtube">Open</button>
         </div>
         <div class="provider-option" data-provider="apple">
           <button class="provider-main" type="button" data-select-provider="apple" aria-label="Use Apple Music">
@@ -853,7 +853,7 @@
               <span class="provider-state" id="appleState">Paste links</span>
             </span>
           </button>
-          <button class="connect-button" type="button" data-connect-provider="apple">Sign in</button>
+          <button class="connect-button" type="button" data-connect-provider="apple">Open</button>
         </div>
       </div>
       <form class="paste-panel" id="linkForm">
@@ -1029,8 +1029,8 @@
           ? "Connected - search ready"
           : status.configured
             ? "Connect to search"
-            : "Sign in, then paste a link";
-        button.textContent = status.connected ? "Connected" : status.configured ? "Connect" : "Sign in";
+            : "Open service, then paste a link";
+        button.textContent = status.connected ? "Connected" : status.configured ? "Connect" : "Open";
         button.classList.toggle("connected", status.connected);
       });
     }
@@ -1063,7 +1063,7 @@
           return;
         }
         window.open(providerDetails[provider].fallbackUrl, "_blank", "noopener");
-        els.linkHint.textContent = `Sign in to ${providerDetails[provider].label}, then paste a song link`;
+        els.linkHint.textContent = `Open ${providerDetails[provider].label}, then paste a song link`;
       } catch (error) {
         els.linkHint.textContent = error.message;
       }

@@ -1,12 +1,12 @@
 # MusicTap provider setup
 
-MusicTap continues to accept shared provider links with no credentials. Account-connected search requires the environment variables below.
+MusicTap continues to accept shared provider links with no credentials. Account-connected search requires the GitHub Actions repository secrets below. The production workflow forwards configured secrets to Vercel automatically.
 
 ## Spotify
 
 1. Create a Spotify developer app.
 2. Add `https://www.ideamuses.com/musictap` as an exact redirect URI.
-3. Set `SPOTIFY_CLIENT_ID` in Vercel.
+3. Add `SPOTIFY_CLIENT_ID` as a GitHub Actions repository secret.
 
 MusicTap uses Spotify's Authorization Code with PKCE flow. It does not require a client secret.
 
@@ -15,7 +15,7 @@ MusicTap uses Spotify's Authorization Code with PKCE flow. It does not require a
 1. Create a Google OAuth web client.
 2. Enable YouTube Data API v3 for the project.
 3. Add `https://www.ideamuses.com` as an authorized JavaScript origin.
-4. Set `GOOGLE_OAUTH_CLIENT_ID` in Vercel.
+4. Add `GOOGLE_OAUTH_CLIENT_ID` as a GitHub Actions repository secret.
 
 MusicTap uses the YouTube Data API for music-video search and the YouTube IFrame Player API for playback.
 
@@ -23,7 +23,7 @@ MusicTap uses the YouTube Data API for music-video search and the YouTube IFrame
 
 1. Create a MusicKit identifier and private key in Apple Developer.
 2. Generate a MusicKit developer token.
-3. Set `APPLE_MUSIC_DEVELOPER_TOKEN` and optionally `APPLE_MUSIC_STOREFRONT` in Vercel.
+3. Add `APPLE_MUSIC_DEVELOPER_TOKEN` and optionally `APPLE_MUSIC_STOREFRONT` as GitHub Actions repository secrets.
 
 MusicKit developer tokens expire and must be rotated before expiration.
 

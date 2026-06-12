@@ -145,13 +145,17 @@ describe("MusicTap connected picker", () => {
     dom.window.close();
   });
 
-  it("opens provider-owned sign-in when app credentials are unavailable", async () => {
+  it("opens the provider when app credentials are unavailable", async () => {
     const dom = createMusicTapDom();
     await flushDom();
     const document = dom.window.document;
 
     document.getElementById("addButton")?.click();
-    (document.querySelector('[data-connect-provider="spotify"]') as HTMLButtonElement).click();
+    const providerButton = document.querySelector(
+      '[data-connect-provider="spotify"]'
+    ) as HTMLButtonElement;
+    expect(providerButton.textContent).toBe("Open");
+    providerButton.click();
 
     expect(openProvider).toHaveBeenCalledWith(
       "https://accounts.spotify.com/login",
