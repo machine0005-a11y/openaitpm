@@ -393,9 +393,6 @@
       box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
       display: grid;
       gap: 12px;
-      position: sticky;
-      bottom: calc(8px + env(safe-area-inset-bottom));
-      z-index: 7;
     }
 
     .progress {
@@ -800,14 +797,6 @@
       <div class="feedback" id="feedback">Perfect</div>
     </section>
 
-    <section class="provider-player" id="providerPlayer" aria-label="Music player" hidden>
-      <div class="provider-mount" id="providerMount"></div>
-      <div class="provider-bar">
-        <div class="provider-label" id="providerLabel"></div>
-        <a class="provider-open" id="providerOpen" href="#" target="_blank" rel="noopener">Open app</a>
-      </div>
-    </section>
-
     <section class="controls" aria-label="Transport">
       <div class="progress" aria-hidden="true"><span id="progress"></span></div>
       <div class="transport-row">
@@ -818,6 +807,14 @@
         <button class="control-button" id="addButton" aria-label="Choose music">Music</button>
       </div>
       <div class="status" id="status">124 BPM - generated preview</div>
+    </section>
+
+    <section class="provider-player" id="providerPlayer" aria-label="Music player" hidden>
+      <div class="provider-mount" id="providerMount"></div>
+      <div class="provider-bar">
+        <div class="provider-label" id="providerLabel"></div>
+        <a class="provider-open" id="providerOpen" href="#" target="_blank" rel="noopener">Open app</a>
+      </div>
     </section>
   </main>
 
