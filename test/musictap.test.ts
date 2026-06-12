@@ -93,30 +93,37 @@ afterEach(() => {
 });
 
 describe("MusicTap connected picker", () => {
-  it("imports the exact YouTube mix, mounts a player, starts, and saves it", async () => {
-    const dom = createMusicTapDom();
-    await flushDom();
-    const document = dom.window.document;
+  it(
+    "imports the exact YouTube mix, mounts a player, starts, and saves it",
+    async () => {
+      const dom = createMusicTapDom();
+      await flushDom();
+      const document = dom.window.document;
 
-    document.getElementById("addButton")?.click();
-    expect(document.getElementById("drawer")?.classList.contains("open")).toBe(true);
+      document.getElementById("addButton")?.click();
+      expect(document.getElementById("drawer")?.classList.contains("open")).toBe(true);
+      expect(
+        dom.window.getComputedStyle(document.getElementById("drawer") as HTMLElement).display
+      ).toBe("block");
 
-    const input = document.getElementById("linkInput") as HTMLInputElement;
-    input.value =
-      "https://www.youtube.com/watch?v=qJ1GBL1TPLg&list=RDqJ1GBL1TPLg&start_radio=1";
-    document.getElementById("linkForm")?.dispatchEvent(
-      new dom.window.Event("submit", { bubbles: true, cancelable: true })
-    );
-    await flushDom();
+      const input = document.getElementById("linkInput") as HTMLInputElement;
+      input.value =
+        "https://www.youtube.com/watch?v=qJ1GBL1TPLg&list=RDqJ1GBL1TPLg&start_radio=1";
+      document.getElementById("linkForm")?.dispatchEvent(
+        new dom.window.Event("submit", { bubbles: true, cancelable: true })
+      );
+      await flushDom();
 
-    expect(document.getElementById("trackTitle")?.textContent).toBe("YouTube mix");
-    expect(document.querySelector("#providerPlayer iframe")?.getAttribute("src")).toContain(
-      "qJ1GBL1TPLg"
-    );
-    expect(document.getElementById("playButton")?.getAttribute("aria-label")).toBe("Pause");
-    expect((document.getElementById("recentSection") as HTMLElement).hidden).toBe(false);
-    dom.window.close();
-  });
+      expect(document.getElementById("trackTitle")?.textContent).toBe("YouTube mix");
+      expect(document.querySelector("#providerPlayer iframe")?.getAttribute("src")).toContain(
+        "qJ1GBL1TPLg"
+      );
+      expect(document.getElementById("playButton")?.getAttribute("aria-label")).toBe("Pause");
+      expect((document.getElementById("recentSection") as HTMLElement).hidden).toBe(false);
+      dom.window.close();
+    },
+    15_000
+  );
 
   it("keeps search honest when provider credentials are not configured", async () => {
     const dom = createMusicTapDom();

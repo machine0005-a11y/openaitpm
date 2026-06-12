@@ -484,14 +484,13 @@
       inset: 0;
       background: var(--surface);
       padding: calc(16px + env(safe-area-inset-top)) 18px calc(20px + env(safe-area-inset-bottom));
-      transform: translateY(105%);
-      transition: transform 220ms ease;
+      display: none;
       z-index: 10;
       overflow-y: auto;
     }
 
     .drawer.open {
-      transform: translateY(0);
+      display: block;
     }
 
     .drawer-inner {
