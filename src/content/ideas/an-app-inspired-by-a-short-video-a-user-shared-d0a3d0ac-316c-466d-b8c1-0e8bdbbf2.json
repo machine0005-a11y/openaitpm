@@ -1,0 +1,32 @@
+{
+  "slug": "an-app-inspired-by-a-short-video-a-user-shared-d0a3d0ac-316c-466d-b8c1-0e8bdbbf2",
+  "name": "An App Inspired By A Short Video A User Shared D0a3d0ac 316c 466d B8c1 0e8bdbbf2",
+  "status": "preview",
+  "tagline": "An App Inspired By A Short Video A User Shared D0a3d0ac 316c 466d B8c1 0e8bdbbf2 — An app inspired by a shor",
+  "thesis": "An App Inspired By A Short Video A User Shared D0a3d0ac 316c 466d B8c1 0e8bdbbf2 turns \"An app inspired by a short video a user shared (D0A3D0AC-316C-466D-B8C1-0E8BDBBF26FB-3-render.MOV)\" into a working product. The first user gets a focused tool that nails the core job on day one, with a clear path from prototype to production.",
+  "audience": "Early adopters who feel this pain today and want a tool that already works.",
+  "sourceBranch": "idea/an-app-inspired-by-a-short-video-a-user-shared-d0a3d0ac-316c-466d-b8c1-0e8bdbbf2",
+  "repoPath": "src/content/ideas/an-app-inspired-by-a-short-video-a-user-shared-d0a3d0ac-316c-466d-b8c1-0e8bdbbf2.json",
+  "primaryCta": "Try it now",
+  "secondaryCta": "See how it works",
+  "proofPoints": [
+    "A working prototype exists the moment you text the idea.",
+    "Every page ships with a concrete next milestone, not a maybe.",
+    "Built and served automatically, end to end, with no manual steps."
+  ],
+  "heroImage": null,
+  "launchChecks": [
+    {
+      "label": "Idea page generated",
+      "state": "done"
+    },
+    {
+      "label": "Validate with first 10 real users",
+      "state": "active"
+    },
+    {
+      "label": "Add the most-requested integration",
+      "state": "next"
+    }
+  ]
+}
