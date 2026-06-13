@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f4f6f1">
-  <meta name="description" content="MusicTap is a mobile browser rhythm tap prototype for pasted music links and local audio.">
-  <meta name="app-version" content="provider-playback-2026-06-11">
+  <meta name="description" content="MusicTap is a mobile rhythm game for connected music services, shared links, and local audio.">
+  <meta name="app-version" content="connected-picker-2026-06-12">
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="icon" href="./icons/icon.svg" type="image/svg+xml">
   <title>MusicTap</title>
@@ -54,13 +54,13 @@
     }
 
     .shell {
-      width: min(100%, 520px);
+      width: min(100%, 560px);
       min-height: 100vh;
       min-height: 100svh;
       margin: 0 auto;
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 10px;
       padding: calc(14px + env(safe-area-inset-top)) 18px calc(18px + env(safe-area-inset-bottom));
     }
 
@@ -176,7 +176,7 @@
 
     .segmented button {
       border: 0;
-      min-height: 36px;
+      min-height: 32px;
       border-radius: 6px;
       background: transparent;
       color: var(--muted);
@@ -193,26 +193,32 @@
     .stats {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
+      gap: 0;
+      padding: 7px;
+      border-radius: 8px;
+      background: var(--surface);
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.05);
     }
 
     .stat {
-      background: var(--surface);
-      border-radius: 8px;
-      padding: 10px 12px;
-      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.05);
+      padding: 3px 10px;
+      text-align: center;
       min-width: 0;
+    }
+
+    .stat + .stat {
+      border-left: 1px solid #e7ece5;
     }
 
     .stat-label {
       color: var(--muted);
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 750;
     }
 
     .stat-value {
       margin-top: 2px;
-      font-size: 21px;
+      font-size: 18px;
       line-height: 1.1;
       font-weight: 900;
       overflow: hidden;
@@ -221,7 +227,7 @@
 
     .arena {
       flex: 1;
-      min-height: clamp(320px, 52svh, 470px);
+      min-height: clamp(320px, 48svh, 470px);
       border-radius: 8px;
       background:
         linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0)),
@@ -407,7 +413,7 @@
 
     .transport-row {
       display: grid;
-      grid-template-columns: 48px 1fr 48px;
+      grid-template-columns: 48px 1fr 92px;
       gap: 10px;
     }
 
@@ -424,6 +430,13 @@
     .play-button {
       display: grid;
       place-items: center;
+      background: var(--teal);
+      color: #ffffff;
+    }
+
+    #addButton {
+      background: var(--ink);
+      color: #ffffff;
     }
 
     .play-icon::before {
@@ -465,25 +478,23 @@
 
     .drawer {
       position: fixed;
-      inset: auto 0 0;
+      inset: 0;
       background: var(--surface);
-      box-shadow: 0 -20px 40px rgba(0, 0, 0, 0.18);
-      border-radius: 12px 12px 0 0;
-      padding: 18px;
-      transform: translateY(105%);
-      transition: transform 220ms ease;
+      padding: calc(16px + env(safe-area-inset-top)) 18px calc(20px + env(safe-area-inset-bottom));
+      display: none;
       z-index: 10;
+      overflow-y: auto;
     }
 
     .drawer.open {
-      transform: translateY(0);
+      display: block;
     }
 
     .drawer-inner {
-      width: min(100%, 520px);
+      width: min(100%, 560px);
       margin: 0 auto;
       display: grid;
-      gap: 12px;
+      gap: 16px;
     }
 
     .drawer-head {
@@ -495,72 +506,107 @@
 
     .drawer h2 {
       margin: 0;
-      font-size: 20px;
+      font-size: 22px;
     }
 
-    .source-grid {
+    .provider-grid {
       display: grid;
       gap: 8px;
     }
 
-    .source {
+    .provider-option {
       border: 1px solid #e3e8e2;
       background: #fafcf8;
       border-radius: 8px;
-      padding: 12px;
+      padding: 10px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+      text-align: left;
+    }
+
+    .provider-option.active {
+      border-color: var(--ink);
+      background: var(--surface);
+    }
+
+    .provider-main {
+      border: 0;
+      padding: 0;
+      background: transparent;
+      color: var(--ink);
       display: grid;
       grid-template-columns: 42px 1fr;
-      gap: 12px;
+      gap: 10px;
       align-items: center;
       text-align: left;
       cursor: pointer;
     }
 
-    .source-mark {
+    .provider-mark {
       width: 42px;
       height: 42px;
       border-radius: 8px;
-      background: var(--teal);
+      color: #ffffff;
+      background: #1ed760;
+      display: grid;
+      place-items: center;
+      font-weight: 950;
+      font-size: 17px;
     }
 
-    .source:nth-child(2) .source-mark {
-      background: var(--coral);
+    .provider-option[data-provider="youtube"] .provider-mark {
+      background: #ff0033;
     }
 
-    .source:nth-child(3) .source-mark {
-      background: var(--yellow);
+    .provider-option[data-provider="apple"] .provider-mark {
+      background: #ef476f;
     }
 
-    .source:nth-child(4) .source-mark {
-      background: var(--lime);
-    }
-
-    .source-title {
+    .provider-title {
+      display: block;
       font-weight: 850;
     }
 
-    .source-sub {
+    .provider-state {
+      display: block;
       margin-top: 2px;
       color: var(--muted);
+      font-size: 12px;
+      font-weight: 650;
+    }
+
+    .connect-button {
+      border: 0;
+      border-radius: 8px;
+      min-height: 36px;
+      padding: 0 11px;
+      background: var(--paper);
+      color: var(--ink);
       font-size: 13px;
+      font-weight: 850;
+      cursor: pointer;
+    }
+
+    .connect-button.connected {
+      background: var(--ink);
+      color: #ffffff;
     }
 
     .paste-panel {
-      border: 1px solid #e3e8e2;
-      background: #fafcf8;
-      border-radius: 8px;
-      padding: 12px;
       display: grid;
       gap: 8px;
     }
 
     .paste-title {
+      font-size: 14px;
       font-weight: 850;
     }
 
     .paste-row {
       display: grid;
-      grid-template-columns: 1fr 78px;
+      grid-template-columns: 1fr 66px 70px;
       gap: 8px;
     }
 
@@ -579,10 +625,15 @@
       min-height: 40px;
       border: 0;
       border-radius: 8px;
-      background: var(--ink);
-      color: var(--surface);
+      background: var(--paper);
+      color: var(--ink);
       font-weight: 850;
       cursor: pointer;
+    }
+
+    .paste-row button[type="submit"] {
+      background: var(--ink);
+      color: var(--surface);
     }
 
     .link-hint {
@@ -590,6 +641,94 @@
       color: var(--muted);
       font-size: 13px;
       font-weight: 650;
+    }
+
+    .picker-section {
+      display: grid;
+      gap: 8px;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      font-size: 14px;
+      font-weight: 850;
+    }
+
+    .result-list,
+    .recent-list {
+      display: grid;
+      gap: 7px;
+    }
+
+    .result-list:empty,
+    .recent-list:empty {
+      display: none;
+    }
+
+    .music-result {
+      border: 1px solid #e3e8e2;
+      border-radius: 8px;
+      background: #fafcf8;
+      padding: 10px;
+      display: grid;
+      grid-template-columns: 42px 1fr auto;
+      gap: 10px;
+      align-items: center;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .result-art {
+      width: 42px;
+      height: 42px;
+      border-radius: 8px;
+      object-fit: cover;
+      background: #e7ece5;
+    }
+
+    .result-art.placeholder {
+      display: grid;
+      place-items: center;
+      color: var(--muted);
+      font-weight: 900;
+    }
+
+    .result-title {
+      display: block;
+      font-size: 14px;
+      font-weight: 850;
+    }
+
+    .result-sub {
+      display: block;
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .result-play {
+      color: var(--teal);
+      font-size: 18px;
+      font-weight: 950;
+    }
+
+    .utility-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .utility-button {
+      border: 1px solid #e3e8e2;
+      border-radius: 8px;
+      min-height: 44px;
+      background: #fafcf8;
+      color: var(--ink);
+      font-weight: 850;
+      cursor: pointer;
     }
 
     .hidden-file {
@@ -625,7 +764,7 @@
         <h1 id="trackTitle">Neon Pocket</h1>
         <div class="subline" id="trackMeta">FingerTapper - Demo</div>
       </div>
-      <button class="icon-button" id="sourcesButton" aria-label="Sources">
+      <button class="icon-button" id="sourcesButton" aria-label="Choose music">
         <span class="playlist-icon" aria-hidden="true"></span>
       </button>
     </section>
@@ -658,14 +797,6 @@
       <div class="feedback" id="feedback">Perfect</div>
     </section>
 
-    <section class="provider-player" id="providerPlayer" aria-label="Music player" hidden>
-      <div class="provider-mount" id="providerMount"></div>
-      <div class="provider-bar">
-        <div class="provider-label" id="providerLabel"></div>
-        <a class="provider-open" id="providerOpen" href="#" target="_blank" rel="noopener">Open app</a>
-      </div>
-    </section>
-
     <section class="controls" aria-label="Transport">
       <div class="progress" aria-hidden="true"><span id="progress"></span></div>
       <div class="transport-row">
@@ -673,56 +804,79 @@
         <button class="control-button play-button" id="playButton" aria-label="Play">
           <span class="play-icon" aria-hidden="true"></span>
         </button>
-        <button class="control-button" id="addButton" aria-label="Add music">Add</button>
+        <button class="control-button" id="addButton" aria-label="Choose music">Music</button>
       </div>
       <div class="status" id="status">124 BPM - generated preview</div>
     </section>
+
+    <section class="provider-player" id="providerPlayer" aria-label="Music player" hidden>
+      <div class="provider-mount" id="providerMount"></div>
+      <div class="provider-bar">
+        <div class="provider-label" id="providerLabel"></div>
+        <a class="provider-open" id="providerOpen" href="#" target="_blank" rel="noopener">Open app</a>
+      </div>
+    </section>
   </main>
 
-  <aside class="drawer" id="drawer" aria-label="Sources">
+  <aside class="drawer" id="drawer" aria-label="Choose music">
     <div class="drawer-inner">
       <div class="drawer-head">
-        <h2>Sources</h2>
+        <h2>Choose music</h2>
         <button class="icon-button" id="closeDrawer" aria-label="Close">x</button>
       </div>
-      <div class="source-grid">
-        <button class="source" id="demoSource">
-          <span class="source-mark" aria-hidden="true"></span>
-          <span>
-            <span class="source-title">Demo groove</span>
-            <span class="source-sub">Generated beatmap</span>
-          </span>
-        </button>
-        <button class="source" id="localSource">
-          <span class="source-mark" aria-hidden="true"></span>
-          <span>
-            <span class="source-title">Local audio</span>
-            <span class="source-sub">Play a file from this browser</span>
-          </span>
-        </button>
-        <button class="source" id="appleSource">
-          <span class="source-mark" aria-hidden="true"></span>
-          <span>
-            <span class="source-title">Apple Music</span>
-            <span class="source-sub">Songs, albums, and playlists</span>
-          </span>
-        </button>
-        <button class="source" id="pasteSource">
-          <span class="source-mark" aria-hidden="true"></span>
-          <span>
-            <span class="source-title">Paste link</span>
-            <span class="source-sub">Spotify, YouTube, YouTube Music, or Apple Music</span>
-          </span>
-        </button>
+      <div class="provider-grid" aria-label="Music services">
+        <div class="provider-option active" data-provider="spotify">
+          <button class="provider-main" type="button" data-select-provider="spotify" aria-label="Use Spotify">
+            <span class="provider-mark" aria-hidden="true">S</span>
+            <span>
+              <span class="provider-title">Spotify</span>
+              <span class="provider-state" id="spotifyState">Paste links</span>
+            </span>
+          </button>
+          <button class="connect-button" type="button" data-connect-provider="spotify">Open</button>
+        </div>
+        <div class="provider-option" data-provider="youtube">
+          <button class="provider-main" type="button" data-select-provider="youtube" aria-label="Use YouTube Music">
+            <span class="provider-mark" aria-hidden="true">Y</span>
+            <span>
+              <span class="provider-title">YouTube Music</span>
+              <span class="provider-state" id="youtubeState">Paste links</span>
+            </span>
+          </button>
+          <button class="connect-button" type="button" data-connect-provider="youtube">Open</button>
+        </div>
+        <div class="provider-option" data-provider="apple">
+          <button class="provider-main" type="button" data-select-provider="apple" aria-label="Use Apple Music">
+            <span class="provider-mark" aria-hidden="true">A</span>
+            <span>
+              <span class="provider-title">Apple Music</span>
+              <span class="provider-state" id="appleState">Paste links</span>
+            </span>
+          </button>
+          <button class="connect-button" type="button" data-connect-provider="apple">Open</button>
+        </div>
       </div>
       <form class="paste-panel" id="linkForm">
-        <div class="paste-title">Song or playlist link</div>
+        <div class="paste-title" id="pickerPrompt">Search Spotify or paste a song link</div>
         <div class="paste-row">
-          <input id="linkInput" type="text" inputmode="url" placeholder="https://open.spotify.com/playlist/...">
-          <button type="submit">Use</button>
+          <input id="linkInput" type="text" placeholder="Search or paste a link">
+          <button type="button" id="pasteButton">Paste</button>
+          <button type="submit">Play</button>
         </div>
         <div class="link-hint" id="linkHint"></div>
       </form>
+      <section class="picker-section" id="resultsSection" hidden>
+        <div class="section-head">Results</div>
+        <div class="result-list" id="searchResults"></div>
+      </section>
+      <section class="picker-section" id="recentSection" hidden>
+        <div class="section-head">Recently played</div>
+        <div class="recent-list" id="recentList"></div>
+      </section>
+      <div class="utility-row">
+        <button class="utility-button" id="localSource" type="button">Audio file</button>
+        <button class="utility-button" id="demoSource" type="button">Demo groove</button>
+      </div>
       <input class="hidden-file" id="fileInput" type="file" accept="audio/*">
     </div>
   </aside>
@@ -749,6 +903,7 @@
       running: false,
       playbackType: "demo",
       linkedItem: null,
+      selectedProvider: "spotify",
       events: [],
       hitIds: new Set(),
       missedIds: new Set(),
@@ -781,6 +936,15 @@
       linkForm: document.getElementById("linkForm"),
       linkInput: document.getElementById("linkInput"),
       linkHint: document.getElementById("linkHint"),
+      pickerPrompt: document.getElementById("pickerPrompt"),
+      pasteButton: document.getElementById("pasteButton"),
+      resultsSection: document.getElementById("resultsSection"),
+      searchResults: document.getElementById("searchResults"),
+      recentSection: document.getElementById("recentSection"),
+      recentList: document.getElementById("recentList"),
+      spotifyState: document.getElementById("spotifyState"),
+      youtubeState: document.getElementById("youtubeState"),
+      appleState: document.getElementById("appleState"),
       fileInput: document.getElementById("fileInput"),
       audio: document.getElementById("audio")
     };
@@ -789,6 +953,440 @@
     let youtubePlayer = null;
     let spotifyApiPromise = null;
     let spotifyController = null;
+    let googleIdentityPromise = null;
+    let googleTokenClient = null;
+    let appleMusicPromise = null;
+
+    const integration = {
+      config: {
+        spotifyClientId: "",
+        googleClientId: "",
+        appleMusicDeveloperToken: "",
+        appleMusicStorefront: "us"
+      },
+      spotifyToken: sessionStorage.getItem("musictap_spotify_token") || "",
+      googleToken: sessionStorage.getItem("musictap_google_token") || "",
+      appleMusic: null,
+      appleConnected: false,
+      appleQueueId: ""
+    };
+
+    const providerDetails = {
+      spotify: {
+        label: "Spotify",
+        prompt: "Search Spotify or paste a song link",
+        fallbackUrl: "https://accounts.spotify.com/login"
+      },
+      youtube: {
+        label: "YouTube Music",
+        prompt: "Search YouTube Music or paste a link",
+        fallbackUrl: "https://music.youtube.com/"
+      },
+      apple: {
+        label: "Apple Music",
+        prompt: "Search Apple Music or paste a link",
+        fallbackUrl: "https://music.apple.com/"
+      }
+    };
+
+    async function loadIntegrationConfig() {
+      try {
+        const response = await fetch("/api/musictap/config", { cache: "no-store" });
+        if (response.ok) {
+          integration.config = { ...integration.config, ...await response.json() };
+        }
+        await handleSpotifyCallback();
+      } catch {
+        // Static previews continue to support provider-owned sign-in and pasted links.
+      }
+      renderProviderConnections();
+    }
+
+    function renderProviderConnections() {
+      const connectionState = {
+        spotify: {
+          configured: Boolean(integration.config.spotifyClientId),
+          connected: Boolean(integration.spotifyToken),
+          element: els.spotifyState
+        },
+        youtube: {
+          configured: Boolean(integration.config.googleClientId),
+          connected: Boolean(integration.googleToken),
+          element: els.youtubeState
+        },
+        apple: {
+          configured: Boolean(integration.config.appleMusicDeveloperToken),
+          connected: integration.appleConnected,
+          element: els.appleState
+        }
+      };
+
+      document.querySelectorAll("[data-connect-provider]").forEach(button => {
+        const provider = button.dataset.connectProvider;
+        const status = connectionState[provider];
+        if (!status) return;
+        status.element.textContent = status.connected
+          ? "Connected - search ready"
+          : status.configured
+            ? "Connect to search"
+            : "Open service, then paste a link";
+        button.textContent = status.connected ? "Connected" : status.configured ? "Connect" : "Open";
+        button.classList.toggle("connected", status.connected);
+      });
+    }
+
+    function selectProvider(provider) {
+      state.selectedProvider = provider;
+      document.querySelectorAll(".provider-option").forEach(option => {
+        option.classList.toggle("active", option.dataset.provider === provider);
+      });
+      els.pickerPrompt.textContent = providerDetails[provider].prompt;
+      els.linkInput.placeholder = providerDetails[provider].prompt;
+      els.linkHint.textContent = "";
+      clearSearchResults();
+      els.linkInput.focus();
+    }
+
+    async function connectProvider(provider) {
+      selectProvider(provider);
+      try {
+        if (provider === "spotify" && integration.config.spotifyClientId) {
+          await beginSpotifyLogin();
+          return;
+        }
+        if (provider === "youtube" && integration.config.googleClientId) {
+          await connectYouTube();
+          return;
+        }
+        if (provider === "apple" && integration.config.appleMusicDeveloperToken) {
+          await connectAppleMusic();
+          return;
+        }
+        window.open(providerDetails[provider].fallbackUrl, "_blank", "noopener");
+        els.linkHint.textContent = `Open ${providerDetails[provider].label}, then paste a song link`;
+      } catch (error) {
+        els.linkHint.textContent = error.message;
+      }
+    }
+
+    function randomString(length = 64) {
+      const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+      const values = crypto.getRandomValues(new Uint8Array(length));
+      return Array.from(values, value => possible[value % possible.length]).join("");
+    }
+
+    function base64UrlEncode(input) {
+      return btoa(String.fromCharCode(...new Uint8Array(input)))
+        .replace(/=/g, "")
+        .replace(/\+/g, "-")
+        .replace(/\//g, "_");
+    }
+
+    function spotifyRedirectUri() {
+      return `${window.location.origin}${window.location.pathname}`;
+    }
+
+    async function beginSpotifyLogin() {
+      const verifier = randomString();
+      const stateValue = randomString(24);
+      const hashed = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(verifier));
+      sessionStorage.setItem("musictap_spotify_verifier", verifier);
+      sessionStorage.setItem("musictap_spotify_state", stateValue);
+      const authUrl = new URL("https://accounts.spotify.com/authorize");
+      authUrl.search = new URLSearchParams({
+        client_id: integration.config.spotifyClientId,
+        response_type: "code",
+        redirect_uri: spotifyRedirectUri(),
+        scope: "user-read-private user-read-email",
+        code_challenge_method: "S256",
+        code_challenge: base64UrlEncode(hashed),
+        state: stateValue
+      }).toString();
+      window.location.assign(authUrl.toString());
+    }
+
+    async function handleSpotifyCallback() {
+      const params = new URLSearchParams(window.location.search);
+      const code = params.get("code");
+      const returnedState = params.get("state");
+      if (!code || !integration.config.spotifyClientId) return;
+      const expectedState = sessionStorage.getItem("musictap_spotify_state");
+      const verifier = sessionStorage.getItem("musictap_spotify_verifier");
+      if (!verifier || !expectedState || returnedState !== expectedState) {
+        throw new Error("Spotify sign-in could not be verified.");
+      }
+      const response = await fetch("https://accounts.spotify.com/api/token", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({
+          client_id: integration.config.spotifyClientId,
+          grant_type: "authorization_code",
+          code,
+          redirect_uri: spotifyRedirectUri(),
+          code_verifier: verifier
+        })
+      });
+      if (!response.ok) throw new Error("Spotify sign-in failed.");
+      const token = await response.json();
+      integration.spotifyToken = token.access_token;
+      sessionStorage.setItem("musictap_spotify_token", token.access_token);
+      sessionStorage.removeItem("musictap_spotify_state");
+      sessionStorage.removeItem("musictap_spotify_verifier");
+      history.replaceState({}, "", window.location.pathname);
+      openDrawer();
+      selectProvider("spotify");
+      els.linkHint.textContent = "Spotify connected";
+    }
+
+    function ensureGoogleIdentity() {
+      if (window.google?.accounts?.oauth2) return Promise.resolve(window.google);
+      if (googleIdentityPromise) return googleIdentityPromise;
+      googleIdentityPromise = new Promise((resolve, reject) => {
+        const script = document.createElement("script");
+        script.src = "https://accounts.google.com/gsi/client";
+        script.async = true;
+        script.onload = () => resolve(window.google);
+        script.onerror = () => reject(new Error("Google sign-in could not load."));
+        document.head.appendChild(script);
+      });
+      return googleIdentityPromise;
+    }
+
+    async function connectYouTube() {
+      const google = await ensureGoogleIdentity();
+      googleTokenClient ||= google.accounts.oauth2.initTokenClient({
+        client_id: integration.config.googleClientId,
+        scope: "https://www.googleapis.com/auth/youtube.readonly",
+        callback: response => {
+          if (!response.access_token) {
+            els.linkHint.textContent = response.error || "YouTube Music sign-in failed";
+            return;
+          }
+          integration.googleToken = response.access_token;
+          sessionStorage.setItem("musictap_google_token", response.access_token);
+          renderProviderConnections();
+          els.linkHint.textContent = "YouTube Music connected";
+        }
+      });
+      googleTokenClient.requestAccessToken({ prompt: integration.googleToken ? "" : "consent" });
+    }
+
+    function ensureAppleMusic() {
+      if (integration.appleMusic) return Promise.resolve(integration.appleMusic);
+      if (appleMusicPromise) return appleMusicPromise;
+      appleMusicPromise = new Promise((resolve, reject) => {
+        const configure = async () => {
+          try {
+            await window.MusicKit.configure({
+              developerToken: integration.config.appleMusicDeveloperToken,
+              app: { name: "MusicTap", build: "1.0.0" }
+            });
+            integration.appleMusic = window.MusicKit.getInstance();
+            resolve(integration.appleMusic);
+          } catch {
+            reject(new Error("Apple Music could not connect."));
+          }
+        };
+        if (window.MusicKit) {
+          configure();
+          return;
+        }
+        document.addEventListener("musickitloaded", configure, { once: true });
+        const script = document.createElement("script");
+        script.src = "https://js-cdn.music.apple.com/musickit/v3/musickit.js";
+        script.async = true;
+        script.onerror = () => reject(new Error("Apple Music could not load."));
+        document.head.appendChild(script);
+      });
+      return appleMusicPromise;
+    }
+
+    async function connectAppleMusic() {
+      const music = await ensureAppleMusic();
+      await music.authorize();
+      integration.appleConnected = true;
+      renderProviderConnections();
+      els.linkHint.textContent = "Apple Music connected";
+    }
+
+    async function searchMusic(query) {
+      els.linkHint.textContent = `Searching ${providerDetails[state.selectedProvider].label}`;
+      clearSearchResults();
+      let results = [];
+      if (state.selectedProvider === "spotify") results = await searchSpotify(query);
+      if (state.selectedProvider === "youtube") results = await searchYouTube(query);
+      if (state.selectedProvider === "apple") results = await searchAppleMusic(query);
+      renderSearchResults(results);
+      els.linkHint.textContent = results.length ? `${results.length} songs found` : "No songs found";
+    }
+
+    async function searchSpotify(query) {
+      if (!integration.spotifyToken) throw new Error("Connect Spotify to search. Links still work.");
+      const url = new URL("https://api.spotify.com/v1/search");
+      url.search = new URLSearchParams({ q: query, type: "track", limit: "10" }).toString();
+      const response = await fetch(url, {
+        headers: { Authorization: `Bearer ${integration.spotifyToken}` }
+      });
+      if (!response.ok) throw new Error("Spotify search needs a fresh connection.");
+      const data = await response.json();
+      return (data.tracks?.items || []).filter(Boolean).map(track => ({
+        title: track.name,
+        subtitle: track.artists.map(artist => artist.name).join(", "),
+        artwork: track.album?.images?.[track.album.images.length - 1]?.url || track.album?.images?.[0]?.url || "",
+        item: linkedItem("Spotify", "track", track.id, "spotify", {
+          title: track.name,
+          artist: track.artists.map(artist => artist.name).join(", "),
+          originalUrl: track.external_urls.spotify,
+          spotifyUri: track.uri
+        })
+      }));
+    }
+
+    async function searchYouTube(query) {
+      if (!integration.googleToken) throw new Error("Connect YouTube Music to search. Links still work.");
+      const url = new URL("https://www.googleapis.com/youtube/v3/search");
+      url.search = new URLSearchParams({
+        part: "snippet",
+        type: "video",
+        videoCategoryId: "10",
+        maxResults: "10",
+        q: query
+      }).toString();
+      const response = await fetch(url, {
+        headers: { Authorization: `Bearer ${integration.googleToken}` }
+      });
+      if (!response.ok) throw new Error("YouTube Music search needs a fresh connection.");
+      const data = await response.json();
+      return (data.items || []).map(video => ({
+        title: video.snippet.title,
+        subtitle: video.snippet.channelTitle,
+        artwork: video.snippet.thumbnails?.default?.url || "",
+        item: linkedItem("YouTube Music", "video", video.id.videoId, "youtube-music", {
+          title: video.snippet.title,
+          artist: video.snippet.channelTitle,
+          originalUrl: `https://music.youtube.com/watch?v=${video.id.videoId}`,
+          videoId: video.id.videoId
+        })
+      }));
+    }
+
+    async function searchAppleMusic(query) {
+      if (!integration.config.appleMusicDeveloperToken) {
+        throw new Error("Connect Apple Music to search. Links still work.");
+      }
+      const storefront = integration.config.appleMusicStorefront || "us";
+      const url = new URL(`https://api.music.apple.com/v1/catalog/${storefront}/search`);
+      url.search = new URLSearchParams({ term: query, types: "songs", limit: "10" }).toString();
+      const response = await fetch(url, {
+        headers: { Authorization: `Bearer ${integration.config.appleMusicDeveloperToken}` }
+      });
+      if (!response.ok) throw new Error("Apple Music search is unavailable.");
+      const data = await response.json();
+      return (data.results?.songs?.data || []).map(song => {
+        const attributes = song.attributes || {};
+        const artwork = attributes.artwork?.url?.replace("{w}", "80").replace("{h}", "80") || "";
+        return {
+          title: attributes.name || "Apple Music song",
+          subtitle: attributes.artistName || "Apple Music",
+          artwork,
+          item: linkedItem("Apple Music", "song", song.id, "apple", {
+            title: attributes.name || "Apple Music song",
+            artist: attributes.artistName || "Apple Music",
+            originalUrl: attributes.url,
+            embedUrl: attributes.url?.replace("music.apple.com", "embed.music.apple.com"),
+            appleKind: "song"
+          })
+        };
+      });
+    }
+
+    function clearSearchResults() {
+      els.searchResults.innerHTML = "";
+      els.resultsSection.hidden = true;
+    }
+
+    function renderSearchResults(results) {
+      els.searchResults.innerHTML = "";
+      results.forEach(result => els.searchResults.appendChild(musicResultButton(result)));
+      els.resultsSection.hidden = results.length === 0;
+    }
+
+    function musicResultButton(result) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "music-result";
+      const art = result.artwork
+        ? Object.assign(document.createElement("img"), { className: "result-art", src: result.artwork, alt: "" })
+        : Object.assign(document.createElement("span"), { className: "result-art placeholder", textContent: "♪" });
+      const text = document.createElement("span");
+      const title = Object.assign(document.createElement("span"), { className: "result-title", textContent: result.title });
+      const sub = Object.assign(document.createElement("span"), { className: "result-sub", textContent: result.subtitle });
+      text.append(title, sub);
+      const play = Object.assign(document.createElement("span"), { className: "result-play", textContent: "▶" });
+      button.append(art, text, play);
+      button.addEventListener("click", () => loadLinkedItem(result.item, true));
+      return button;
+    }
+
+    function saveRecent(item) {
+      try {
+        const recent = JSON.parse(localStorage.getItem("musictap_recent") || "[]")
+          .filter(saved => !(saved.provider === item.provider && saved.id === item.id));
+        recent.unshift(item);
+        localStorage.setItem("musictap_recent", JSON.stringify(recent.slice(0, 6)));
+      } catch {
+        // Recent songs are optional.
+      }
+      renderRecents();
+    }
+
+    function renderRecents() {
+      let recent = [];
+      try {
+        recent = JSON.parse(localStorage.getItem("musictap_recent") || "[]");
+      } catch {
+        recent = [];
+      }
+      els.recentList.innerHTML = "";
+      recent.forEach(item => {
+        els.recentList.appendChild(musicResultButton({
+          title: item.title,
+          subtitle: item.artist || item.provider,
+          artwork: item.artwork || "",
+          item
+        }));
+      });
+      els.recentSection.hidden = recent.length === 0;
+    }
+
+    async function pasteAndPlay() {
+      try {
+        const value = await navigator.clipboard.readText();
+        els.linkInput.value = value;
+        submitMusicInput(value);
+      } catch {
+        els.linkHint.textContent = "Paste permission was not available";
+      }
+    }
+
+    function submitMusicInput(rawValue) {
+      const value = rawValue.trim();
+      if (!value) {
+        els.linkHint.textContent = "Search for a song or paste a link";
+        return;
+      }
+      if (/^(https?:\/\/|spotify:)/i.test(value)) {
+        try {
+          loadLinkedItem(parseMusicLink(value), true);
+        } catch (error) {
+          els.linkHint.textContent = error.message;
+        }
+        return;
+      }
+      searchMusic(value).catch(error => {
+        els.linkHint.textContent = error.message;
+      });
+    }
 
     function generateBeatmap(bpm, duration, seed) {
       const interval = 60 / bpm;
@@ -912,6 +1510,21 @@
       if (state.playbackType === "spotify" && spotifyController?.resume) {
         spotifyController.resume();
       }
+      if (state.playbackType === "apple" && integration.appleMusic && state.linkedItem?.appleKind) {
+        playAppleMusicProvider();
+      }
+    }
+
+    async function playAppleMusicProvider() {
+      try {
+        if (integration.appleQueueId !== state.linkedItem.id) {
+          await integration.appleMusic.setQueue({ [state.linkedItem.appleKind]: state.linkedItem.id });
+          integration.appleQueueId = state.linkedItem.id;
+        }
+        await integration.appleMusic.play();
+      } catch {
+        els.status.textContent = "Use the Apple Music player below";
+      }
     }
 
     function pauseProvider() {
@@ -920,6 +1533,9 @@
       }
       if (state.playbackType === "spotify" && spotifyController?.pause) {
         spotifyController.pause();
+      }
+      if (state.playbackType === "apple" && integration.appleMusic?.pause) {
+        integration.appleMusic.pause();
       }
     }
 
@@ -932,6 +1548,9 @@
         spotifyController.restart();
         spotifyController.pause();
       }
+      if (state.playbackType === "apple" && integration.appleMusic?.seekToTime) {
+        integration.appleMusic.seekToTime(0);
+      }
     }
 
     function clearProvider() {
@@ -939,6 +1558,7 @@
       if (spotifyController?.destroy) spotifyController.destroy();
       youtubePlayer = null;
       spotifyController = null;
+      integration.appleQueueId = "";
       els.providerMount.innerHTML = "";
       els.providerMount.className = "provider-mount";
       els.providerPlayer.hidden = true;
@@ -994,9 +1614,10 @@
           events: {
             onReady: event => {
               const duration = event.target.getDuration();
-              syncProviderPosition(0, duration, true);
+              const shouldPlay = state.running;
+              syncProviderPosition(0, duration, !shouldPlay);
               els.status.textContent = `${item.provider} player ready`;
-              if (state.running) event.target.playVideo();
+              if (shouldPlay) event.target.playVideo();
             },
             onStateChange: event => {
               if (event.data === YT.PlayerState.PLAYING) {
@@ -1253,6 +1874,7 @@
         els.status.textContent = `${state.bpm} BPM - local preview`;
         closeDrawer();
         render();
+        start();
       };
       els.audio.load();
     }
@@ -1260,7 +1882,7 @@
     function parseMusicLink(rawValue) {
       const value = rawValue.trim();
       if (!value) {
-        throw new Error("Paste a Spotify, YouTube, or YouTube Music link.");
+        throw new Error("Search for a song or paste a music link.");
       }
 
       const spotifyUri = value.match(/^spotify:(track|playlist|album):([A-Za-z0-9]+)$/i);
@@ -1346,7 +1968,8 @@
           embedUrl.hostname = "embed.music.apple.com";
           return linkedItem("Apple Music", kind, id, "apple", {
             originalUrl: value,
-            embedUrl: embedUrl.toString()
+            embedUrl: embedUrl.toString(),
+            appleKind: kind
           });
         }
       }
@@ -1373,11 +1996,11 @@
       };
     }
 
-    function loadLinkedItem(item) {
+    function loadLinkedItem(item, autoStart = true) {
       restart();
       clearProvider();
       state.trackTitle = item.title;
-      state.artist = ["playlist", "mix"].includes(item.kind) ? "Imported playlist" : "Imported song";
+      state.artist = item.artist || (["playlist", "mix"].includes(item.kind) ? "Imported playlist" : "Imported song");
       state.source = item.provider;
       state.bpm = item.bpm;
       state.duration = item.duration;
@@ -1390,10 +2013,14 @@
       mountLinkedProvider(item);
       closeDrawer();
       render();
+      saveRecent(item);
+      if (autoStart) window.setTimeout(start, 0);
     }
 
     function openDrawer() {
       els.drawer.classList.add("open");
+      renderProviderConnections();
+      renderRecents();
     }
 
     function closeDrawer() {
@@ -1408,20 +2035,16 @@
     document.getElementById("closeDrawer").addEventListener("click", closeDrawer);
     document.getElementById("demoSource").addEventListener("click", loadDemo);
     document.getElementById("localSource").addEventListener("click", () => els.fileInput.click());
-    document.getElementById("appleSource").addEventListener("click", () => {
-      els.linkInput.placeholder = "https://music.apple.com/...";
-      els.linkInput.focus();
+    document.querySelectorAll("[data-select-provider]").forEach(button => {
+      button.addEventListener("click", () => selectProvider(button.dataset.selectProvider));
     });
-    document.getElementById("pasteSource").addEventListener("click", () => {
-      els.linkInput.focus();
+    document.querySelectorAll("[data-connect-provider]").forEach(button => {
+      button.addEventListener("click", () => connectProvider(button.dataset.connectProvider));
     });
+    els.pasteButton.addEventListener("click", pasteAndPlay);
     els.linkForm.addEventListener("submit", event => {
       event.preventDefault();
-      try {
-        loadLinkedItem(parseMusicLink(els.linkInput.value));
-      } catch (error) {
-        els.linkHint.textContent = error.message;
-      }
+      submitMusicInput(els.linkInput.value);
     });
     els.fileInput.addEventListener("change", event => loadLocalFile(event.target.files[0]));
     els.playButton.addEventListener("click", () => state.running ? pause() : start());
@@ -1440,7 +2063,10 @@
     state.events = generateBeatmap(state.bpm, state.duration, 19);
     renderLanes();
     renderStats();
+    renderProviderConnections();
+    renderRecents();
     render();
+    loadIntegrationConfig();
   </script>
 </body>
 </html>
