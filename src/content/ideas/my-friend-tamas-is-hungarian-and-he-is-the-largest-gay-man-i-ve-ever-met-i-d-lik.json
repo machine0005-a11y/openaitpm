@@ -1,0 +1,32 @@
+{
+  "slug": "my-friend-tamas-is-hungarian-and-he-is-the-largest-gay-man-i-ve-ever-met-i-d-lik",
+  "name": "Tamas Pride",
+  "status": "preview",
+  "tagline": "A bold celebration of Tamas, Hungarian pride, and living authentically.",
+  "thesis": "Tamas Pride is a joyful tribute page built around friendship, Hungarian heritage, and unapologetic LGBTQ+ self-expression. It gives friends a warm, shareable way to celebrate Tamas while keeping his dignity and consent at the center.",
+  "audience": "Friends and chosen family creating an affirming tribute for someone they love.",
+  "sourceBranch": "idea/my-friend-tamas-is-hungarian-and-he-is-the-largest-gay-man-i-ve-ever-met-i-d-lik",
+  "repoPath": "src/content/ideas/my-friend-tamas-is-hungarian-and-he-is-the-largest-gay-man-i-ve-ever-met-i-d-lik.json",
+  "primaryCta": "Celebrate Tamas",
+  "secondaryCta": "Share the love",
+  "proofPoints": [
+    "A vibrant tribute pairs Hungarian-inspired colors with the full spectrum of Pride.",
+    "Friends can contribute affirming stories, photos, and messages with Tamas's approval.",
+    "The concept celebrates identity without stereotypes, rankings, or invasive personal details."
+  ],
+  "heroImage": null,
+  "launchChecks": [
+    {
+      "label": "Idea page generated",
+      "state": "done"
+    },
+    {
+      "label": "Ask Tamas for consent and creative input",
+      "state": "active"
+    },
+    {
+      "label": "Open a moderated friends tribute wall",
+      "state": "next"
+    }
+  ]
+}
