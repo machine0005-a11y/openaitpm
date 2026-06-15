@@ -120,6 +120,34 @@ export function IdeaLaunchPage({ idea, relatedIdeas = [] }: IdeaLaunchPageProps)
         </div>
       </section>
 
+      {/* VISUAL GALLERY — AI-generated concept scenes (only when present) */}
+      {idea.galleryImages && idea.galleryImages.length > 0 ? (
+        <section className="border-t border-[var(--line)] bg-[var(--panel)]">
+          <div className="mx-auto max-w-6xl px-6 py-16">
+            <h2 className="text-sm font-bold uppercase tracking-widest" style={{ color: t.from }}>
+              Visual concept
+            </h2>
+            <div className="mt-6 grid gap-4 md:grid-cols-2">
+              {idea.galleryImages.map((src, i) => (
+                <div
+                  key={src}
+                  className={`relative overflow-hidden rounded-2xl border border-[var(--line)] ${i === 0 ? "md:col-span-2 aspect-[16/8]" : "aspect-[4/3]"}`}
+                  style={{ boxShadow: `0 24px 50px -20px ${t.glow}` }}
+                >
+                  <Image
+                    src={src}
+                    alt={`${idea.name} — visual concept ${i + 1}`}
+                    fill
+                    sizes="(max-width: 900px) 100vw, 50vw"
+                    className="object-cover"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
+
       {/* PROOF POINTS — big colorful cards */}
       <section id="proof" className="border-y border-[var(--line)] bg-[var(--panel)]">
         <div className="mx-auto max-w-6xl px-6 py-20">
