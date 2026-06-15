@@ -1,0 +1,33 @@
+{
+  "slug": "a-farmers-market-finder-that-shows-whats-in-season-near-you",
+  "name": "A Farmers Market Finder That Shows Whats In Season Near You",
+  "status": "preview",
+  "tagline": "A Farmers Market Finder That Shows Whats In Season Near You — a farmers market finder that shows whats in se",
+  "thesis": "A Farmers Market Finder That Shows Whats In Season Near You turns \"a farmers market finder that shows whats in season near you\" into a working product. The first user gets a focused tool that nails the core job on day one, with a clear path from prototype to production.",
+  "audience": "Early adopters who feel this pain today and want a tool that already works.",
+  "sourceBranch": "idea/a-farmers-market-finder-that-shows-whats-in-season-near-you",
+  "repoPath": "src/content/ideas/a-farmers-market-finder-that-shows-whats-in-season-near-you.json",
+  "primaryCta": "Try it now",
+  "secondaryCta": "See how it works",
+  "proofPoints": [
+    "A working prototype exists the moment you text the idea.",
+    "Every page ships with a concrete next milestone, not a maybe.",
+    "Built and served automatically, end to end, with no manual steps."
+  ],
+  "heroImage": null,
+  "galleryImages": [],
+  "launchChecks": [
+    {
+      "label": "Idea page generated",
+      "state": "done"
+    },
+    {
+      "label": "Validate with first 10 real users",
+      "state": "active"
+    },
+    {
+      "label": "Add the most-requested integration",
+      "state": "next"
+    }
+  ]
+}
