@@ -2,31 +2,31 @@
   "slug": "yeah-looks-good-build-it",
   "name": "Personal Agent Action Router",
   "status": "preview",
-  "tagline": "A human-aware queue for personal agent actions",
-  "thesis": "Personal Agent Action Router turns recordings, translations, and human context into queued actions that can be checked against timezone, sleep, family, persona, and approval rules before any tool executes. It gives a personal AI system a practical middle layer between intent and action: Kafka-style event buffering, policy gates, tool adapters, and an observer log that makes every outcome replayable.",
-  "audience": "People building personal agents that need to act through tools without interrupting the human at the wrong time or crossing identity, approval, or family-time boundaries.",
+  "tagline": "The whiteboard architecture for a personal assistant that queues actions before tools touch the world.",
+  "thesis": "The board describes a personal assistant control plane: attendant recording, AI translation, and persona context become normalized inputs; Kafka holds those inputs as queued action candidates; then a human constraint gate checks time zone, sleep, family, persona, and approval boundaries before Zapier, Replit, goal/soul/skill files, or other tools execute. The product is not just an agent. It is the action router that keeps the agent useful, observable, and socially aware.",
+  "audience": "Builders of personal agents who need a real middle layer between captured intent and tool execution, especially when actions can interrupt a person, speak on their behalf, or touch external systems.",
   "sourceBranch": "idea/yeah-looks-good-build-it",
   "repoPath": "src/content/ideas/yeah-looks-good-build-it.json",
   "primaryCta": "Open the prototype",
   "secondaryCta": "Review the architecture",
   "proofPoints": [
-    "Context intake combines attendant recording, AI translation, and persona memory into a structured action candidate.",
-    "The queue layer separates action creation from execution so policy checks, retries, and audit trails stay explicit.",
-    "The constraint layer blocks or defers actions around timezone, sleep, family time, approval needs, and tool permissions."
+    "The left side of the board is the intake stack: attendant recording, AI translation, and persona/human context become structured inputs instead of loose notes.",
+    "The center is the router: queued action candidates move through Kafka so retries, prioritization, and audit order are explicit.",
+    "The right side is the human gate: time zone, sleep, family, and persona boundaries decide whether the action runs, waits, or asks for approval."
   ],
-  "heroImage": null,
+  "heroImage": "/ideas/personal-agent-whiteboard.jpg",
   "galleryImages": [],
   "launchChecks": [
     {
-      "label": "Idea page generated",
+      "label": "Whiteboard photo translated into product architecture",
       "state": "done"
     },
     {
-      "label": "Bind the simulator to real recorder, translation, and queue events",
+      "label": "Bind attendant recording, translation, and persona context into one event schema",
       "state": "active"
     },
     {
-      "label": "Add Zapier and Replit adapters behind explicit approval receipts",
+      "label": "Wire Kafka action topics to Zapier, Replit, and durable goal/soul/skill tool adapters",
       "state": "next"
     }
   ]
