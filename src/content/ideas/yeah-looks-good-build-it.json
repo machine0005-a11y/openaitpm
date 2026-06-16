@@ -1,18 +1,18 @@
 {
   "slug": "yeah-looks-good-build-it",
-  "name": "Yeah Looks Good Build It",
+  "name": "Personal Agent Action Router",
   "status": "preview",
-  "tagline": "Yeah Looks Good Build It — Yeah looks good build it",
-  "thesis": "Yeah Looks Good Build It turns \"Yeah looks good build it\" into a working product. The first user gets a focused tool that nails the core job on day one, with a clear path from prototype to production.",
-  "audience": "Early adopters who feel this pain today and want a tool that already works.",
+  "tagline": "A human-aware queue for personal agent actions",
+  "thesis": "Personal Agent Action Router turns recordings, translations, and human context into queued actions that can be checked against timezone, sleep, family, persona, and approval rules before any tool executes. It gives a personal AI system a practical middle layer between intent and action: Kafka-style event buffering, policy gates, tool adapters, and an observer log that makes every outcome replayable.",
+  "audience": "People building personal agents that need to act through tools without interrupting the human at the wrong time or crossing identity, approval, or family-time boundaries.",
   "sourceBranch": "idea/yeah-looks-good-build-it",
   "repoPath": "src/content/ideas/yeah-looks-good-build-it.json",
-  "primaryCta": "Try it now",
-  "secondaryCta": "See how it works",
+  "primaryCta": "Open the prototype",
+  "secondaryCta": "Review the architecture",
   "proofPoints": [
-    "A working prototype exists the moment you text the idea.",
-    "Every page ships with a concrete next milestone, not a maybe.",
-    "Built and served automatically, end to end, with no manual steps."
+    "Context intake combines attendant recording, AI translation, and persona memory into a structured action candidate.",
+    "The queue layer separates action creation from execution so policy checks, retries, and audit trails stay explicit.",
+    "The constraint layer blocks or defers actions around timezone, sleep, family time, approval needs, and tool permissions."
   ],
   "heroImage": null,
   "galleryImages": [],
@@ -22,11 +22,11 @@
       "state": "done"
     },
     {
-      "label": "Validate with first 10 real users",
+      "label": "Bind the simulator to real recorder, translation, and queue events",
       "state": "active"
     },
     {
-      "label": "Add the most-requested integration",
+      "label": "Add Zapier and Replit adapters behind explicit approval receipts",
       "state": "next"
     }
   ]
