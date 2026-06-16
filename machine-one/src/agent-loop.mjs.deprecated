@@ -1,0 +1,237 @@
+#!/usr/bin/env node
+/**
+ * agent-loop: the autonomous SMS→idea→URL daemon.
+ *
+ * READ path: it does NOT call `imsg` for reads (that needs Full Disk Access,
+ * which only Terminal-launched processes inherit). Instead a Terminal-resident
+ * `reader.sh` dumps the inbox to /tmp/openaitpm-inbox.json and the chat map to
+ * /tmp/openaitpm-chats.json. This agent consumes those files.
+ *
+ * WRITE path: `imsg send` works without FDA, so this agent sends replies directly.
+ *
+ * Generation: tries the `claude` CLI; if it's not logged in / no API key, falls
+ * back to a deterministic template so the loop is always end-to-end.
+ *
+ * Run anywhere:  node src/agent-loop.mjs
+ * One-shot:      node src/agent-loop.mjs --once-idea "<idea>" [<replyTo>]
+ */
+import { spawnSync } from 'node:child_process';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
+
+const PROJECT_DIR = '/Users/machine1/Documents/New project';
+const IDEAS_DIR = join(PROJECT_DIR, 'src', 'content', 'ideas');
+const IMSG = '/opt/homebrew/bin/imsg';
+const CLAUDE = '/opt/homebrew/bin/claude';
+const BASE_URL = process.env.OPENAITPM_BASE_URL || 'https://www.ideamuses.com';
+const STATE_FILE = process.env.STATE_FILE || '/tmp/openaitpm-agent-state.json';
+const INBOX_FILE = process.env.INBOX_FILE || '/tmp/openaitpm-inbox.json';
+const CHATS_FILE = process.env.CHATS_FILE || '/tmp/openaitpm-chats.json';
+const ALLOW_FROM = (process.env.ALLOW_FROM || '').split(',').map(s => s.trim()).filter(Boolean);
+const POLL_MS = Number(process.env.POLL_MS || 3000);
+
+function log(...a) { console.log(new Date().toISOString(), ...a); }
+
+function loadState() {
+  try { return JSON.parse(readFileSync(STATE_FILE, 'utf8')); } catch { return { lastRowId: 0, seen: {} }; }
+}
+function saveState(s) { try { writeFileSync(STATE_FILE, JSON.stringify(s)); } catch {} }
+
+// ---- slug helpers (match scripts/create-idea.mjs) ----
+function normalizeIdeaSlug(input) {
+  const slug = input.trim().toLowerCase()
+    .replace(/['"]/g, '').replace(/&/g, ' and ')
+    .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 80);
+  return slug || 'untitled-idea';
+}
+const titleCase = (slug) => slug.split('-').filter(Boolean).map(p => p[0].toUpperCase() + p.slice(1)).join(' ');
+
+// ---- generation ----
+const SCHEMA = {
+  type: 'object',
+  properties: {
+    tagline: { type: 'string', maxLength: 110 },
+    thesis: { type: 'string' },
+    audience: { type: 'string', maxLength: 140 },
+    primaryCta: { type: 'string', maxLength: 24 },
+    secondaryCta: { type: 'string', maxLength: 24 },
+    proofPoints: { type: 'array', minItems: 3, maxItems: 3, items: { type: 'string' } },
+    nextMilestone: { type: 'string', maxLength: 60 },
+    futureMilestone: { type: 'string', maxLength: 60 }
+  },
+  required: ['tagline','thesis','audience','primaryCta','secondaryCta','proofPoints','nextMilestone','futureMilestone'],
+  additionalProperties: false
+};
+
+// Load the idea-page skill once; it encodes the prototype-first style and the
+// mandatory role-based C-suite review panel.
+let SKILL_TEXT = '';
+try {
+  SKILL_TEXT = readFileSync(new URL('../skills/idea-page/SKILL.md', import.meta.url), 'utf8');
+} catch { SKILL_TEXT = ''; }
+
+function generateWithClaude(idea, slug, name) {
+  const prompt = `${SKILL_TEXT ? SKILL_TEXT + '\n\n---\n\n' : ''}Apply the skill above. Turn this one-line idea into ideamuses.com/${slug} content.
+
+Idea: "${idea}"
+Name: ${name}
+
+Be specific and concrete — real numbers, real workflows, real personas. Don't hedge with "could"/"might". Write like the product already exists.
+Before returning, silently run the role-based C-suite review panel and revise until the product, design, systems, and growth reviews pass.
+Return ONLY JSON matching the schema.`;
+  const r = spawnSync(CLAUDE, [
+    '--print', '--model', process.env.CLAUDE_MODEL || 'sonnet',
+    '--output-format', 'json', '--json-schema', JSON.stringify(SCHEMA),
+    '--disable-slash-commands', prompt
+  ], { encoding: 'utf8', maxBuffer: 4 * 1024 * 1024 });
+  if (r.status !== 0) throw new Error('claude failed');
+  const outer = JSON.parse(r.stdout.trim());
+  if (outer.is_error) throw new Error('claude: ' + String(outer.result).slice(0, 80));
+  return JSON.parse(outer.result ?? outer.text ?? r.stdout);
+}
+
+function templateFallback(idea, name) {
+  return {
+    tagline: `${name}: ${idea}`.slice(0, 108),
+    thesis: `${name} turns "${idea}" into a working product. Target users get a focused tool that solves the core job on day one, with a clear path from prototype to production.`,
+    audience: 'Early adopters who feel this pain today and want a tool that already works.',
+    primaryCta: 'Try it now',
+    secondaryCta: 'See how it works',
+    proofPoints: [
+      'A working prototype exists the moment you text the idea.',
+      'Every page ships with a concrete next milestone, not a maybe.',
+      'Built and served automatically, end to end, with no manual steps.'
+    ],
+    nextMilestone: 'Validate with first 10 real users',
+    futureMilestone: 'Add the most-requested integration'
+  };
+}
+
+function publish(idea, replyTo) {
+  let slug = normalizeIdeaSlug(idea);
+  const name = titleCase(slug);
+  if (existsSync(join(IDEAS_DIR, `${slug}.json`))) slug = `${slug}-${Date.now().toString(36).slice(-4)}`;
+
+  let content;
+  try { content = generateWithClaude(idea, slug, name); log('[gen] claude', slug); }
+  catch (e) { log('[gen] template:', e.message); content = templateFallback(idea, name); }
+
+  const page = {
+    slug, name, status: 'preview',
+    tagline: content.tagline, thesis: content.thesis, audience: content.audience,
+    sourceBranch: `idea/${slug}`, repoPath: `src/content/ideas/${slug}.json`,
+    primaryCta: content.primaryCta, secondaryCta: content.secondaryCta,
+    proofPoints: content.proofPoints,
+    launchChecks: [
+      { label: 'Idea page generated', state: 'done' },
+      { label: content.nextMilestone, state: 'active' },
+      { label: content.futureMilestone, state: 'next' }
+    ]
+  };
+  mkdirSync(IDEAS_DIR, { recursive: true });
+  writeFileSync(join(IDEAS_DIR, `${slug}.json`), JSON.stringify(page, null, 2) + '\n');
+  log('[write]', slug);
+
+  const run = (c, a) => spawnSync(c, a, { cwd: PROJECT_DIR, encoding: 'utf8' });
+  if (run('git', ['remote']).stdout.trim()) {
+    run('git', ['add', `src/content/ideas/${slug}.json`]);
+    run('git', ['commit', '-m', `idea: ${name}`]);
+    run('git', ['push']);
+    log('[git] pushed');
+  }
+
+  const url = `${BASE_URL.replace(/\/$/, '')}/${slug}`;
+  if (replyTo) {
+    const s = spawnSync(IMSG, ['send', '--to', replyTo, '--text', url, '--service', 'imessage', '--json'], { encoding: 'utf8' });
+    log('[reply]', replyTo, (s.stdout || s.stderr || '').trim());
+  }
+  return url;
+}
+
+// ---- inbound: read the files written by the Terminal-resident reader.sh ----
+function loadChatMap() {
+  const map = {};
+  try {
+    const raw = readFileSync(CHATS_FILE, 'utf8').trim();
+    for (const line of raw.split('\n')) {
+      // each line may itself be an array or a single object
+      let arr; try { arr = JSON.parse(line); } catch { continue; }
+      if (!Array.isArray(arr)) arr = [arr];
+      for (const c of arr) {
+        const id = c.id ?? c.chatId ?? c.rowid;
+        if (id != null && c.identifier) map[String(id)] = c.identifier;
+      }
+    }
+  } catch {}
+  return map;
+}
+
+function loadInbox() {
+  let raw;
+  try { raw = readFileSync(INBOX_FILE, 'utf8'); } catch { return null; } // null = reader not up yet
+  const msgs = [];
+  for (const line of raw.split('\n')) {
+    const t = line.trim(); if (!t) continue;
+    let obj; try { obj = JSON.parse(t); } catch { continue; }
+    const items = Array.isArray(obj) ? obj : [obj];
+    for (const m of items) msgs.push(m);
+  }
+  return msgs;
+}
+
+const isInbound = (m) => !(m.is_from_me === true || m.isFromMe === true || m.fromMe === true);
+// Strip null bytes, the attachment placeholder glyph (U+FFFC), and other control chars
+// that iMessage embeds — these break the claude CLI call and pollute slugs.
+const cleanText = (s) => (s || '')
+  .replace(/[\u0000-\u001f\u007f\ufffc\ufffd]/g, ' ')
+  .replace(/\s+/g, ' ')
+  .trim();
+const bodyOf = (m) => cleanText(m.text || m.body || m.message || '');
+const rowIdOf = (m) => Number(m.rowid ?? m.rowId ?? m.id ?? 0);
+function handleOf(m, chatMap) {
+  return m.handle || m.sender || m.from || chatMap[String(m.chat_id ?? m.chatId ?? '')] || null;
+}
+
+function tick(state) {
+  const msgs = loadInbox();
+  if (msgs === null) { log('[wait] reader not up yet (no inbox file)'); return; }
+  const chatMap = loadChatMap();
+  msgs.sort((a, b) => rowIdOf(a) - rowIdOf(b));
+  for (const m of msgs) {
+    const rid = rowIdOf(m);
+    if (!isInbound(m)) { if (rid) state.lastRowId = Math.max(state.lastRowId, rid); continue; }
+    if (rid && rid <= state.lastRowId) continue;
+    const from = handleOf(m, chatMap);
+    const body = bodyOf(m);
+    if (rid) state.lastRowId = Math.max(state.lastRowId, rid);
+    if (!body) continue;
+    if (ALLOW_FROM.length && from && !ALLOW_FROM.includes(from)) { log('[skip]', from); continue; }
+    if (state.seen[rid]) continue;
+    state.seen[rid] = true;
+    log('[idea]', from, JSON.stringify(body));
+    // Reply must be ONLY the URL. On failure we log but do NOT send any other text.
+    try { const url = publish(body, from); log('[done]', url); }
+    catch (e) { log('[fail]', e.message); }
+    saveState(state);
+  }
+  saveState(state);
+}
+
+// ---- main ----
+if (process.argv[2] === '--once-idea') {
+  console.log(publish(process.argv[3], process.argv[4] || null));
+  process.exit(0);
+}
+
+log('[start] agent-loop base=' + BASE_URL + ' allow=' + (ALLOW_FROM.join(',') || 'anyone') + ' inbox=' + INBOX_FILE);
+const state = loadState();
+// Baseline: on first run, skip everything already in the inbox so we only act on NEW texts.
+if (!state.baselined) {
+  const seedMsgs = loadInbox() || [];
+  for (const m of seedMsgs) { const r = rowIdOf(m); if (r > state.lastRowId) state.lastRowId = r; }
+  state.baselined = true;
+  saveState(state);
+  log('[baseline] lastRowId=' + state.lastRowId);
+}
+tick(state);
+setInterval(() => tick(state), POLL_MS);
