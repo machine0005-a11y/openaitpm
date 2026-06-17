@@ -1,0 +1,525 @@
+.page {
+  --ink: #11130f;
+  --muted: #5d6259;
+  --paper: #f7f3ea;
+  --panel: #fffdf8;
+  --line: #ded5c4;
+  --green: #29694c;
+  --green-dark: #193f31;
+  --red: #b44834;
+  --gold: #c5943a;
+  --shadow: 0 24px 70px rgba(36, 31, 20, 0.14);
+  min-height: 100vh;
+  color: var(--ink);
+  background: var(--paper);
+  overflow-x: hidden;
+}
+
+.hero {
+  min-height: 86vh;
+  display: grid;
+  align-items: stretch;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: #111;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background: url("/ideas/ideamuses-money/hero.jpg") center / cover no-repeat;
+}
+
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(90deg, rgba(9, 12, 10, 0.88) 0%, rgba(9, 12, 10, 0.75) 32%, rgba(9, 12, 10, 0.22) 70%, rgba(9, 12, 10, 0.1) 100%),
+    linear-gradient(0deg, rgba(9, 12, 10, 0.62), rgba(9, 12, 10, 0.04) 46%);
+}
+
+.nav {
+  width: min(1160px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 20px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #fffdf6;
+  position: relative;
+  z-index: 2;
+}
+
+.brand {
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+  font-weight: 760;
+  letter-spacing: 0;
+  text-decoration: none;
+}
+
+.mark {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.navlinks {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 14px;
+}
+
+.navlinks a {
+  text-decoration: none;
+}
+
+.heroInner {
+  width: min(1160px, calc(100% - 32px));
+  margin: 0 auto;
+  display: grid;
+  align-items: center;
+  padding: 36px 0 86px;
+}
+
+.heroCopy {
+  width: 100%;
+  max-width: 650px;
+  min-width: 0;
+  color: #fffdf6;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.34);
+  background: rgba(255, 255, 255, 0.1);
+  font-size: 13px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.hero h1 {
+  margin: 22px 0 18px;
+  font-size: clamp(46px, 8vw, 92px);
+  line-height: 0.92;
+  letter-spacing: 0;
+  max-width: 760px;
+  overflow-wrap: break-word;
+}
+
+.heroCopy p {
+  max-width: 590px;
+  margin: 0 0 28px;
+  color: rgba(255, 255, 255, 0.84);
+  font-size: clamp(18px, 2.4vw, 23px);
+  line-height: 1.45;
+  overflow-wrap: break-word;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+.btn {
+  min-height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 13px 18px;
+  border: 1px solid transparent;
+  text-decoration: none;
+  font-weight: 780;
+  border-radius: 4px;
+  transition: transform 180ms ease, background 180ms ease, border-color 180ms ease;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+}
+
+.primary {
+  background: #fffdf6;
+  color: #151813;
+}
+
+.secondary {
+  border-color: rgba(255, 255, 255, 0.36);
+  color: #fffdf6;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.dark {
+  background: var(--green-dark);
+  color: white;
+}
+
+.line {
+  border-color: var(--line);
+  color: var(--ink);
+  background: transparent;
+}
+
+.section {
+  padding: 76px 0;
+}
+
+.wrap {
+  width: min(1160px, calc(100% - 32px));
+  margin: 0 auto;
+}
+
+.sectionHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 430px);
+  gap: 32px;
+  align-items: end;
+  margin-bottom: 28px;
+}
+
+.sectionHead h2,
+.offerCopy h2 {
+  margin: 0;
+  font-size: clamp(32px, 4vw, 58px);
+  line-height: 1;
+  letter-spacing: 0;
+  overflow-wrap: break-word;
+}
+
+.sectionHead p,
+.muted {
+  color: var(--muted);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.proofGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border-top: 1px solid var(--line);
+  border-left: 1px solid var(--line);
+  background: var(--panel);
+}
+
+.proof {
+  padding: 24px;
+  min-height: 190px;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.proof b {
+  display: block;
+  font-size: 32px;
+  margin-bottom: 36px;
+  color: var(--green);
+}
+
+.proof h3 {
+  margin: 0 0 8px;
+  font-size: 19px;
+}
+
+.proof p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.band {
+  background: #151813;
+  color: #fffdf6;
+}
+
+.band .sectionHead p {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.workflow {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.step {
+  padding: 28px;
+  background: #1f241e;
+  min-height: 240px;
+}
+
+.num {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  background: var(--gold);
+  color: #14130f;
+  font-weight: 900;
+  margin-bottom: 48px;
+}
+
+.step h3 {
+  margin: 0 0 10px;
+  font-size: 23px;
+}
+
+.step p {
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+  line-height: 1.55;
+}
+
+.pricing {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  align-items: stretch;
+}
+
+.plan {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  padding: 26px;
+  min-height: 440px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 12px 42px rgba(36, 31, 20, 0.07);
+}
+
+.featured {
+  background: var(--green-dark);
+  color: #fffdf6;
+  border-color: var(--green-dark);
+  transform: translateY(-10px);
+  box-shadow: var(--shadow);
+}
+
+.label {
+  color: var(--red);
+  font-weight: 800;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.featured .label {
+  color: #f5c77a;
+}
+
+.plan h3 {
+  margin: 16px 0 10px;
+  font-size: 26px;
+}
+
+.price {
+  margin: 0 0 18px;
+  font-size: 46px;
+  font-weight: 850;
+  line-height: 1;
+}
+
+.price small {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.featured .price small,
+.featured p,
+.featured li {
+  color: rgba(255, 255, 255, 0.76);
+}
+
+.plan p {
+  color: var(--muted);
+  margin: 0 0 20px;
+  line-height: 1.55;
+}
+
+.plan ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 24px;
+  display: grid;
+  gap: 12px;
+}
+
+.plan li {
+  color: var(--muted);
+  line-height: 1.35;
+  padding-left: 22px;
+  position: relative;
+}
+
+.plan li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.62em;
+  width: 9px;
+  height: 9px;
+  background: var(--green);
+}
+
+.featured li::before {
+  background: #f5c77a;
+}
+
+.plan .btn {
+  margin-top: auto;
+}
+
+.offer {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(320px, 1.1fr);
+  gap: 34px;
+  align-items: center;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  padding: 18px;
+  box-shadow: var(--shadow);
+}
+
+.offerVisual {
+  min-height: 460px;
+  background:
+    linear-gradient(rgba(17, 19, 15, 0.08), rgba(17, 19, 15, 0.08)),
+    url("/ideas/ideamuses-money/hero.jpg") center / cover no-repeat;
+}
+
+.offerCopy {
+  padding: 24px 18px 24px 0;
+}
+
+.offerCopy h2 {
+  margin-bottom: 18px;
+}
+
+.checklist {
+  margin: 26px 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 13px;
+}
+
+.checklist li {
+  display: grid;
+  grid-template-columns: 20px 1fr;
+  gap: 12px;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.check {
+  width: 18px;
+  height: 18px;
+  color: var(--green);
+  display: grid;
+  place-items: center;
+  margin-top: 2px;
+}
+
+@media (max-width: 900px) {
+  .hero {
+    min-height: 820px;
+  }
+
+  .hero::before {
+    background-position: 63% center;
+  }
+
+  .hero::after {
+    background:
+      linear-gradient(90deg, rgba(9, 12, 10, 0.9), rgba(9, 12, 10, 0.62) 58%, rgba(9, 12, 10, 0.22)),
+      linear-gradient(0deg, rgba(9, 12, 10, 0.76), rgba(9, 12, 10, 0.04) 52%);
+  }
+
+  .navlinks {
+    display: none;
+  }
+
+  .sectionHead,
+  .offer {
+    grid-template-columns: 1fr;
+  }
+
+  .proofGrid,
+  .workflow,
+  .pricing {
+    grid-template-columns: 1fr;
+  }
+
+  .featured {
+    transform: none;
+  }
+
+  .offerCopy {
+    padding: 0 4px 14px;
+  }
+
+  .offerVisual {
+    min-height: 330px;
+  }
+}
+
+@media (max-width: 520px) {
+  .nav,
+  .heroInner,
+  .wrap {
+    width: calc(100% - 32px);
+    max-width: 358px;
+    margin-left: 16px;
+    margin-right: auto;
+  }
+
+  .hero {
+    min-height: 760px;
+  }
+
+  .heroInner {
+    align-items: end;
+    padding-bottom: 48px;
+  }
+
+  .hero h1 {
+    font-size: 40px;
+  }
+
+  .btn {
+    width: 100%;
+  }
+
+  .section {
+    padding: 54px 0;
+  }
+
+  .proof,
+  .step,
+  .plan {
+    padding: 22px;
+  }
+
+  .price {
+    font-size: 40px;
+  }
+}
