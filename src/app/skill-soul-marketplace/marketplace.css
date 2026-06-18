@@ -84,7 +84,7 @@
 .humanware-tags span { border: 1px solid #cbc6bb; border-radius: 999px; padding: 6px 8px; font-size: .6rem; font-weight: 800; }
 .humanware-listing-footer { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: auto; border-top: 1px solid #d7d1c7; padding-top: 18px; font-size: .64rem; font-weight: 800; }
 .humanware-listing-footer span { opacity: .48; }
-.humanware-listing button { display: flex; align-items: center; gap: 5px; border: 0; background: transparent; font-size: .68rem; font-weight: 900; }
+.humanware-listing-footer a { display: flex; align-items: center; gap: 5px; font-size: .68rem; font-weight: 900; }
 
 .humanware-model { background: var(--ink); color: var(--paper); }
 .humanware-section-heading.light > p { color: rgba(242,239,231,.62); }
@@ -102,16 +102,26 @@
 .humanware-krystina blockquote { max-width: 1000px; margin-top: 25px; font-size: clamp(2.5rem, 5.6vw, 5.8rem); line-height: .98; letter-spacing: -.065em; font-weight: 900; }
 .humanware-assumption { max-width: 670px; margin-top: 40px; border-top: 1px solid rgba(21,23,21,.3); padding-top: 16px; font-size: .7rem; line-height: 1.6; font-weight: 700; opacity: .62; }
 
+.humanware-preview { display: grid; align-items: center; gap: clamp(40px, 8vw, 120px); padding: clamp(80px, 11vw, 160px) clamp(20px, 8vw, 120px); background: var(--blue); grid-template-columns: .9fr 1.1fr; }
+.humanware-preview-copy h2 { margin-top: 18px; font-size: clamp(3.5rem, 7vw, 7rem); line-height: .88; letter-spacing: -.08em; font-weight: 900; }
+.humanware-preview-copy > p { max-width: 580px; margin-top: 26px; line-height: 1.75; }
+.humanware-preview-copy small { display: block; max-width: 590px; margin-top: 22px; font-size: .62rem; line-height: 1.6; opacity: .6; }
+.humanware-preview-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
+.humanware-preview-actions a { display: inline-flex; align-items: center; gap: 8px; border-radius: 999px; padding: 14px 17px; background: var(--ink); color: var(--paper); font-size: .7rem; font-weight: 900; }
+.humanware-preview-actions svg { width: 15px; }
+.humanware-preview-file { border: 1px solid rgba(21,23,21,.25); border-radius: 28px; padding: clamp(22px, 4vw, 40px); background: var(--paper); box-shadow: 18px 18px 0 rgba(21,23,21,.9); transform: rotate(2deg); }
+.humanware-preview-file pre { overflow-x: auto; margin-top: 30px; white-space: pre-wrap; font: 700 .78rem/1.85 ui-monospace, SFMono-Regular, Menlo, monospace; }
+
 .humanware-creator { display: grid; align-items: center; gap: 90px; grid-template-columns: 1.15fr .85fr; }
 .humanware-creator-card { border: 1px solid #c8c2b7; border-radius: 30px; padding: clamp(25px, 4vw, 48px); background: var(--acid); box-shadow: 15px 15px 0 var(--ink); }
 .humanware-creator-card p { font-size: 1rem; line-height: 1.75; font-weight: 700; }
-.humanware-creator-card button { display: flex; width: 100%; align-items: center; justify-content: space-between; margin-top: 28px; border: 0; border-radius: 999px; padding: 15px 18px; background: var(--ink); color: var(--paper); font-size: .75rem; font-weight: 900; }
+.humanware-creator-card > a { display: flex; width: 100%; align-items: center; justify-content: space-between; margin-top: 28px; border: 0; border-radius: 999px; padding: 15px 18px; background: var(--ink); color: var(--paper); font-size: .75rem; font-weight: 900; }
 .humanware-creator-card small { display: block; margin-top: 16px; font-size: .6rem; line-height: 1.5; opacity: .54; }
 .humanware-footer { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 32px clamp(20px, 5vw, 76px); background: var(--ink); color: var(--paper); }
 .humanware-footer p { font-size: .65rem; opacity: .5; }
 
 @media (max-width: 980px) {
-  .humanware-hero-grid, .humanware-section-heading, .humanware-creator { grid-template-columns: 1fr; }
+  .humanware-hero-grid, .humanware-section-heading, .humanware-preview, .humanware-creator { grid-template-columns: 1fr; }
   .humanware-hero-grid { padding-top: 100px; }
   .humanware-file-stack { min-height: 620px; }
   .humanware-listings { grid-template-columns: 1fr; }

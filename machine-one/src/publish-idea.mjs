@@ -14,7 +14,7 @@
  * slug/name are forced from args.
  */
 import { spawnSync } from 'node:child_process';
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 const PROJECT_DIR = '/Users/machine1/Documents/New project';

@@ -59,7 +59,7 @@ if (!latestCommit) {
   process.exit(1);
 }
 
-if (currentBranch !== "main") {
+if (!dryRun && currentBranch !== "main") {
   console.error(`Expected to connect from main, but current branch is ${currentBranch || "unknown"}.`);
   process.exit(1);
 }
@@ -84,4 +84,4 @@ if (push) {
   console.log("Origin configured. Push when ready with: git push -u origin main");
 }
 
-console.log(`Connected ${latestCommit} on main to ${repoUrl}${dryRun ? " (dry run)" : ""}.`);
+console.log(`Connected ${latestCommit} on ${currentBranch || "unknown branch"} to ${repoUrl}${dryRun ? " (dry run)" : ""}.`);
