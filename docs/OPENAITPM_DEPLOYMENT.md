@@ -43,6 +43,14 @@ npm run idea:new -- "Enterprise Leadership Context OS"
 6. Vercel creates a preview deployment for the PR when the GitHub repo is connected.
 7. After merge, production serves the route from `openAITpm.com/<idea-name>`.
 
+For automatic PR creation, enable this GitHub repository setting:
+
+```txt
+Settings > Actions > General > Workflow permissions > Allow GitHub Actions to create and approve pull requests
+```
+
+If that setting is off, the workflow still runs `npm run verify` and prints a manual PR link in the Actions summary instead of skipping the build.
+
 ## First-Time GitHub Remote Setup
 
 This local folder currently needs a GitHub remote before the PR loop can run. After creating the correct GitHub repository, connect it once:

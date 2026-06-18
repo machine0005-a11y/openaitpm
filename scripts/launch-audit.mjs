@@ -235,6 +235,9 @@ const checks = [
         ".github/workflows/vercel-deploy.yml",
         ".github/workflows/production-smoke.yml"
       ]) &&
+      checklistHasEvery(["requiredGitHub", "requiredPermissions"], [
+        "Allow GitHub Actions to create and approve pull requests"
+      ]) &&
       checklistHasEvery(["requiredVercel", "domains"], ["openAITpm.com", "www.openAITpm.com"]),
     "docs/LAUNCH_CHECKLIST.json captures required GitHub, Vercel, and domain setup.",
     "Add docs/LAUNCH_CHECKLIST.json with required GitHub secrets, workflows, Vercel settings, and domains."

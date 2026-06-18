@@ -1,0 +1,32 @@
+{
+  "slug": "no-git-route-verification-20260612",
+  "name": "Route Verification Proof 20260612",
+  "status": "preview",
+  "tagline": "A proof page that catches route, branch, and public URL drift before customers see it.",
+  "thesis": "Route Verification Proof 20260612 exists to verify the OpenAITPM publishing loop end to end: a checked-in idea file must produce a stable route, a matching source branch, a valid repo path, and a public URL. The first user is the operator maintaining the launch system.",
+  "audience": "OpenAITPM operators who need confidence that every idea branch maps cleanly to a public route.",
+  "sourceBranch": "idea/no-git-route-verification-20260612",
+  "repoPath": "src/content/ideas/no-git-route-verification-20260612.json",
+  "primaryCta": "Try it now",
+  "secondaryCta": "See how it works",
+  "proofPoints": [
+    "The route verifier checks slug, route, sourceBranch, repoPath, and required page copy.",
+    "Long slugs preserve uniqueness suffixes instead of truncating into collisions.",
+    "GitHub Actions runs the same verification before a branch can be safely merged."
+  ],
+  "heroImage": null,
+  "launchChecks": [
+    {
+      "label": "Route proof page added",
+      "state": "done"
+    },
+    {
+      "label": "Watch next GitHub branch build",
+      "state": "active"
+    },
+    {
+      "label": "Promote route checks into release evidence",
+      "state": "next"
+    }
+  ]
+}
