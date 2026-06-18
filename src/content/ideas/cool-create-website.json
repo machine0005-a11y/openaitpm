@@ -1,0 +1,33 @@
+{
+  "slug": "cool-create-website",
+  "name": "Cool Create Website",
+  "status": "preview",
+  "tagline": "Turn a rough idea into a simple public website page you can share in minutes.",
+  "thesis": "Cool Create Website is the lightweight proof that OpenAITPM can take a short, casual idea and turn it into a customer-readable page with a stable URL. The first user is a founder or creator who wants a page before they have a full product spec.",
+  "audience": "Founders, creators, and operators who need a quick public page for a new idea.",
+  "sourceBranch": "idea/cool-create-website",
+  "repoPath": "src/content/ideas/cool-create-website.json",
+  "primaryCta": "Try it now",
+  "secondaryCta": "See how it works",
+  "proofPoints": [
+    "A short prompt becomes a checked-in JSON page with route, thesis, CTAs, proof points, and launch checks.",
+    "The route is stable at openAITpm.com/cool-create-website once the branch lands.",
+    "The same PR/build workflow validates the page before it reaches production."
+  ],
+  "heroImage": null,
+  "galleryImages": [],
+  "launchChecks": [
+    {
+      "label": "Customer-facing idea copy added",
+      "state": "done"
+    },
+    {
+      "label": "Add live screenshot capture",
+      "state": "active"
+    },
+    {
+      "label": "Generate richer page variants",
+      "state": "next"
+    }
+  ]
+}

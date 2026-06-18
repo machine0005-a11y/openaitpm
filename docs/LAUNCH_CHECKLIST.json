@@ -24,7 +24,8 @@
     "requiredPermissions": [
       "Actions enabled",
       "Read and write workflow permissions",
-      "Pull requests write permission for GITHUB_TOKEN"
+      "Pull requests write permission for GITHUB_TOKEN",
+      "Allow GitHub Actions to create and approve pull requests"
     ]
   },
   "requiredVercel": {
