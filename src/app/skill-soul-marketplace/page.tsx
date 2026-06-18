@@ -29,7 +29,8 @@ const listings = [
     description:
       "A warm greeting and conversation framework for restaurants, ordering agents, and customer support.",
     tags: ["Hospitality", "Support", "Restaurant"],
-    accent: "coral"
+    accent: "coral",
+    href: "#krystina-welcome"
   },
   {
     initials: "M",
@@ -39,7 +40,8 @@ const listings = [
     description:
       "Turns complex instructions into calm, step-by-step guidance without making people feel behind.",
     tags: ["Education", "Onboarding", "SaaS"],
-    accent: "blue"
+    accent: "blue",
+    href: "#creator"
   },
   {
     initials: "A",
@@ -49,7 +51,8 @@ const listings = [
     description:
       "Interaction principles for helping new members feel noticed, included, and ready to participate.",
     tags: ["Community", "Events", "Welcome"],
-    accent: "gold"
+    accent: "gold",
+    href: "#creator"
   }
 ];
 
@@ -153,10 +156,55 @@ export default function SkillSoulMarketplacePage() {
               </div>
               <div className="humanware-listing-footer">
                 <span>Preview available</span>
-                <button type="button">Open listing <ArrowRight aria-hidden="true" /></button>
+                <a href={listing.href}>Open listing <ArrowRight aria-hidden="true" /></a>
               </div>
             </article>
           ))}
+        </div>
+      </section>
+
+      <section className="humanware-preview" id="krystina-welcome">
+        <div className="humanware-preview-copy">
+          <p className="humanware-kicker"><BadgeCheck aria-hidden="true" /> Sample listing</p>
+          <h2>Krystina&apos;s Welcome</h2>
+          <p>
+            Try a bounded sample before licensing a creator-approved version. These files
+            demonstrate the product format without claiming to represent Krystina herself.
+          </p>
+          <div className="humanware-preview-actions">
+            <a href="/humanware/krystina-welcome/SKILL.md" download>
+              Download sample SKILL.md <ArrowRight aria-hidden="true" />
+            </a>
+            <a href="/humanware/krystina-welcome/SOUL.md" download>
+              Download sample SOUL.md <ArrowRight aria-hidden="true" />
+            </a>
+          </div>
+          <small>
+            Prototype sample only. A commercial listing would require Krystina&apos;s direct
+            participation, review, consent, and licensing terms.
+          </small>
+        </div>
+        <div className="humanware-preview-file">
+          <div className="humanware-file-top">
+            <span className="humanware-file-dot" />
+            <code>Krystina-Welcome/SKILL.md</code>
+            <BadgeCheck aria-label="Sample file" />
+          </div>
+          <pre>{`# Warm Welcome
+
+## Goal
+Help a guest feel noticed before asking what they need.
+
+## Interaction
+1. Offer one natural welcome.
+2. Ask one easy, relevant question.
+3. Reflect their answer briefly.
+4. Make the next step clear.
+
+## Boundaries
+- Never pretend to be Krystina.
+- Do not infer sensitive personal details.
+- Keep the guest in control.`}</pre>
         </div>
       </section>
 
@@ -202,7 +250,9 @@ export default function SkillSoulMarketplacePage() {
         </div>
         <div className="humanware-creator-card">
           <p>Start with one journal entry, story, or lesson. Turn it into a testable file. Keep ownership of your voice and approve every update.</p>
-          <button type="button">Draft your first skill <ArrowRight aria-hidden="true" /></button>
+          <a href="mailto:hello@ideamuses.com?subject=Draft%20my%20first%20Humanware%20skill">
+            Draft your first skill <ArrowRight aria-hidden="true" />
+          </a>
           <small>Prototype only · No purchase or financial action is performed here.</small>
         </div>
       </section>

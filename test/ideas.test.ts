@@ -8,6 +8,11 @@ describe("OpenAITPM idea routing", () => {
       "enterprise-leadership-context-os"
     );
     expect(normalizeIdeaSlug("AI TPM: Family & Friends")).toBe("ai-tpm-family-and-friends");
+    expect(
+      normalizeIdeaSlug(
+        "Create a plan for a restaurant that is gonna be based around digital dart games dz0r"
+      )
+    ).toBe("create-a-plan-for-a-restaurant-that-is-gonna-be-based-around-digital-dart-games-dz0r");
   });
 
   it("serves known idea pages for checked-in concepts", () => {
