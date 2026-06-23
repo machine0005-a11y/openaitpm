@@ -11,11 +11,6 @@
 //
 // ngrok is loaded dynamically so the dep isn't required for normal use.
 import 'dotenv/config';
-import { spawn } from 'node:child_process';
-
-async function main() {
-  require('./server.js'); // boots the server on PORT (default 3000)
-}
 
 // We deliberately use a dynamic import here so a missing ngrok package
 // produces a clear, actionable error instead of crashing module load.

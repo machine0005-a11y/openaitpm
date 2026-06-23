@@ -594,6 +594,22 @@
       color: #ffffff;
     }
 
+    .provider-summary {
+      border: 1px solid #e3e8e2;
+      border-radius: 8px;
+      background: #fafcf8;
+      color: var(--muted);
+      min-height: 38px;
+      padding: 9px 11px;
+      font-size: 13px;
+      font-weight: 750;
+    }
+
+    .provider-summary.ready {
+      border-color: color-mix(in srgb, var(--teal) 35%, #e3e8e2);
+      color: #137d71;
+    }
+
     .paste-panel {
       display: grid;
       gap: 8px;
@@ -856,6 +872,7 @@
           <button class="connect-button" type="button" data-connect-provider="apple">Open</button>
         </div>
       </div>
+      <div class="provider-summary" id="providerSummary">Checking music search</div>
       <form class="paste-panel" id="linkForm">
         <div class="paste-title" id="pickerPrompt">Search Spotify or paste a song link</div>
         <div class="paste-row">
@@ -945,6 +962,7 @@
       spotifyState: document.getElementById("spotifyState"),
       youtubeState: document.getElementById("youtubeState"),
       appleState: document.getElementById("appleState"),
+      providerSummary: document.getElementById("providerSummary"),
       fileInput: document.getElementById("fileInput"),
       audio: document.getElementById("audio")
     };
@@ -1033,6 +1051,15 @@
         button.textContent = status.connected ? "Connected" : status.configured ? "Connect" : "Open";
         button.classList.toggle("connected", status.connected);
       });
+
+      const configuredCount = Object.values(connectionState).filter(status => status.configured).length;
+      const connectedCount = Object.values(connectionState).filter(status => status.connected).length;
+      els.providerSummary.classList.toggle("ready", configuredCount > 0);
+      els.providerSummary.textContent = connectedCount > 0
+        ? `${connectedCount} connected - search ready`
+        : configuredCount > 0
+          ? `${configuredCount} ready to connect - search available after sign-in`
+          : "Link mode active - paste a song link to play";
     }
 
     function selectProvider(provider) {
@@ -1600,6 +1627,7 @@
       try {
         const YT = await ensureYouTubeApi();
         if (state.linkedItem !== item) return;
+        const embedPlaylistId = item.embedPlaylistId ?? item.playlistId;
         youtubePlayer = new YT.Player("youtubePlayerMount", {
           width: "100%",
           height: "100%",
@@ -1609,7 +1637,7 @@
             controls: 1,
             rel: 0,
             origin: window.location.origin,
-            ...(item.playlistId ? { listType: "playlist", list: item.playlistId } : {})
+            ...(embedPlaylistId ? { listType: "playlist", list: embedPlaylistId } : {})
           },
           events: {
             onReady: event => {
@@ -1916,9 +1944,19 @@
       }
 
       if (host === "youtu.be" && pathParts[0]) {
+        const playlistId = url.searchParams.get("list");
+        const isRadioMix = playlistId && (playlistId.startsWith("RD") || url.searchParams.get("start_radio") === "1");
+        if (isRadioMix) {
+          return linkedItem("YouTube", "mix", playlistId, "youtube", {
+            originalUrl: value,
+            radioPlaylistId: playlistId,
+            videoId: pathParts[0]
+          });
+        }
         return linkedItem("YouTube", "video", pathParts[0], "youtube", {
           originalUrl: value,
-          videoId: pathParts[0]
+          videoId: pathParts[0],
+          ...(playlistId ? { playlistId } : {})
         });
       }
 
@@ -1939,7 +1977,7 @@
         if (isRadioMix) {
           return linkedItem(provider, "mix", playlistId, flavor, {
             originalUrl: value,
-            playlistId,
+            ...(videoId ? { radioPlaylistId: playlistId } : { playlistId }),
             videoId
           });
         }
@@ -2042,6 +2080,11 @@
       button.addEventListener("click", () => connectProvider(button.dataset.connectProvider));
     });
     els.pasteButton.addEventListener("click", pasteAndPlay);
+    els.linkInput.addEventListener("keydown", event => {
+      if (event.key !== "Enter") return;
+      event.preventDefault();
+      submitMusicInput(els.linkInput.value);
+    });
     els.linkForm.addEventListener("submit", event => {
       event.preventDefault();
       submitMusicInput(els.linkInput.value);

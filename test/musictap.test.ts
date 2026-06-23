@@ -7,7 +7,12 @@ import { GET as getMusicTapConfig } from "@/app/api/musictap/config/route";
 const html = readFileSync(resolve("public/musictap/index.html"), "utf8");
 const openProvider = vi.fn();
 
-function createMusicTapDom() {
+function createMusicTapDom(config = {
+  spotifyClientId: "",
+  googleClientId: "",
+  appleMusicDeveloperToken: "",
+  appleMusicStorefront: "us"
+}) {
   openProvider.mockClear();
   return new JSDOM(html, {
     runScripts: "dangerously",
@@ -16,12 +21,7 @@ function createMusicTapDom() {
       const win = window as unknown as Record<string, unknown>;
       win.fetch = vi.fn(async () => ({
         ok: true,
-        json: async () => ({
-          spotifyClientId: "",
-          googleClientId: "",
-          appleMusicDeveloperToken: "",
-          appleMusicStorefront: "us"
-        })
+        json: async () => config
       }));
       win.open = openProvider;
       win.requestAnimationFrame = vi.fn(() => 1);
@@ -38,6 +38,7 @@ function createMusicTapDom() {
       class FakeYouTubePlayer {
         private readonly options: {
           videoId: string;
+          playerVars?: Record<string, unknown>;
           events: {
             onReady: (event: { target: FakeYouTubePlayer }) => void;
             onStateChange: (event: { data: number; target: FakeYouTubePlayer }) => void;
@@ -46,6 +47,7 @@ function createMusicTapDom() {
 
         constructor(targetId: string, options: FakeYouTubePlayer["options"]) {
           this.options = options;
+          win.lastYouTubePlayerOptions = options;
           window.setTimeout(() => {
             const target = window.document.getElementById(targetId);
             const iframe = window.document.createElement("iframe");
@@ -108,9 +110,9 @@ describe("MusicTap connected picker", () => {
 
       const input = document.getElementById("linkInput") as HTMLInputElement;
       input.value =
-        "https://www.youtube.com/watch?v=qJ1GBL1TPLg&list=RDqJ1GBL1TPLg&start_radio=1";
-      document.getElementById("linkForm")?.dispatchEvent(
-        new dom.window.Event("submit", { bubbles: true, cancelable: true })
+        "https://www.youtube.com/watch?v=qJ1GBL1TPLg&list=RDqJ1GBL1TPLg&start_radio=1&pp=ygUqZnJlZCBhZ2FpbiBzb21ldGltZXMgaSB3YW5uYSBmZWVsIHRoZSBwYWluoAcB";
+      input.dispatchEvent(
+        new dom.window.KeyboardEvent("keydown", { key: "Enter", bubbles: true, cancelable: true })
       );
       await flushDom();
 
@@ -118,6 +120,12 @@ describe("MusicTap connected picker", () => {
       expect(document.querySelector("#providerPlayer iframe")?.getAttribute("src")).toContain(
         "qJ1GBL1TPLg"
       );
+      const playerOptions = (
+        dom.window as unknown as {
+          lastYouTubePlayerOptions?: { playerVars?: Record<string, unknown> };
+        }
+      ).lastYouTubePlayerOptions;
+      expect(playerOptions?.playerVars?.list).toBeUndefined();
       expect(document.getElementById("playButton")?.getAttribute("aria-label")).toBe("Pause");
       expect((document.getElementById("recentSection") as HTMLElement).hidden).toBe(false);
       dom.window.close();
@@ -151,6 +159,9 @@ describe("MusicTap connected picker", () => {
     const document = dom.window.document;
 
     document.getElementById("addButton")?.click();
+    expect(document.getElementById("providerSummary")?.textContent).toBe(
+      "Link mode active - paste a song link to play"
+    );
     const providerButton = document.querySelector(
       '[data-connect-provider="spotify"]'
     ) as HTMLButtonElement;
@@ -162,6 +173,29 @@ describe("MusicTap connected picker", () => {
       "_blank",
       "noopener"
     );
+    dom.window.close();
+  });
+
+  it("switches providers into connect mode when credentials are configured", async () => {
+    const dom = createMusicTapDom({
+      spotifyClientId: "spotify-client",
+      googleClientId: "",
+      appleMusicDeveloperToken: "",
+      appleMusicStorefront: "us"
+    });
+    await flushDom();
+    const document = dom.window.document;
+
+    document.getElementById("addButton")?.click();
+
+    expect(document.getElementById("providerSummary")?.textContent).toBe(
+      "1 ready to connect - search available after sign-in"
+    );
+    expect(
+      (document.querySelector('[data-connect-provider="spotify"]') as HTMLButtonElement)
+        .textContent
+    ).toBe("Connect");
+    expect(document.getElementById("spotifyState")?.textContent).toBe("Connect to search");
     dom.window.close();
   });
 
