@@ -186,6 +186,35 @@ describe("MusicTap connected picker", () => {
     dom.window.close();
   });
 
+  it("labels the primary picker action as search for text and play for links", async () => {
+    const dom = createMusicTapDom();
+    await flushDom();
+    const document = dom.window.document;
+
+    document.getElementById("addButton")?.click();
+    const input = document.getElementById("linkInput") as HTMLInputElement;
+    const submitButton = document.getElementById("submitMusicButton") as HTMLButtonElement;
+
+    expect(submitButton.textContent).toBe("Search");
+
+    input.value = "fred again";
+    input.dispatchEvent(new dom.window.Event("input", { bubbles: true }));
+    expect(submitButton.textContent).toBe("Search");
+
+    input.value = "https://www.youtube.com/watch?v=qJ1GBL1TPLg";
+    input.dispatchEvent(new dom.window.Event("input", { bubbles: true }));
+    expect(submitButton.textContent).toBe("Play");
+
+    input.value = "morning playlist";
+    (document.querySelector('[data-content-kind="playlist"]') as HTMLButtonElement).click();
+    input.dispatchEvent(new dom.window.Event("input", { bubbles: true }));
+    expect(submitButton.textContent).toBe("Search");
+    expect(document.getElementById("pickerPrompt")?.textContent).toBe(
+      "Search Spotify playlists or paste a playlist link"
+    );
+    dom.window.close();
+  });
+
   it("switches providers into connect mode when credentials are configured", async () => {
     const dom = createMusicTapDom({
       spotifyClientId: "spotify-client",

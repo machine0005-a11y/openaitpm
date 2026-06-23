@@ -886,7 +886,7 @@
         <div class="paste-row">
           <input id="linkInput" type="text" placeholder="Search or paste a link">
           <button type="button" id="pasteButton">Paste</button>
-          <button type="submit">Play</button>
+          <button type="submit" id="submitMusicButton">Search</button>
         </div>
         <div class="link-hint" id="linkHint"></div>
       </form>
@@ -961,6 +961,7 @@
       drawer: document.getElementById("drawer"),
       linkForm: document.getElementById("linkForm"),
       linkInput: document.getElementById("linkInput"),
+      submitMusicButton: document.getElementById("submitMusicButton"),
       linkHint: document.getElementById("linkHint"),
       pickerPrompt: document.getElementById("pickerPrompt"),
       pasteButton: document.getElementById("pasteButton"),
@@ -1143,6 +1144,15 @@
       const prompt = `Search ${provider} ${content.plural} or paste a ${content.singular} link`;
       els.pickerPrompt.textContent = prompt;
       els.linkInput.placeholder = prompt;
+      updateSubmitAction();
+    }
+
+    function isMusicLink(value) {
+      return /^(https?:\/\/|spotify:)/i.test(value.trim());
+    }
+
+    function updateSubmitAction() {
+      els.submitMusicButton.textContent = isMusicLink(els.linkInput.value) ? "Play" : "Search";
     }
 
     function setContentKind(kind) {
@@ -1529,6 +1539,7 @@
       try {
         const value = await navigator.clipboard.readText();
         els.linkInput.value = value;
+        updateSubmitAction();
         submitMusicInput(value);
       } catch {
         els.linkHint.textContent = "Paste permission was not available";
@@ -1541,7 +1552,7 @@
         els.linkHint.textContent = "Search for a song or paste a link";
         return;
       }
-      if (/^(https?:\/\/|spotify:)/i.test(value)) {
+      if (isMusicLink(value)) {
         try {
           loadLinkedItem(parseMusicLink(value), true);
         } catch (error) {
@@ -2222,6 +2233,7 @@
       button.addEventListener("click", () => connectProvider(button.dataset.connectProvider));
     });
     els.pasteButton.addEventListener("click", pasteAndPlay);
+    els.linkInput.addEventListener("input", updateSubmitAction);
     els.linkInput.addEventListener("keydown", event => {
       if (event.key !== "Enter") return;
       event.preventDefault();
