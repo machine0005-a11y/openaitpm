@@ -1020,25 +1020,32 @@
       renderProviderConnections();
     }
 
-    function renderProviderConnections() {
+    function providerConnectionState(provider) {
       const connectionState = {
         spotify: {
           configured: Boolean(integration.config.spotifyClientId),
           connected: Boolean(integration.spotifyToken),
-          element: els.spotifyState
+          element: els.spotifyState,
+          label: providerDetails.spotify.label
         },
         youtube: {
           configured: Boolean(integration.config.googleClientId),
           connected: Boolean(integration.googleToken),
-          element: els.youtubeState
+          element: els.youtubeState,
+          label: providerDetails.youtube.label
         },
         apple: {
           configured: Boolean(integration.config.appleMusicDeveloperToken),
           connected: integration.appleConnected,
-          element: els.appleState
+          element: els.appleState,
+          label: providerDetails.apple.label
         }
       };
+      return provider ? connectionState[provider] : connectionState;
+    }
 
+    function renderProviderConnections() {
+      const connectionState = providerConnectionState();
       document.querySelectorAll("[data-connect-provider]").forEach(button => {
         const provider = button.dataset.connectProvider;
         const status = connectionState[provider];
@@ -1060,6 +1067,44 @@
         : configuredCount > 0
           ? `${configuredCount} ready to connect - search available after sign-in`
           : "Link mode active - paste a song link to play";
+    }
+
+    function rememberPendingSearch(provider, query) {
+      sessionStorage.setItem("musictap_pending_search", JSON.stringify({ provider, query }));
+    }
+
+    function readPendingSearch() {
+      try {
+        return JSON.parse(sessionStorage.getItem("musictap_pending_search") || "null");
+      } catch {
+        return null;
+      }
+    }
+
+    function clearPendingSearch() {
+      sessionStorage.removeItem("musictap_pending_search");
+    }
+
+    async function resumePendingSearch(provider) {
+      const pending = readPendingSearch();
+      if (!pending || pending.provider !== provider || !pending.query) return false;
+      clearPendingSearch();
+      openDrawer();
+      selectProvider(provider);
+      els.linkInput.value = pending.query;
+      await searchMusic(pending.query, { skipAutoConnect: true });
+      return true;
+    }
+
+    async function finishProviderConnection(provider, message) {
+      renderProviderConnections();
+      try {
+        if (await resumePendingSearch(provider)) return;
+      } catch (error) {
+        els.linkHint.textContent = error.message;
+        return;
+      }
+      els.linkHint.textContent = message;
     }
 
     function selectProvider(provider) {
@@ -1162,7 +1207,7 @@
       history.replaceState({}, "", window.location.pathname);
       openDrawer();
       selectProvider("spotify");
-      els.linkHint.textContent = "Spotify connected";
+      await finishProviderConnection("spotify", "Spotify connected");
     }
 
     function ensureGoogleIdentity() {
@@ -1191,8 +1236,7 @@
           }
           integration.googleToken = response.access_token;
           sessionStorage.setItem("musictap_google_token", response.access_token);
-          renderProviderConnections();
-          els.linkHint.textContent = "YouTube Music connected";
+          finishProviderConnection("youtube", "YouTube Music connected");
         }
       });
       googleTokenClient.requestAccessToken({ prompt: integration.googleToken ? "" : "consent" });
@@ -1232,17 +1276,24 @@
       const music = await ensureAppleMusic();
       await music.authorize();
       integration.appleConnected = true;
-      renderProviderConnections();
-      els.linkHint.textContent = "Apple Music connected";
+      await finishProviderConnection("apple", "Apple Music connected");
     }
 
-    async function searchMusic(query) {
-      els.linkHint.textContent = `Searching ${providerDetails[state.selectedProvider].label}`;
+    async function searchMusic(query, options = {}) {
+      const provider = state.selectedProvider;
+      const connection = providerConnectionState(provider);
+      if (!connection.connected && connection.configured && !options.skipAutoConnect) {
+        rememberPendingSearch(provider, query);
+        els.linkHint.textContent = `Connect ${connection.label} to search for "${query}"`;
+        await connectProvider(provider);
+        return;
+      }
+      els.linkHint.textContent = `Searching ${providerDetails[provider].label}`;
       clearSearchResults();
       let results = [];
-      if (state.selectedProvider === "spotify") results = await searchSpotify(query);
-      if (state.selectedProvider === "youtube") results = await searchYouTube(query);
-      if (state.selectedProvider === "apple") results = await searchAppleMusic(query);
+      if (provider === "spotify") results = await searchSpotify(query);
+      if (provider === "youtube") results = await searchYouTube(query);
+      if (provider === "apple") results = await searchAppleMusic(query);
       renderSearchResults(results);
       els.linkHint.textContent = results.length ? `${results.length} songs found` : "No songs found";
     }

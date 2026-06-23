@@ -6,20 +6,29 @@ import { GET as getMusicTapConfig } from "@/app/api/musictap/config/route";
 
 const html = readFileSync(resolve("public/musictap/index.html"), "utf8");
 const openProvider = vi.fn();
+type MusicTapConfig = {
+  spotifyClientId: string;
+  googleClientId: string;
+  appleMusicDeveloperToken: string;
+  appleMusicStorefront: string;
+};
 
-function createMusicTapDom(config = {
+function createMusicTapDom(config: MusicTapConfig = {
   spotifyClientId: "",
   googleClientId: "",
   appleMusicDeveloperToken: "",
   appleMusicStorefront: "us"
-}) {
+}, options: {
+  fetch?: typeof fetch;
+  setupWindow?: (window: Window & typeof globalThis) => void;
+} = {}) {
   openProvider.mockClear();
   return new JSDOM(html, {
     runScripts: "dangerously",
     url: "https://www.ideamuses.com/musictap",
     beforeParse(window) {
       const win = window as unknown as Record<string, unknown>;
-      win.fetch = vi.fn(async () => ({
+      win.fetch = options.fetch || vi.fn(async () => ({
         ok: true,
         json: async () => config
       }));
@@ -82,6 +91,7 @@ function createMusicTapDom(config = {
         Player: FakeYouTubePlayer,
         PlayerState: { PLAYING: 1, PAUSED: 2, ENDED: 0 }
       };
+      options.setupWindow?.(window as unknown as Window & typeof globalThis);
     }
   });
 }
@@ -196,6 +206,96 @@ describe("MusicTap connected picker", () => {
         .textContent
     ).toBe("Connect");
     expect(document.getElementById("spotifyState")?.textContent).toBe("Connect to search");
+    dom.window.close();
+  });
+
+  it("connects YouTube Music from a typed search, shows results, and plays the selection", async () => {
+    const config = {
+      spotifyClientId: "",
+      googleClientId: "google-client",
+      appleMusicDeveloperToken: "",
+      appleMusicStorefront: "us"
+    };
+    const requestAccessToken = vi.fn();
+    const fetchMock = vi.fn(async (input: RequestInfo | URL) => {
+      const url = String(input);
+      if (url.includes("/api/musictap/config")) {
+        return {
+          ok: true,
+          json: async () => config
+        };
+      }
+      if (url.includes("youtube/v3/search")) {
+        return {
+          ok: true,
+          json: async () => ({
+            items: [
+              {
+                id: { videoId: "abc123xyz00" },
+                snippet: {
+                  title: "Fred again.. - Delilah",
+                  channelTitle: "Fred again..",
+                  thumbnails: { default: { url: "https://img.youtube.com/example.jpg" } }
+                }
+              }
+            ]
+          })
+        };
+      }
+      return {
+        ok: false,
+        json: async () => ({})
+      };
+    }) as unknown as typeof fetch;
+    const dom = createMusicTapDom(config, {
+      fetch: fetchMock,
+      setupWindow(window) {
+        const win = window as unknown as Record<string, unknown>;
+        win.google = {
+          accounts: {
+            oauth2: {
+              initTokenClient: vi.fn((tokenOptions: {
+                callback: (response: { access_token?: string; error?: string }) => void;
+              }) => {
+                requestAccessToken.mockImplementation(() => {
+                  tokenOptions.callback({ access_token: "youtube-token" });
+                });
+                return { requestAccessToken };
+              })
+            }
+          }
+        };
+      }
+    });
+    await flushDom();
+    const document = dom.window.document;
+
+    document.getElementById("addButton")?.click();
+    (document.querySelector('[data-select-provider="youtube"]') as HTMLButtonElement).click();
+    const input = document.getElementById("linkInput") as HTMLInputElement;
+    input.value = "fred again delilah";
+    document.getElementById("linkForm")?.dispatchEvent(
+      new dom.window.Event("submit", { bubbles: true, cancelable: true })
+    );
+    await flushDom();
+    await flushDom();
+
+    expect(requestAccessToken).toHaveBeenCalledWith({ prompt: "consent" });
+    const youtubeCall = vi.mocked(fetchMock).mock.calls.find(([request]) =>
+      String(request).includes("youtube/v3/search")
+    );
+    expect(youtubeCall?.[1]?.headers).toEqual({ Authorization: "Bearer youtube-token" });
+    expect(document.getElementById("linkHint")?.textContent).toBe("1 songs found");
+    expect(document.querySelector(".music-result")?.textContent).toContain("Fred again.. - Delilah");
+
+    (document.querySelector(".music-result") as HTMLButtonElement).click();
+    await flushDom();
+
+    expect(document.getElementById("trackTitle")?.textContent).toBe("Fred again.. - Delilah");
+    expect(document.querySelector("#providerPlayer iframe")?.getAttribute("src")).toContain(
+      "abc123xyz00"
+    );
+    expect(document.getElementById("playButton")?.getAttribute("aria-label")).toBe("Pause");
     dom.window.close();
   });
 
