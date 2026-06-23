@@ -285,7 +285,7 @@ describe("MusicTap connected picker", () => {
       String(request).includes("youtube/v3/search")
     );
     expect(youtubeCall?.[1]?.headers).toEqual({ Authorization: "Bearer youtube-token" });
-    expect(document.getElementById("linkHint")?.textContent).toBe("1 songs found");
+    expect(document.getElementById("linkHint")?.textContent).toBe("1 song found");
     expect(document.querySelector(".music-result")?.textContent).toContain("Fred again.. - Delilah");
 
     (document.querySelector(".music-result") as HTMLButtonElement).click();
@@ -296,6 +296,242 @@ describe("MusicTap connected picker", () => {
       "abc123xyz00"
     );
     expect(document.getElementById("playButton")?.getAttribute("aria-label")).toBe("Pause");
+    dom.window.close();
+  });
+
+  it("searches YouTube Music playlists and embeds the selected playlist", async () => {
+    const config = {
+      spotifyClientId: "",
+      googleClientId: "google-client",
+      appleMusicDeveloperToken: "",
+      appleMusicStorefront: "us"
+    };
+    const fetchMock = vi.fn(async (input: RequestInfo | URL) => {
+      const url = String(input);
+      if (url.includes("/api/musictap/config")) {
+        return {
+          ok: true,
+          json: async () => config
+        };
+      }
+      if (url.includes("youtube/v3/search")) {
+        return {
+          ok: true,
+          json: async () => ({
+            items: [
+              {
+                id: { playlistId: "PL1234567890" },
+                snippet: {
+                  title: "Late night focus",
+                  channelTitle: "MusicTap",
+                  thumbnails: { default: { url: "https://img.youtube.com/playlist.jpg" } }
+                }
+              }
+            ]
+          })
+        };
+      }
+      return {
+        ok: false,
+        json: async () => ({})
+      };
+    }) as unknown as typeof fetch;
+    const dom = createMusicTapDom(config, {
+      fetch: fetchMock,
+      setupWindow(window) {
+        window.sessionStorage.setItem("musictap_google_token", "youtube-token");
+      }
+    });
+    await flushDom();
+    const document = dom.window.document;
+
+    document.getElementById("addButton")?.click();
+    (document.querySelector('[data-select-provider="youtube"]') as HTMLButtonElement).click();
+    (document.querySelector('[data-content-kind="playlist"]') as HTMLButtonElement).click();
+    const input = document.getElementById("linkInput") as HTMLInputElement;
+    input.value = "late night focus";
+    document.getElementById("linkForm")?.dispatchEvent(
+      new dom.window.Event("submit", { bubbles: true, cancelable: true })
+    );
+    await flushDom();
+
+    const youtubeCall = vi.mocked(fetchMock).mock.calls.find(([request]) =>
+      String(request).includes("youtube/v3/search")
+    );
+    expect(String(youtubeCall?.[0])).toContain("type=playlist");
+    expect(String(youtubeCall?.[0])).not.toContain("videoCategoryId=10");
+    expect(document.getElementById("linkHint")?.textContent).toBe("1 playlist found");
+    expect(document.querySelector(".music-result")?.textContent).toContain("Late night focus");
+
+    (document.querySelector(".music-result") as HTMLButtonElement).click();
+    await flushDom();
+
+    const playerOptions = (
+      dom.window as unknown as {
+        lastYouTubePlayerOptions?: { playerVars?: Record<string, unknown> };
+      }
+    ).lastYouTubePlayerOptions;
+    expect(document.getElementById("trackTitle")?.textContent).toBe("Late night focus");
+    expect(playerOptions?.playerVars?.list).toBe("PL1234567890");
+    expect(document.getElementById("playButton")?.getAttribute("aria-label")).toBe("Pause");
+    dom.window.close();
+  });
+
+  it("searches Spotify playlists when Spotify is already connected", async () => {
+    const config = {
+      spotifyClientId: "spotify-client",
+      googleClientId: "",
+      appleMusicDeveloperToken: "",
+      appleMusicStorefront: "us"
+    };
+    const fetchMock = vi.fn(async (input: RequestInfo | URL) => {
+      const url = String(input);
+      if (url.includes("/api/musictap/config")) {
+        return {
+          ok: true,
+          json: async () => config
+        };
+      }
+      if (url.includes("api.spotify.com/v1/search")) {
+        return {
+          ok: true,
+          json: async () => ({
+            playlists: {
+              items: [
+                {
+                  id: "spotify-playlist",
+                  name: "Morning lift",
+                  owner: { display_name: "Ari" },
+                  images: [{ url: "https://i.scdn.co/image.jpg" }],
+                  external_urls: { spotify: "https://open.spotify.com/playlist/spotify-playlist" },
+                  uri: "spotify:playlist:spotify-playlist"
+                }
+              ]
+            }
+          })
+        };
+      }
+      return {
+        ok: false,
+        json: async () => ({})
+      };
+    }) as unknown as typeof fetch;
+    const dom = createMusicTapDom(config, {
+      fetch: fetchMock,
+      setupWindow(window) {
+        window.sessionStorage.setItem("musictap_spotify_token", "spotify-token");
+      }
+    });
+    await flushDom();
+    const document = dom.window.document;
+
+    document.getElementById("addButton")?.click();
+    (document.querySelector('[data-content-kind="playlist"]') as HTMLButtonElement).click();
+    const input = document.getElementById("linkInput") as HTMLInputElement;
+    input.value = "morning";
+    document.getElementById("linkForm")?.dispatchEvent(
+      new dom.window.Event("submit", { bubbles: true, cancelable: true })
+    );
+    await flushDom();
+
+    const spotifyCall = vi.mocked(fetchMock).mock.calls.find(([request]) =>
+      String(request).includes("api.spotify.com/v1/search")
+    );
+    expect(String(spotifyCall?.[0])).toContain("type=playlist");
+    expect(spotifyCall?.[1]?.headers).toEqual({ Authorization: "Bearer spotify-token" });
+    expect(document.getElementById("linkHint")?.textContent).toBe("1 playlist found");
+    expect(document.querySelector(".music-result")?.textContent).toContain("Morning lift");
+
+    (document.querySelector(".music-result") as HTMLButtonElement).click();
+    await flushDom();
+
+    expect(document.getElementById("trackTitle")?.textContent).toBe("Morning lift");
+    expect(document.getElementById("providerLabel")?.textContent).toBe("Spotify playlist");
+    dom.window.close();
+  });
+
+  it("connects Apple Music and resumes a playlist search", async () => {
+    const config = {
+      spotifyClientId: "",
+      googleClientId: "",
+      appleMusicDeveloperToken: "apple-token",
+      appleMusicStorefront: "us"
+    };
+    const authorize = vi.fn(async () => undefined);
+    const fetchMock = vi.fn(async (input: RequestInfo | URL) => {
+      const url = String(input);
+      if (url.includes("/api/musictap/config")) {
+        return {
+          ok: true,
+          json: async () => config
+        };
+      }
+      if (url.includes("api.music.apple.com")) {
+        return {
+          ok: true,
+          json: async () => ({
+            results: {
+              playlists: {
+                data: [
+                  {
+                    id: "pl.apple",
+                    attributes: {
+                      name: "Sunset run",
+                      curatorName: "Apple Music Fitness",
+                      url: "https://music.apple.com/us/playlist/pl.apple",
+                      artwork: { url: "https://is1-ssl.mzstatic.com/image/{w}x{h}.jpg" }
+                    }
+                  }
+                ]
+              }
+            }
+          })
+        };
+      }
+      return {
+        ok: false,
+        json: async () => ({})
+      };
+    }) as unknown as typeof fetch;
+    const dom = createMusicTapDom(config, {
+      fetch: fetchMock,
+      setupWindow(window) {
+        const win = window as unknown as Record<string, unknown>;
+        win.MusicKit = {
+          configure: vi.fn(async () => undefined),
+          getInstance: vi.fn(() => ({ authorize }))
+        };
+      }
+    });
+    await flushDom();
+    const document = dom.window.document;
+
+    document.getElementById("addButton")?.click();
+    (document.querySelector('[data-select-provider="apple"]') as HTMLButtonElement).click();
+    (document.querySelector('[data-content-kind="playlist"]') as HTMLButtonElement).click();
+    const input = document.getElementById("linkInput") as HTMLInputElement;
+    input.value = "run";
+    document.getElementById("linkForm")?.dispatchEvent(
+      new dom.window.Event("submit", { bubbles: true, cancelable: true })
+    );
+    await flushDom();
+    await flushDom();
+
+    const appleCall = vi.mocked(fetchMock).mock.calls.find(([request]) =>
+      String(request).includes("api.music.apple.com")
+    );
+    expect(authorize).toHaveBeenCalledOnce();
+    expect(String(appleCall?.[0])).toContain("types=playlists");
+    expect(appleCall?.[1]?.headers).toEqual({ Authorization: "Bearer apple-token" });
+    expect(document.getElementById("linkHint")?.textContent).toBe("1 playlist found");
+
+    (document.querySelector(".music-result") as HTMLButtonElement).click();
+    await flushDom();
+
+    expect(document.getElementById("trackTitle")?.textContent).toBe("Sunset run");
+    expect(
+      document.querySelector("#providerPlayer iframe")?.getAttribute("src")
+    ).toBe("https://embed.music.apple.com/us/playlist/pl.apple");
     dom.window.close();
   });
 

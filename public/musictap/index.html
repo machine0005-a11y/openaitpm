@@ -190,6 +190,10 @@
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.07);
     }
 
+    .content-mode {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
     .stats {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -873,6 +877,10 @@
         </div>
       </div>
       <div class="provider-summary" id="providerSummary">Checking music search</div>
+      <section class="segmented content-mode" aria-label="Music type">
+        <button type="button" data-content-kind="song" class="active">Songs</button>
+        <button type="button" data-content-kind="playlist">Playlists</button>
+      </section>
       <form class="paste-panel" id="linkForm">
         <div class="paste-title" id="pickerPrompt">Search Spotify or paste a song link</div>
         <div class="paste-row">
@@ -921,6 +929,7 @@
       playbackType: "demo",
       linkedItem: null,
       selectedProvider: "spotify",
+      selectedContentKind: "song",
       events: [],
       hitIds: new Set(),
       missedIds: new Set(),
@@ -1007,6 +1016,11 @@
       }
     };
 
+    const contentDetails = {
+      song: { label: "Songs", singular: "song", plural: "songs" },
+      playlist: { label: "Playlists", singular: "playlist", plural: "playlists" }
+    };
+
     async function loadIntegrationConfig() {
       try {
         const response = await fetch("/api/musictap/config", { cache: "no-store" });
@@ -1070,7 +1084,11 @@
     }
 
     function rememberPendingSearch(provider, query) {
-      sessionStorage.setItem("musictap_pending_search", JSON.stringify({ provider, query }));
+      sessionStorage.setItem("musictap_pending_search", JSON.stringify({
+        provider,
+        query,
+        contentKind: state.selectedContentKind
+      }));
     }
 
     function readPendingSearch() {
@@ -1091,6 +1109,7 @@
       clearPendingSearch();
       openDrawer();
       selectProvider(provider);
+      setContentKind(pending.contentKind || "song");
       els.linkInput.value = pending.query;
       await searchMusic(pending.query, { skipAutoConnect: true });
       return true;
@@ -1112,10 +1131,28 @@
       document.querySelectorAll(".provider-option").forEach(option => {
         option.classList.toggle("active", option.dataset.provider === provider);
       });
-      els.pickerPrompt.textContent = providerDetails[provider].prompt;
-      els.linkInput.placeholder = providerDetails[provider].prompt;
+      updatePickerPrompt();
       els.linkHint.textContent = "";
       clearSearchResults();
+      els.linkInput.focus();
+    }
+
+    function updatePickerPrompt() {
+      const provider = providerDetails[state.selectedProvider].label;
+      const content = contentDetails[state.selectedContentKind];
+      const prompt = `Search ${provider} ${content.plural} or paste a ${content.singular} link`;
+      els.pickerPrompt.textContent = prompt;
+      els.linkInput.placeholder = prompt;
+    }
+
+    function setContentKind(kind) {
+      state.selectedContentKind = kind;
+      document.querySelectorAll("[data-content-kind]").forEach(button => {
+        button.classList.toggle("active", button.dataset.contentKind === kind);
+      });
+      updatePickerPrompt();
+      clearSearchResults();
+      els.linkHint.textContent = "";
       els.linkInput.focus();
     }
 
@@ -1284,29 +1321,46 @@
       const connection = providerConnectionState(provider);
       if (!connection.connected && connection.configured && !options.skipAutoConnect) {
         rememberPendingSearch(provider, query);
-        els.linkHint.textContent = `Connect ${connection.label} to search for "${query}"`;
+        els.linkHint.textContent = `Connect ${connection.label} to search ${contentDetails[state.selectedContentKind].plural} for "${query}"`;
         await connectProvider(provider);
         return;
       }
-      els.linkHint.textContent = `Searching ${providerDetails[provider].label}`;
+      const content = contentDetails[state.selectedContentKind];
+      els.linkHint.textContent = `Searching ${providerDetails[provider].label} ${content.plural}`;
       clearSearchResults();
       let results = [];
       if (provider === "spotify") results = await searchSpotify(query);
       if (provider === "youtube") results = await searchYouTube(query);
       if (provider === "apple") results = await searchAppleMusic(query);
       renderSearchResults(results);
-      els.linkHint.textContent = results.length ? `${results.length} songs found` : "No songs found";
+      els.linkHint.textContent = results.length
+        ? `${results.length} ${results.length === 1 ? content.singular : content.plural} found`
+        : `No ${content.plural} found`;
     }
 
     async function searchSpotify(query) {
       if (!integration.spotifyToken) throw new Error("Connect Spotify to search. Links still work.");
+      const wantsPlaylists = state.selectedContentKind === "playlist";
       const url = new URL("https://api.spotify.com/v1/search");
-      url.search = new URLSearchParams({ q: query, type: "track", limit: "10" }).toString();
+      url.search = new URLSearchParams({ q: query, type: wantsPlaylists ? "playlist" : "track", limit: "10" }).toString();
       const response = await fetch(url, {
         headers: { Authorization: `Bearer ${integration.spotifyToken}` }
       });
       if (!response.ok) throw new Error("Spotify search needs a fresh connection.");
       const data = await response.json();
+      if (wantsPlaylists) {
+        return (data.playlists?.items || []).filter(Boolean).map(playlist => ({
+          title: playlist.name,
+          subtitle: playlist.owner?.display_name ? `Playlist by ${playlist.owner.display_name}` : "Spotify playlist",
+          artwork: playlist.images?.[playlist.images.length - 1]?.url || playlist.images?.[0]?.url || "",
+          item: linkedItem("Spotify", "playlist", playlist.id, "spotify", {
+            title: playlist.name,
+            artist: playlist.owner?.display_name || "Spotify playlist",
+            originalUrl: playlist.external_urls.spotify,
+            spotifyUri: playlist.uri || `spotify:playlist:${playlist.id}`
+          })
+        }));
+      }
       return (data.tracks?.items || []).filter(Boolean).map(track => ({
         title: track.name,
         subtitle: track.artists.map(artist => artist.name).join(", "),
@@ -1322,19 +1376,34 @@
 
     async function searchYouTube(query) {
       if (!integration.googleToken) throw new Error("Connect YouTube Music to search. Links still work.");
+      const wantsPlaylists = state.selectedContentKind === "playlist";
       const url = new URL("https://www.googleapis.com/youtube/v3/search");
-      url.search = new URLSearchParams({
+      const params = {
         part: "snippet",
-        type: "video",
-        videoCategoryId: "10",
+        type: wantsPlaylists ? "playlist" : "video",
         maxResults: "10",
         q: query
-      }).toString();
+      };
+      if (!wantsPlaylists) params.videoCategoryId = "10";
+      url.search = new URLSearchParams(params).toString();
       const response = await fetch(url, {
         headers: { Authorization: `Bearer ${integration.googleToken}` }
       });
       if (!response.ok) throw new Error("YouTube Music search needs a fresh connection.");
       const data = await response.json();
+      if (wantsPlaylists) {
+        return (data.items || []).map(playlist => ({
+          title: playlist.snippet.title,
+          subtitle: playlist.snippet.channelTitle,
+          artwork: playlist.snippet.thumbnails?.default?.url || "",
+          item: linkedItem("YouTube Music", "playlist", playlist.id.playlistId, "youtube-music", {
+            title: playlist.snippet.title,
+            artist: playlist.snippet.channelTitle,
+            originalUrl: `https://music.youtube.com/playlist?list=${playlist.id.playlistId}`,
+            playlistId: playlist.id.playlistId
+          })
+        }));
+      }
       return (data.items || []).map(video => ({
         title: video.snippet.title,
         subtitle: video.snippet.channelTitle,
@@ -1352,14 +1421,33 @@
       if (!integration.config.appleMusicDeveloperToken) {
         throw new Error("Connect Apple Music to search. Links still work.");
       }
+      const wantsPlaylists = state.selectedContentKind === "playlist";
       const storefront = integration.config.appleMusicStorefront || "us";
       const url = new URL(`https://api.music.apple.com/v1/catalog/${storefront}/search`);
-      url.search = new URLSearchParams({ term: query, types: "songs", limit: "10" }).toString();
+      url.search = new URLSearchParams({ term: query, types: wantsPlaylists ? "playlists" : "songs", limit: "10" }).toString();
       const response = await fetch(url, {
         headers: { Authorization: `Bearer ${integration.config.appleMusicDeveloperToken}` }
       });
       if (!response.ok) throw new Error("Apple Music search is unavailable.");
       const data = await response.json();
+      if (wantsPlaylists) {
+        return (data.results?.playlists?.data || []).map(playlist => {
+          const attributes = playlist.attributes || {};
+          const artwork = attributes.artwork?.url?.replace("{w}", "80").replace("{h}", "80") || "";
+          return {
+            title: attributes.name || "Apple Music playlist",
+            subtitle: attributes.curatorName || attributes.artistName || "Apple Music",
+            artwork,
+            item: linkedItem("Apple Music", "playlist", playlist.id, "apple", {
+              title: attributes.name || "Apple Music playlist",
+              artist: attributes.curatorName || attributes.artistName || "Apple Music",
+              originalUrl: attributes.url,
+              embedUrl: attributes.url?.replace("music.apple.com", "embed.music.apple.com"),
+              appleKind: "playlist"
+            })
+          };
+        });
+      }
       return (data.results?.songs?.data || []).map(song => {
         const attributes = song.attributes || {};
         const artwork = attributes.artwork?.url?.replace("{w}", "80").replace("{h}", "80") || "";
@@ -2126,6 +2214,9 @@
     document.getElementById("localSource").addEventListener("click", () => els.fileInput.click());
     document.querySelectorAll("[data-select-provider]").forEach(button => {
       button.addEventListener("click", () => selectProvider(button.dataset.selectProvider));
+    });
+    document.querySelectorAll("[data-content-kind]").forEach(button => {
+      button.addEventListener("click", () => setContentKind(button.dataset.contentKind));
     });
     document.querySelectorAll("[data-connect-provider]").forEach(button => {
       button.addEventListener("click", () => connectProvider(button.dataset.connectProvider));
