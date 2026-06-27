@@ -1,0 +1,413 @@
+.live-chess {
+  min-height: 100vh;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, .82), rgba(244, 240, 232, .88)),
+    #f2eee4;
+  color: #171b19;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.live-chess * {
+  box-sizing: border-box;
+}
+
+.live-chess button {
+  border: 0;
+  font: inherit;
+}
+
+.live-chess-shell {
+  min-height: 100vh;
+  padding: 22px clamp(14px, 4vw, 54px) 36px;
+}
+
+.live-chess-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.live-chess-brand,
+.live-chess-room {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: inherit;
+  font-size: .76rem;
+  font-weight: 900;
+  letter-spacing: .15em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.live-chess-brand svg,
+.live-chess-room svg {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  padding: 7px;
+}
+
+.live-chess-brand svg {
+  background: #171b19;
+  color: #f6c74d;
+}
+
+.live-chess-room {
+  border: 1px solid #cfc4b4;
+  border-radius: 8px;
+  padding: 5px 10px 5px 5px;
+  background: #fffaf1;
+}
+
+.live-chess-room svg {
+  background: #0c766e;
+  color: #fffaf1;
+}
+
+.live-chess-layout {
+  display: grid;
+  grid-template-columns: minmax(350px, 720px) minmax(290px, 420px);
+  gap: clamp(20px, 4vw, 54px);
+  align-items: start;
+  margin-top: 28px;
+}
+
+.live-chess-stage {
+  min-width: 0;
+}
+
+.live-chess-scorebar {
+  display: grid;
+  grid-template-columns: 1fr minmax(160px, 1.4fr) 1fr;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.live-chess-player,
+.live-chess-status,
+.live-chess-lead,
+.live-chess-panel,
+.live-chess-feed {
+  border: 1px solid #cfc4b4;
+  border-radius: 8px;
+  background: #fffaf1;
+}
+
+.live-chess-player,
+.live-chess-status {
+  min-height: 72px;
+  padding: 11px 12px;
+}
+
+.live-chess-player {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.live-chess-player.white {
+  border-left: 5px solid #f6c74d;
+}
+
+.live-chess-player.black {
+  border-left: 5px solid #2f3632;
+}
+
+.live-chess-player span,
+.live-chess-status span,
+.live-chess-lead span,
+.live-chess-panel-title span,
+.live-chess-feed span {
+  color: #626761;
+  font-size: .66rem;
+  font-weight: 900;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.live-chess-player strong {
+  font-size: clamp(1.8rem, 4vw, 2.55rem);
+  line-height: 1;
+}
+
+.live-chess-status {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+
+.live-chess-status strong {
+  overflow: hidden;
+  margin-top: 5px;
+  font-size: clamp(.9rem, 2vw, 1.18rem);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.live-chess-board {
+  display: grid;
+  overflow: hidden;
+  border: 2px solid #171b19;
+  border-radius: 8px;
+  box-shadow: 0 28px 78px rgba(23, 27, 25, .24);
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  aspect-ratio: 1;
+}
+
+.live-chess-square {
+  position: relative;
+  display: grid;
+  min-width: 0;
+  min-height: 0;
+  place-items: center;
+  color: #171b19;
+  cursor: pointer;
+  transition: box-shadow .14s ease, transform .14s ease, filter .14s ease;
+}
+
+.live-chess-square.light {
+  background: #f1dfbd;
+}
+
+.live-chess-square.dark {
+  background: #47776f;
+}
+
+.live-chess-square.recent {
+  box-shadow: inset 0 0 0 999px rgba(246, 199, 77, .34);
+}
+
+.live-chess-square.active {
+  box-shadow: inset 0 0 0 4px #f66f45;
+}
+
+.live-chess-square.legal::after {
+  content: "";
+  position: absolute;
+  width: 28%;
+  border-radius: 50%;
+  background: rgba(246, 111, 69, .76);
+  aspect-ratio: 1;
+}
+
+.live-chess-square:hover {
+  filter: brightness(1.03);
+}
+
+.piece {
+  position: relative;
+  z-index: 1;
+  font-size: clamp(2rem, 7vw, 4.85rem);
+  line-height: 1;
+  text-shadow: 0 2px 0 rgba(255, 255, 255, .22), 0 12px 22px rgba(0, 0, 0, .18);
+}
+
+.white-piece {
+  color: #fff8e8;
+  -webkit-text-stroke: 1px rgba(23, 27, 25, .28);
+}
+
+.black-piece {
+  color: #171b19;
+}
+
+.live-chess-square small {
+  position: absolute;
+  right: 5px;
+  bottom: 4px;
+  color: rgba(23, 27, 25, .45);
+  font-size: .58rem;
+  font-weight: 900;
+}
+
+.live-chess-control {
+  display: grid;
+  gap: 10px;
+}
+
+.live-chess-lead {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 10px;
+  align-items: center;
+  padding: 15px;
+}
+
+.live-chess-lead svg {
+  width: 36px;
+  height: 36px;
+  grid-row: span 2;
+  border-radius: 8px;
+  padding: 8px;
+  background: #f6c74d;
+}
+
+.live-chess-lead strong {
+  font-size: 1.35rem;
+}
+
+.live-chess-actions {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.live-chess-actions button {
+  display: inline-flex;
+  min-height: 58px;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 1px solid #cfc4b4;
+  border-radius: 8px;
+  background: #fffaf1;
+  color: #171b19;
+  cursor: pointer;
+  font-size: .82rem;
+  font-weight: 900;
+}
+
+.live-chess-actions button:disabled {
+  cursor: not-allowed;
+  opacity: .42;
+}
+
+.live-chess-actions svg {
+  width: 17px;
+}
+
+.live-chess-panel {
+  min-height: 260px;
+  padding: 15px;
+}
+
+.live-chess-panel-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.live-chess-panel-title svg {
+  width: 18px;
+}
+
+.live-chess-moves {
+  display: grid;
+  max-height: 314px;
+  gap: 6px;
+  overflow: auto;
+  margin: 13px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.live-chess-moves li {
+  display: flex;
+  min-height: 34px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  border-radius: 8px;
+  padding: 7px 9px;
+  background: #f3eadc;
+}
+
+.live-chess-moves li.empty {
+  justify-content: center;
+  color: #777066;
+  font-weight: 800;
+}
+
+.live-chess-moves span {
+  color: #777066;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: .78rem;
+}
+
+.live-chess-moves strong {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: .9rem;
+}
+
+.live-chess-feed {
+  padding: 14px;
+}
+
+.live-chess-feed strong {
+  display: block;
+  margin-top: 3px;
+  color: #0c766e;
+  font-size: 1.05rem;
+}
+
+.live-chess-feed p {
+  overflow-wrap: anywhere;
+  margin: 10px 0 0;
+  color: #626761;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: .72rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 1020px) {
+  .live-chess-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .live-chess-control {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .live-chess-actions,
+  .live-chess-panel,
+  .live-chess-feed {
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 640px) {
+  .live-chess-shell {
+    padding: 18px 12px 28px;
+  }
+
+  .live-chess-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .live-chess-scorebar {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .live-chess-status {
+    grid-column: span 2;
+    grid-row: 1;
+  }
+
+  .live-chess-control {
+    grid-template-columns: 1fr;
+  }
+
+  .live-chess-actions,
+  .live-chess-panel,
+  .live-chess-feed {
+    grid-column: auto;
+  }
+
+  .live-chess-actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .live-chess-actions button {
+    min-height: 52px;
+  }
+
+  .live-chess-square small {
+    display: none;
+  }
+}
