@@ -107,9 +107,10 @@ export function generateVisuals({ slug, name, tagline, thesis, audience, visualP
 
   const base = [
     visualPrompt,
-    'Premium editorial photography, cinematic depth, sophisticated natural lighting, tactile real-world detail.',
-    'A real person or a real physical object as the focal point. Generous negative space.',
-    'No words, letters, logos, UI text, watermarks, or borders.',
+    'Award-winning editorial photograph. Shot on a 35mm prime, shallow depth of field, cinematic natural light, rich but true-to-life color.',
+    'A real, believable human moment or a tangible real-world object as the hero — photoreal, never illustrated, never an abstract gradient.',
+    'Composition leaves clean negative space for overlaid text. Magazine-cover quality; the kind of image someone would proudly share.',
+    'Absolutely no words, letters, numbers, logos, UI, watermarks, or borders anywhere in the frame.',
   ].filter(Boolean).join('\n');
 
   // The shots to attempt, in priority order. Hero first — if even the hero hits

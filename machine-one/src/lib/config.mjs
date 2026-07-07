@@ -20,8 +20,12 @@ export const config = {
   imsg: process.env.IMSG_BIN || '/opt/homebrew/bin/imsg',
   claude: process.env.CLAUDE_BIN || '/opt/homebrew/bin/claude',
   claudeModel: process.env.CLAUDE_MODEL || 'sonnet',
+  // Image model: gpt-image-2 is the current top image generator on this key
+  // (the GPT-5.5-generation image model — the "gpt-5.5" entries in /models are
+  // text/reasoning models, not image generators). Dated pin for reproducibility;
+  // override via OPENAI_IMAGE_MODEL if a newer gpt-image ships.
   openaiImageModel: process.env.OPENAI_IMAGE_MODEL || 'gpt-image-2',
-  openaiImageQuality: process.env.OPENAI_IMAGE_QUALITY || 'medium',
+  openaiImageQuality: process.env.OPENAI_IMAGE_QUALITY || 'high',
   // Image circuit breaker: once a hard-cap/quota error is seen, stop attempting
   // image generation (no wasted doomed calls) until this cooldown elapses, then
   // re-probe so it auto-recovers when credit is added. State file persists the trip.
