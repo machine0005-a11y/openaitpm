@@ -1,6 +1,6 @@
 # Machine One — ideamuses.com Pipeline
 
-Machine One turns valid inbound idea texts sent to `+1 949-508-9229` into reachable prototype pages at `https://www.ideamuses.com/<slug>` and replies to the texter with exactly one plain-text URL.
+Machine One turns valid inbound idea texts sent to `+1 949-508-9229` into reachable prototype pages at `https://www.ideamuses.com/<slug>`. Guests receive exactly two fixed-shape replies: an immediate "I'm building" ack, then one plain-text URL — sent only after the page is verified live.
 
 John Lou is the human, owner, source of truth, and final authority.
 
@@ -10,7 +10,7 @@ John Lou is the human, owner, source of truth, and final authority.
 SMS reader → parser/valid-idea gate → Machine One orchestrator
 → internal role-based C-suite council → page generator
 → dynamic production route → exact-page reachability check
-→ URL-only iMessage reply
+→ instant build-ack iMessage … → URL iMessage once verified live
 ```
 
 ## Active Components
@@ -19,13 +19,13 @@ SMS reader → parser/valid-idea gate → Machine One orchestrator
 - `run.sh`: supervisor that keeps the reader and orchestrator alive.
 - `src/agent.mjs`: daemon entrypoint.
 - `src/lib/messages.mjs`: inbox parsing and valid-idea gate.
-- `src/lib/agent.mjs`: orchestration, safe retry, failure alerting, and URL-only delivery.
+- `src/lib/agent.mjs`: orchestration, safe retry, failure alerting, and ack-then-URL delivery.
 - `src/lib/council.mjs`: loads the internal role-based council.
 - `agents/*.md`: role definitions for the internal council.
 - `src/lib/generate.mjs`: council-reviewed page-content generation with deterministic fallback.
 - `src/lib/visual.mjs`: optional GPT Image hero generation with a durable local asset and graceful fallback.
 - `src/lib/publish.mjs`: writes the local idea record and verifies the exact public dynamic route.
-- `src/lib/sms.mjs`: URL-only guest replies and concise owner alerts.
+- `src/lib/sms.mjs`: fixed-shape guest replies (build ack + URL only) and concise owner alerts.
 - `src/lib/records.mjs`: structured private run records.
 - `skills/idea-page/SKILL.md`: page quality, safety, and publishing contract.
 

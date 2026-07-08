@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ArrowRight, Lock } from "lucide-react";
 
 type UnlockPanelProps = {
@@ -36,7 +36,29 @@ function GooglePayMark() {
 export function UnlockPanel({ slug, name, priceLabel, demo, theme }: UnlockPanelProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [notice, setNotice] = useState("");
   const grad = `linear-gradient(135deg, ${theme.from} 0%, ${theme.to} 100%)`;
+
+  useEffect(() => {
+    // iOS Safari restores this page from bfcache when the visitor taps Back
+    // from Stripe Checkout — with loading still true, freezing the button.
+    const onPageShow = (e: PageTransitionEvent) => {
+      if (e.persisted) setLoading(false);
+    };
+    window.addEventListener("pageshow", onPageShow);
+
+    // Stripe return paths (?canceled=1 from cancel_url, ?unpaid=1 when
+    // verification failed) were previously silent — say what happened.
+    const q = new URLSearchParams(window.location.search);
+    if (q.has("canceled")) {
+      setNotice("Payment canceled — nothing was charged.");
+    } else if (q.has("unpaid")) {
+      setNotice(
+        "We couldn't confirm that payment. If your card was charged, don't pay again — text the number that sent you this link and it'll be unlocked for you."
+      );
+    }
+    return () => window.removeEventListener("pageshow", onPageShow);
+  }, []);
 
   async function unlock() {
     setLoading(true);
@@ -99,6 +121,7 @@ export function UnlockPanel({ slug, name, priceLabel, demo, theme }: UnlockPanel
       </button>
       <p className="mt-3 text-xs text-[var(--ink-soft)]">One-time payment. Instant access on this device.</p>
       {demo ? <p className="mt-1 text-xs font-semibold text-[var(--ink-soft)]">Demo mode — no card is charged.</p> : null}
+      {notice ? <p className="mt-3 text-sm font-semibold text-amber-600">{notice}</p> : null}
       {error ? <p className="mt-3 text-sm font-semibold text-red-500">{error}</p> : null}
     </div>
   );
