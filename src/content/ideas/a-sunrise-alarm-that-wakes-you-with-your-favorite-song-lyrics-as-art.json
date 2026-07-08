@@ -1,0 +1,33 @@
+{
+  "slug": "a-sunrise-alarm-that-wakes-you-with-your-favorite-song-lyrics-as-art",
+  "name": "A Sunrise Alarm That Wakes You With Your Favorite Song Lyrics As Art",
+  "status": "preview",
+  "tagline": "A Sunrise Alarm That Wakes You With Your Favorite Song Lyrics As Art — a sunrise alarm that wakes you with y",
+  "thesis": "A Sunrise Alarm That Wakes You With Your Favorite Song Lyrics As Art turns \"a sunrise alarm that wakes you with your favorite song lyrics as art\" into a working product. The first user gets a focused tool that nails the core job on day one, with a clear path from prototype to production.",
+  "audience": "Early adopters who feel this pain today and want a tool that already works.",
+  "sourceBranch": "idea/a-sunrise-alarm-that-wakes-you-with-your-favorite-song-lyrics-as-art",
+  "repoPath": "src/content/ideas/a-sunrise-alarm-that-wakes-you-with-your-favorite-song-lyrics-as-art.json",
+  "primaryCta": "Try it now",
+  "secondaryCta": "See how it works",
+  "proofPoints": [
+    "A working prototype exists the moment you text the idea.",
+    "Every page ships with a concrete next milestone, not a maybe.",
+    "Built and served automatically, end to end, with no manual steps."
+  ],
+  "heroImage": null,
+  "galleryImages": [],
+  "launchChecks": [
+    {
+      "label": "Idea page generated",
+      "state": "done"
+    },
+    {
+      "label": "Validate with first 10 real users",
+      "state": "active"
+    },
+    {
+      "label": "Add the most-requested integration",
+      "state": "next"
+    }
+  ]
+}
