@@ -3,6 +3,7 @@ import Image from "next/image";
 import { ArrowRight, CheckCircle2, CircleDot, Clock3, Sparkles, MessageSquareText, MousePointer2, Orbit, Zap } from "lucide-react";
 import type { IdeaPage, IdeaStatus } from "@/lib/ideas/catalog";
 import { themeFor } from "@/lib/ideas/theme";
+import { UnlockPanel } from "@/components/ideas/UnlockPanel";
 
 const statusCopy: Record<IdeaStatus, string> = {
   draft: "Draft",
@@ -23,9 +24,14 @@ const TEXT_NUMBER_TEL = "+19495089229";
 type IdeaLaunchPageProps = {
   idea: IdeaPage;
   relatedIdeas?: IdeaPage[];
+  /** Locked mode: render the REAL page up to the hero + thesis, then stop.
+   *  The remaining 87% never reaches the browser — only blurred ghost
+   *  placeholders and the unlock card. */
+  locked?: boolean;
+  unlock?: { priceLabel: string; demo: boolean };
 };
 
-export function IdeaLaunchPage({ idea, relatedIdeas = [] }: IdeaLaunchPageProps) {
+export function IdeaLaunchPage({ idea, relatedIdeas = [], locked = false, unlock }: IdeaLaunchPageProps) {
   const t = themeFor(idea.slug);
   const grad = `linear-gradient(135deg, ${t.from} 0%, ${t.to} 100%)`;
   const heroStyle = { "--idea-from": t.from, "--idea-to": t.to, "--idea-glow": t.glow } as React.CSSProperties;
@@ -120,6 +126,51 @@ export function IdeaLaunchPage({ idea, relatedIdeas = [] }: IdeaLaunchPageProps)
         </div>
       </section>
 
+      {locked ? (
+        /* LOCKED BREAK — the visitor sees the REAL page down to here (~13%).
+           Everything below is blurred ghost placeholders; the actual proof
+           points, gallery, and roadmap are never rendered server-side, so
+           nothing leaks via view-source or devtools. */
+        <section id="proof" className="relative overflow-hidden border-t border-[var(--line)] bg-[var(--panel)]">
+          <div aria-hidden className="mx-auto max-w-6xl select-none px-6 py-16 blur-md">
+            <div className="h-4 w-44 rounded-full opacity-60" style={{ background: grad }} />
+            <div className="mt-8 grid gap-5 md:grid-cols-3">
+              {[0, 1, 2].map((i) => (
+                <div key={i} className="rounded-2xl border border-[var(--line)] bg-[var(--background)] p-6">
+                  <div className="h-11 w-11 rounded-xl" style={{ background: grad }} />
+                  <div className="mt-4 h-3 w-full rounded bg-[var(--panel-muted)]" />
+                  <div className="mt-2 h-3 w-4/5 rounded bg-[var(--panel-muted)]" />
+                  <div className="mt-2 h-3 w-3/5 rounded bg-[var(--panel-muted)]" />
+                </div>
+              ))}
+            </div>
+            <div className="mt-10 grid gap-4 md:grid-cols-2">
+              <div className="aspect-[16/9] rounded-2xl bg-[var(--panel-muted)]" />
+              <div className="aspect-[16/9] rounded-2xl bg-[var(--panel-muted)]" />
+            </div>
+            <div className="mt-10 grid gap-4">
+              {[0, 1, 2].map((i) => (
+                <div key={i} className="h-16 rounded-2xl border border-[var(--line)] bg-[var(--background)]" />
+              ))}
+            </div>
+          </div>
+          <div
+            aria-hidden
+            className="absolute inset-0"
+            style={{ background: "linear-gradient(180deg, transparent 0%, var(--background) 82%)" }}
+          />
+          <div className="absolute inset-0 grid place-items-center px-6">
+            <UnlockPanel
+              slug={idea.slug}
+              name={idea.name}
+              priceLabel={unlock?.priceLabel ?? "$0.99"}
+              demo={unlock?.demo ?? true}
+              theme={{ from: t.from, to: t.to, ink: t.ink }}
+            />
+          </div>
+        </section>
+      ) : (
+        <>
       {/* VISUAL GALLERY — AI-generated concept scenes (only when present) */}
       {idea.galleryImages && idea.galleryImages.length > 0 ? (
         <section className="border-t border-[var(--line)] bg-[var(--panel)]">
@@ -258,6 +309,8 @@ export function IdeaLaunchPage({ idea, relatedIdeas = [] }: IdeaLaunchPageProps)
           </div>
         </section>
       ) : null}
+        </>
+      )}
 
       <footer className="border-t border-[var(--line)]">
         <div className="mx-auto max-w-5xl px-6 py-8 text-center text-sm text-[var(--ink-soft)]">

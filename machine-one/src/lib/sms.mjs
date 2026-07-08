@@ -24,6 +24,17 @@ export function sendUrl(to, url) {
   return sendSms(to, url);
 }
 
+// Guests receive exactly TWO message shapes: this fixed build ack the moment
+// their idea is accepted, and the bare URL once the page is verified live.
+// Fixed copy (not model-generated) so nothing unexpected can reach a guest.
+const BUILDING_ACK =
+  "Got it — I'm building your idea into its own page right now. " +
+  "I'll text you the link the moment it's done. Only when it's truly done.";
+
+export function sendBuildingAck(to) {
+  return sendSms(to, BUILDING_ACK);
+}
+
 export function alertOwner(component, detail) {
   return sendSms(config.ownerNumber, `Machine One blocker — ${component}: ${String(detail).slice(0, 240)}`);
 }

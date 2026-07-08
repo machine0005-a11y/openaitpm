@@ -1,10 +1,12 @@
 // agent.mjs — the orchestrator. One job: on each tick, find NEW inbound texts
-// and turn each into a built page + a reply containing ONLY the URL.
+// and turn each into a built page. Guest contract: an immediate fixed
+// "I'm building" ack, then ONE more text — the bare URL — sent only after the
+// page is verified live (publishIdea throws until it's reachable).
 import { config, log } from './config.mjs';
 import { loadInbox, loadChatMap, loadAttachments, isInbound, isValidIdea, rowIdOf, bodyOf, handleOf } from './messages.mjs';
 import { loadState, saveState } from './state.mjs';
 import { publishIdea } from './publish.mjs';
-import { alertOwner, sendUrl } from './sms.mjs';
+import { alertOwner, sendUrl, sendBuildingAck } from './sms.mjs';
 import { recordRun } from './records.mjs';
 import { extractIdea, mediaKind } from './extract.mjs';
 
@@ -28,11 +30,15 @@ function resolveIdea(body, attachments) {
 const allowed = (from) =>
   config.allowFrom.length === 0 || (from && config.allowFrom.includes(from));
 
-// Process exactly one idea: build the page, reply with the bare URL.
-// Reply is ONLY the URL by contract; on failure we log and stay silent.
+// Process exactly one idea: ack immediately, build the page, then reply with
+// the bare URL — only once the page is verified live. On failure we alert the
+// owner and stay silent toward the guest (no half-built links, ever).
 export function handleIdea(idea, replyTo) {
   const startedAt = Date.now();
   log('[idea]', replyTo || '(no-reply)', JSON.stringify(idea));
+  // Immediate ack so the sender knows the silence that follows is the build.
+  // Sent once, before any attempt; the URL comes only after verifyLive passes.
+  if (replyTo) sendBuildingAck(replyTo);
   for (let attempt = 1; attempt <= 2; attempt += 1) {
     try {
       const { url, source, slug, council } = publishIdea(idea);
