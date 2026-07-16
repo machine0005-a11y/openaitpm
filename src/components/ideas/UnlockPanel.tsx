@@ -128,7 +128,10 @@ export function UnlockPanel({ slug, name, priceLabel, demo, theme }: UnlockPanel
           </>
         )}
       </button>
-      <p className="mt-3 text-xs text-[var(--ink-soft)]">One-time payment. Instant access on this device.</p>
+      <p className="mt-3 text-xs text-[var(--ink-soft)]">
+        One-time payment. Instant access on this device.{" "}
+        <a href="/terms" className="underline">Terms &amp; instant refunds</a>
+      </p>
       {demo ? <p className="mt-1 text-xs font-semibold text-[var(--ink-soft)]">Demo mode — no card is charged.</p> : null}
       {notice ? <p className="mt-3 text-sm font-semibold text-amber-600">{notice}</p> : null}
       {retryUrl ? (

@@ -321,7 +321,8 @@ export function IdeaLaunchPage({ idea, relatedIdeas = [], locked = false, unlock
 
       <footer className="border-t border-[var(--line)]">
         <div className="mx-auto max-w-5xl px-6 py-8 text-center text-sm text-[var(--ink-soft)]">
-          ideamuses.com — every idea gets its own page.
+          ideamuses.com — every idea gets its own page.{" "}
+          <Link href="/terms" className="underline">Terms &amp; refunds</Link>
         </div>
       </footer>
     </main>
