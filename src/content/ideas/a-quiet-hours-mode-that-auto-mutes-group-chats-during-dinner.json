@@ -30,7 +30,7 @@
   ],
   "heroImage": "/ideas/a-quiet-hours-mode-that-auto-mutes-group-chats-during-dinner/hero.jpg",
   "galleryImages": [
-    "/ideas/a-quiet-hours-mode-that-auto-mutes-group-chats-during-dinner/scene-1.jpg",
-    "/ideas/a-quiet-hours-mode-that-auto-mutes-group-chats-during-dinner/scene-2.jpg"
+    "/api/scene/a-quiet-hours-mode-that-auto-mutes-group-chats-during-dinner/scene-1.jpg",
+    "/api/scene/a-quiet-hours-mode-that-auto-mutes-group-chats-during-dinner/scene-2.jpg"
   ]
 }

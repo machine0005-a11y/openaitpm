@@ -21,12 +21,18 @@ export async function GET(req: NextRequest) {
   let paid = false;
 
   if (stripeConfigured() && sessionId) {
-    try {
-      const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
-      const session = await stripe.checkout.sessions.retrieve(sessionId);
-      paid = session.payment_status === "paid" && session.metadata?.slug === slug;
-    } catch {
-      paid = false;
+    // A transient Stripe/network error here must NOT strand a paying guest —
+    // retry, and if it still fails, keep session_id in the redirect so the
+    // client can offer "retry verification" instead of a second charge.
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
+    for (let attempt = 1; attempt <= 3 && !paid; attempt += 1) {
+      try {
+        const session = await stripe.checkout.sessions.retrieve(sessionId);
+        paid = session.payment_status === "paid" && session.metadata?.slug === slug;
+        break; // got a definitive answer (paid or genuinely unpaid/mismatched)
+      } catch {
+        if (attempt < 3) await new Promise((r) => setTimeout(r, 600 * attempt));
+      }
     }
   } else if (!stripeConfigured() && demo === "1") {
     // Demo mode: allow unlock so the flow is testable end-to-end with no charge.
@@ -34,7 +40,8 @@ export async function GET(req: NextRequest) {
   }
 
   if (!paid) {
-    return NextResponse.redirect(`${origin}/${encodeURIComponent(slug)}?unpaid=1`);
+    const retry = sessionId ? `&session_id=${encodeURIComponent(sessionId)}` : "";
+    return NextResponse.redirect(`${origin}/${encodeURIComponent(slug)}?unpaid=1${retry}`);
   }
 
   const res = NextResponse.redirect(`${origin}/${encodeURIComponent(slug)}`);

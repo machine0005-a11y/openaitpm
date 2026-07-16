@@ -185,10 +185,17 @@ export function IdeaLaunchPage({ idea, relatedIdeas = [], locked = false, unlock
                   className={`relative overflow-hidden rounded-2xl border border-[var(--line)] ${i === 0 ? "md:col-span-2 aspect-[16/8]" : "aspect-[4/3]"}`}
                   style={{ boxShadow: `0 24px 50px -20px ${t.glow}` }}
                 >
+                  {/* unoptimized: gallery scenes are served by the unlock-gated
+                      /api/scene route, and Next's optimizer proxy strips the
+                      visitor's unlock cookie (it would always get a 403).
+                      eager: this gallery is the paid reveal — it must simply
+                      be there when the freshly-unlocked page opens. */}
                   <Image
                     src={src}
                     alt={`${idea.name} — visual concept ${i + 1}`}
                     fill
+                    unoptimized
+                    loading="eager"
                     sizes="(max-width: 900px) 100vw, 50vw"
                     className="object-cover"
                   />

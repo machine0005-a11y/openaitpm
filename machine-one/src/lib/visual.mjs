@@ -42,9 +42,12 @@ function breakerAllowsAttempt() {
   return false; // still cooling down → skip, go non-hero
 }
 
-// Generate ONE image. Returns { ok, publicPath } on success, or
+// Generate ONE image. Returns { ok, publicPath, repoFile } on success, or
 // { ok:false, stop:true } when we should abandon further generation this run.
-function generateOne({ slug, file, prompt }) {
+// gated=true stores the image OUTSIDE public/ (src/content/idea-images/) so it
+// is only served through the unlock-checking /api/scene route — paid content
+// must not be fetchable by guessing static URLs.
+function generateOne({ slug, file, prompt, gated = false }) {
   const payload = JSON.stringify({
     model: config.openaiImageModel,
     prompt,
@@ -81,11 +84,18 @@ function generateOne({ slug, file, prompt }) {
   const b64 = body.data?.[0]?.b64_json;
   if (!b64) return { ok: false, stop: true };
 
-  const dir = join(config.projectDir, 'public', 'ideas', slug);
+  const repoDir = gated
+    ? join('src', 'content', 'idea-images', slug)
+    : join('public', 'ideas', slug);
+  const dir = join(config.projectDir, repoDir);
   mkdirSync(dir, { recursive: true });
   writeFileSync(join(dir, file), Buffer.from(b64, 'base64'));
-  log('[visual] generated', `${slug}/${file}`);
-  return { ok: true, publicPath: `/ideas/${slug}/${file}` };
+  log('[visual] generated', `${slug}/${file}${gated ? ' (gated)' : ''}`);
+  return {
+    ok: true,
+    publicPath: gated ? `/api/scene/${slug}/${file}` : `/ideas/${slug}/${file}`,
+    repoFile: `${repoDir}/${file}`,
+  };
 }
 
 // Generate a hero + a few section images. Returns:
@@ -95,14 +105,14 @@ function generateOne({ slug, file, prompt }) {
 export function generateVisuals({ slug, name, tagline, thesis, audience, visualPrompt, proofPoints = [] }) {
   if (!process.env.OPENAI_API_KEY) {
     log('[visual] skipped (OPENAI_API_KEY not set)', slug);
-    return { heroImage: null, galleryImages: [] };
+    return { heroImage: null, galleryImages: [], repoFiles: [] };
   }
 
   // Circuit breaker: if we recently hit the hard cap, skip image gen entirely
   // (no wasted doomed call) and ship non-hero. Auto-re-probes after cooldown.
   if (!breakerAllowsAttempt()) {
     log('[visual] breaker open — skipping image gen (non-hero)', slug);
-    return { heroImage: null, galleryImages: [] };
+    return { heroImage: null, galleryImages: [], repoFiles: [] };
   }
 
   const base = [
@@ -116,17 +126,19 @@ export function generateVisuals({ slug, name, tagline, thesis, audience, visualP
   // The shots to attempt, in priority order. Hero first — if even the hero hits
   // a limit, we return all-null and the page uses its built-in fallback art.
   const shots = [
-    { file: 'hero.webp', prompt: `Hero image for "${name}". ${tagline}\n${base}` },
-    { file: 'scene-1.webp', prompt: `A candid real-life moment showing the core experience of "${name}" in use by a person. ${thesis || tagline}\n${base}` },
-    { file: 'scene-2.webp', prompt: `A close, tangible detail shot of the key object or surface central to "${name}", for ${audience || 'its users'}. ${proofPoints[0] || ''}\n${base}` },
+    { file: 'hero.webp', gated: false, prompt: `Hero image for "${name}". ${tagline}\n${base}` },
+    { file: 'scene-1.webp', gated: true, prompt: `A candid real-life moment showing the core experience of "${name}" in use by a person. ${thesis || tagline}\n${base}` },
+    { file: 'scene-2.webp', gated: true, prompt: `A close, tangible detail shot of the key object or surface central to "${name}", for ${audience || 'its users'}. ${proofPoints[0] || ''}\n${base}` },
   ];
 
   let heroImage = null;
   const galleryImages = [];
+  const repoFiles = [];
 
   for (const shot of shots) {
-    const r = generateOne({ slug, file: shot.file, prompt: shot.prompt });
+    const r = generateOne({ slug, file: shot.file, prompt: shot.prompt, gated: shot.gated });
     if (r.ok) {
+      repoFiles.push(r.repoFile);
       if (shot.file === 'hero.webp') heroImage = r.publicPath;
       else galleryImages.push(r.publicPath);
     } else if (r.stop) {
@@ -141,7 +153,7 @@ export function generateVisuals({ slug, name, tagline, thesis, audience, visualP
   // Any success means generation is healthy again → clear a previously-tripped breaker.
   if (heroImage || galleryImages.length) resetBreaker();
 
-  return { heroImage, galleryImages };
+  return { heroImage, galleryImages, repoFiles };
 }
 
 // Back-compat: keep the single-hero export some callers may still use.

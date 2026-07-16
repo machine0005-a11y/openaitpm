@@ -37,6 +37,7 @@ export function UnlockPanel({ slug, name, priceLabel, demo, theme }: UnlockPanel
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
+  const [retryUrl, setRetryUrl] = useState("");
   const grad = `linear-gradient(135deg, ${theme.from} 0%, ${theme.to} 100%)`;
 
   useEffect(() => {
@@ -53,9 +54,17 @@ export function UnlockPanel({ slug, name, priceLabel, demo, theme }: UnlockPanel
     if (q.has("canceled")) {
       setNotice("Payment canceled — nothing was charged.");
     } else if (q.has("unpaid")) {
-      setNotice(
-        "We couldn't confirm that payment. If your card was charged, don't pay again — text the number that sent you this link and it'll be unlocked for you."
-      );
+      const sessionId = q.get("session_id");
+      if (sessionId) {
+        // Verification hiccuped after a payment attempt: re-checking the SAME
+        // Stripe session is free and safe — never nudge toward paying twice.
+        setNotice("We couldn't confirm that payment yet. Don't pay again — tap below to re-check it.");
+        setRetryUrl(`/api/unlock?slug=${encodeURIComponent(slug)}&session_id=${encodeURIComponent(sessionId)}`);
+      } else {
+        setNotice(
+          "We couldn't confirm that payment. If your card was charged, don't pay again — text the number that sent you this link and it'll be unlocked for you."
+        );
+      }
     }
     return () => window.removeEventListener("pageshow", onPageShow);
   }, []);
@@ -122,6 +131,14 @@ export function UnlockPanel({ slug, name, priceLabel, demo, theme }: UnlockPanel
       <p className="mt-3 text-xs text-[var(--ink-soft)]">One-time payment. Instant access on this device.</p>
       {demo ? <p className="mt-1 text-xs font-semibold text-[var(--ink-soft)]">Demo mode — no card is charged.</p> : null}
       {notice ? <p className="mt-3 text-sm font-semibold text-amber-600">{notice}</p> : null}
+      {retryUrl ? (
+        <a
+          href={retryUrl}
+          className="mt-2 inline-block rounded-lg border border-[var(--line)] px-4 py-2 text-sm font-bold"
+        >
+          Re-check my payment
+        </a>
+      ) : null}
       {error ? <p className="mt-3 text-sm font-semibold text-red-500">{error}</p> : null}
     </div>
   );

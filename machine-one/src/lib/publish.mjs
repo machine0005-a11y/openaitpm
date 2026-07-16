@@ -23,15 +23,16 @@ function uniqueSlug(base) {
 }
 
 // Commit the idea JSON + any generated images, then push so Vercel deploys them.
-// publicImagePaths are site-absolute (e.g. /ideas/<slug>/hero.webp); on disk they
-// live under public/. Non-fatal: if there's no git remote we keep the local files.
-function gitShip(slug, name, publicImagePaths = []) {
+// imageRepoFiles are repo-relative (public/ideas/... for the hero,
+// src/content/idea-images/... for gated scenes). Non-fatal: if there's no git
+// remote we keep the local files.
+function gitShip(slug, name, imageRepoFiles = []) {
   const git = (args) => spawnSync('git', args, { cwd: config.projectDir, encoding: 'utf8' });
   if (!git(['remote']).stdout.trim()) {
     log('[git] no remote — wrote locally only');
     return false;
   }
-  const files = [`src/content/ideas/${slug}.json`, ...publicImagePaths.map((p) => `public${p}`)];
+  const files = [`src/content/ideas/${slug}.json`, ...imageRepoFiles];
   const ident = ['-c', 'user.name=machine0005-a11y', '-c', 'user.email=machine0005@gmail.com'];
   git(['add', ...files]);
   git([...ident, 'commit', '-m', `idea: ${name}`]);
@@ -63,7 +64,7 @@ export function publishIdea(idea) {
 
   // Generate multiple images (hero + scenes) BEFORE sending the URL. This tries
   // real generation and falls back cleanly to no-image the instant any limit is hit.
-  const { heroImage, galleryImages } = generateVisuals({
+  const { heroImage, galleryImages, repoFiles } = generateVisuals({
     slug,
     name,
     tagline: content.tagline,
@@ -101,11 +102,11 @@ export function publishIdea(idea) {
   // Commit + push the JSON and any generated images so the live site serves the
   // full rich page (static images must be deployed; the dynamic route alone only
   // renders a generated fallback for brand-new slugs). Non-fatal if no remote.
-  const allImages = [heroImage, ...galleryImages].filter(Boolean);
-  gitShip(slug, name, allImages);
+  gitShip(slug, name, repoFiles || []);
 
   const url = `${config.baseUrl}/${slug}`;
   verifyLive(url, name);
+  const allImages = [heroImage, ...galleryImages].filter(Boolean);
   log('[route] reachable', url, `(${allImages.length} images)`);
   return { slug, name, url, source, council, images: allImages };
 }
