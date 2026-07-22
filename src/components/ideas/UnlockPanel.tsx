@@ -7,7 +7,8 @@ type UnlockPanelProps = {
   slug: string;
   name: string;
   priceLabel: string;
-  demo: boolean;
+  mode: "stripe" | "personal" | "demo";
+  payUrl?: string;
   theme: { from: string; to: string; ink: string };
 };
 
@@ -33,11 +34,12 @@ function GooglePayMark() {
   );
 }
 
-export function UnlockPanel({ slug, name, priceLabel, demo, theme }: UnlockPanelProps) {
+export function UnlockPanel({ slug, name, priceLabel, mode, payUrl, theme }: UnlockPanelProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
   const [retryUrl, setRetryUrl] = useState("");
+  const [paidTapped, setPaidTapped] = useState(false);
   const grad = `linear-gradient(135deg, ${theme.from} 0%, ${theme.to} 100%)`;
 
   useEffect(() => {
@@ -110,29 +112,65 @@ export function UnlockPanel({ slug, name, priceLabel, demo, theme }: UnlockPanel
       <p className="mt-2 text-sm leading-6 text-[var(--ink-soft)]">
         The proof points, visual gallery, and full launch roadmap — the other 87% of this page — are one tap away.
       </p>
-      <button
-        onClick={unlock}
-        disabled={loading}
-        className="mt-5 flex w-full items-center justify-center gap-2.5 rounded-xl px-6 py-4 text-base font-bold text-white transition hover:-translate-y-0.5 disabled:opacity-60"
-        style={{ background: grad }}
-      >
-        {loading ? (
-          "Starting…"
-        ) : (
-          <>
+      {mode === "personal" && payUrl ? (
+        <>
+          {/* POC: pay the creator directly via their personal link (PayPal.me
+              surfaces Apple Pay), then self-confirm to unlock. Honor-system. */}
+          <a
+            href={payUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => setPaidTapped(true)}
+            className="mt-5 flex w-full items-center justify-center gap-2.5 rounded-xl px-6 py-4 text-base font-bold text-white transition hover:-translate-y-0.5"
+            style={{ background: grad }}
+          >
             <ApplePayMark />
             <span aria-hidden className="opacity-40">/</span>
             <GooglePayMark />
-            <span>Unlock · {priceLabel}</span>
+            <span>Pay {priceLabel} to unlock</span>
             <ArrowRight aria-hidden className="h-5 w-5" />
-          </>
-        )}
-      </button>
-      <p className="mt-3 text-xs text-[var(--ink-soft)]">
-        One-time payment. Instant access on this device.{" "}
-        <a href="/terms" className="underline">Terms &amp; instant refunds</a>
-      </p>
-      {demo ? <p className="mt-1 text-xs font-semibold text-[var(--ink-soft)]">Demo mode — no card is charged.</p> : null}
+          </a>
+          {paidTapped ? (
+            <a
+              href={`/api/unlock?slug=${encodeURIComponent(slug)}&poc=1`}
+              className="mt-3 inline-block w-full rounded-xl border-2 px-6 py-3 text-base font-bold"
+              style={{ borderColor: theme.from, color: theme.from }}
+            >
+              I&rsquo;ve paid — unlock the page
+            </a>
+          ) : null}
+          <p className="mt-3 text-xs text-[var(--ink-soft)]">
+            Pays the creator directly. Apple Pay available at checkout.{" "}
+            <a href="/terms" className="underline">Terms &amp; refunds</a>
+          </p>
+        </>
+      ) : (
+        <>
+          <button
+            onClick={unlock}
+            disabled={loading}
+            className="mt-5 flex w-full items-center justify-center gap-2.5 rounded-xl px-6 py-4 text-base font-bold text-white transition hover:-translate-y-0.5 disabled:opacity-60"
+            style={{ background: grad }}
+          >
+            {loading ? (
+              "Starting…"
+            ) : (
+              <>
+                <ApplePayMark />
+                <span aria-hidden className="opacity-40">/</span>
+                <GooglePayMark />
+                <span>Unlock · {priceLabel}</span>
+                <ArrowRight aria-hidden className="h-5 w-5" />
+              </>
+            )}
+          </button>
+          <p className="mt-3 text-xs text-[var(--ink-soft)]">
+            One-time payment. Instant access on this device.{" "}
+            <a href="/terms" className="underline">Terms &amp; instant refunds</a>
+          </p>
+          {mode === "demo" ? <p className="mt-1 text-xs font-semibold text-[var(--ink-soft)]">Demo mode — no card is charged.</p> : null}
+        </>
+      )}
       {notice ? <p className="mt-3 text-sm font-semibold text-amber-600">{notice}</p> : null}
       {retryUrl ? (
         <a

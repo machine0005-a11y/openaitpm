@@ -61,3 +61,21 @@ export function verifyUnlock(slug: string, token: string | undefined): boolean {
 export function stripeConfigured(): boolean {
   return Boolean(process.env.STRIPE_SECRET_KEY && process.env.STRIPE_SECRET_KEY.startsWith("sk_"));
 }
+
+// PROOF-OF-CONCEPT personal payment: a public peer-to-peer link (PayPal.me,
+// Venmo, Cash App) that pays the owner directly — no merchant account. Buyers
+// pay there (PayPal.me surfaces Apple Pay), then self-confirm to unlock. This is
+// honor-system by design: fine for a POC to a personal account, not fraud-proof.
+export function personalPayUrl(): string {
+  const url = process.env.PERSONAL_PAY_URL || "";
+  return /^https:\/\/[^\s]+$/i.test(url) ? url : "";
+}
+
+export type PaymentMode = "stripe" | "personal" | "demo";
+
+// Precedence: a real Stripe key wins; else a personal pay link; else demo.
+export function paymentMode(): PaymentMode {
+  if (stripeConfigured()) return "stripe";
+  if (personalPayUrl()) return "personal";
+  return "demo";
+}

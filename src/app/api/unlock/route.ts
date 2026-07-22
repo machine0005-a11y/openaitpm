@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
-import { signUnlock, unlockCookieName, stripeConfigured } from "@/lib/paywall";
+import { signUnlock, unlockCookieName, stripeConfigured, paymentMode } from "@/lib/paywall";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -13,6 +13,7 @@ export async function GET(req: NextRequest) {
   const slug = searchParams.get("slug") || "";
   const sessionId = searchParams.get("session_id");
   const demo = searchParams.get("demo");
+  const poc = searchParams.get("poc");
 
   if (!/^[a-z0-9-]{1,80}$/i.test(slug)) {
     return NextResponse.redirect(`${origin}/`);
@@ -20,7 +21,11 @@ export async function GET(req: NextRequest) {
 
   let paid = false;
 
-  if (stripeConfigured() && sessionId) {
+  if (paymentMode() === "personal" && poc === "1") {
+    // POC: the buyer paid via the owner's personal link and self-confirmed.
+    // Honor-system unlock — acceptable for a proof of concept, not fraud-proof.
+    paid = true;
+  } else if (stripeConfigured() && sessionId) {
     // A transient Stripe/network error here must NOT strand a paying guest —
     // retry, and if it still fails, keep session_id in the redirect so the
     // client can offer "retry verification" instead of a second charge.
