@@ -7,8 +7,10 @@ type UnlockPanelProps = {
   slug: string;
   name: string;
   priceLabel: string;
-  mode: "stripe" | "personal" | "demo";
+  mode: "stripe" | "personal" | "applecash" | "demo";
   payUrl?: string;
+  appleCashNumber?: string;
+  appleCashDisplay?: string;
   theme: { from: string; to: string; ink: string };
 };
 
@@ -34,7 +36,7 @@ function GooglePayMark() {
   );
 }
 
-export function UnlockPanel({ slug, name, priceLabel, mode, payUrl, theme }: UnlockPanelProps) {
+export function UnlockPanel({ slug, name, priceLabel, mode, payUrl, appleCashNumber, appleCashDisplay, theme }: UnlockPanelProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
@@ -112,7 +114,36 @@ export function UnlockPanel({ slug, name, priceLabel, mode, payUrl, theme }: Unl
       <p className="mt-2 text-sm leading-6 text-[var(--ink-soft)]">
         The proof points, visual gallery, and full launch roadmap — the other 87% of this page — are one tap away.
       </p>
-      {mode === "personal" && payUrl ? (
+      {mode === "applecash" && appleCashNumber ? (
+        <>
+          {/* Consumer-to-consumer Apple Cash: open the Messages thread to the
+              owner's number; the buyer taps the Apple Cash button in Messages
+              to send $0.99, then self-confirms here to unlock. Honor-system. */}
+          <a
+            href={`sms:${appleCashNumber}`}
+            onClick={() => setPaidTapped(true)}
+            className="mt-5 flex w-full items-center justify-center gap-2.5 rounded-xl px-6 py-4 text-base font-bold text-white transition hover:-translate-y-0.5"
+            style={{ background: grad }}
+          >
+            <ApplePayMark />
+            <span>Send {priceLabel} in Messages</span>
+            <ArrowRight aria-hidden className="h-5 w-5" />
+          </a>
+          <p className="mt-3 text-xs leading-5 text-[var(--ink-soft)]">
+            Opens Messages to <strong>{appleCashDisplay}</strong>. Tap the Apple Cash
+            button and send <strong>{priceLabel}</strong> — it goes straight to the creator.
+          </p>
+          {paidTapped ? (
+            <a
+              href={`/api/unlock?slug=${encodeURIComponent(slug)}&poc=1`}
+              className="mt-2 inline-block w-full rounded-xl border-2 px-6 py-3 text-base font-bold"
+              style={{ borderColor: theme.from, color: theme.from }}
+            >
+              I&rsquo;ve sent it — unlock the page
+            </a>
+          ) : null}
+        </>
+      ) : mode === "personal" && payUrl ? (
         <>
           {/* POC: pay the creator directly via their personal link (PayPal.me
               surfaces Apple Pay), then self-confirm to unlock. Honor-system. */}

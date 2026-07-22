@@ -28,7 +28,13 @@ type IdeaLaunchPageProps = {
    *  The remaining 87% never reaches the browser — only blurred ghost
    *  placeholders and the unlock card. */
   locked?: boolean;
-  unlock?: { priceLabel: string; mode: "stripe" | "personal" | "demo"; payUrl?: string };
+  unlock?: {
+    priceLabel: string;
+    mode: "stripe" | "personal" | "applecash" | "demo";
+    payUrl?: string;
+    appleCashNumber?: string;
+    appleCashDisplay?: string;
+  };
 };
 
 export function IdeaLaunchPage({ idea, relatedIdeas = [], locked = false, unlock }: IdeaLaunchPageProps) {
@@ -166,6 +172,8 @@ export function IdeaLaunchPage({ idea, relatedIdeas = [], locked = false, unlock
               priceLabel={unlock?.priceLabel ?? "$0.99"}
               mode={unlock?.mode ?? "demo"}
               payUrl={unlock?.payUrl}
+              appleCashNumber={unlock?.appleCashNumber}
+              appleCashDisplay={unlock?.appleCashDisplay}
               theme={{ from: t.from, to: t.to, ink: t.ink }}
             />
           </div>

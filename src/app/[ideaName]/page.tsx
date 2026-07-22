@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { IdeaLaunchPage } from "@/components/ideas/IdeaLaunchPage";
 import { getIdeaPage, listIdeaPages } from "@/lib/ideas/catalog";
-import { unlockCookieName, verifyUnlock, PRICE_LABEL, paymentMode, personalPayUrl } from "@/lib/paywall";
+import { unlockCookieName, verifyUnlock, PRICE_LABEL, paymentMode, personalPayUrl, appleCashNumber, appleCashDisplay } from "@/lib/paywall";
 
 export const dynamic = "force-dynamic";
 
@@ -37,7 +37,13 @@ export default async function IdeaRoute({ params }: IdeaRouteProps) {
       <IdeaLaunchPage
         idea={idea}
         locked
-        unlock={{ priceLabel: PRICE_LABEL, mode: paymentMode(), payUrl: personalPayUrl() }}
+        unlock={{
+          priceLabel: PRICE_LABEL,
+          mode: paymentMode(),
+          payUrl: personalPayUrl(),
+          appleCashNumber: appleCashNumber(),
+          appleCashDisplay: appleCashDisplay()
+        }}
       />
     );
   }

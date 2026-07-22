@@ -1,5 +1,5 @@
 import crypto from "node:crypto";
-import { PERSONAL_PAY_URL_DEFAULT } from "@/config/pay";
+import { PERSONAL_PAY_URL_DEFAULT, APPLE_CASH_NUMBER_DEFAULT, APPLE_CASH_DISPLAY } from "@/config/pay";
 
 // ---------------------------------------------------------------------------
 // Paywall: every idea page is locked until the visitor pays $0.99.
@@ -73,11 +73,23 @@ export function personalPayUrl(): string {
   return /^https:\/\/[^\s]+$/i.test(url) ? url : "";
 }
 
-export type PaymentMode = "stripe" | "personal" | "demo";
+// Apple Cash target number (E.164), and the human display string. When set (and
+// no Stripe/personal link), buyers pay $0.99 via Apple Cash in Messages.
+export function appleCashNumber(): string {
+  const n = process.env.APPLE_CASH_NUMBER || APPLE_CASH_NUMBER_DEFAULT || "";
+  return /^\+[1-9]\d{6,14}$/.test(n) ? n : "";
+}
+export function appleCashDisplay(): string {
+  return APPLE_CASH_DISPLAY;
+}
 
-// Precedence: a real Stripe key wins; else a personal pay link; else demo.
+export type PaymentMode = "stripe" | "personal" | "applecash" | "demo";
+
+// Precedence: a real Stripe key wins; else a personal pay link; else Apple Cash
+// to a number; else demo.
 export function paymentMode(): PaymentMode {
   if (stripeConfigured()) return "stripe";
   if (personalPayUrl()) return "personal";
+  if (appleCashNumber()) return "applecash";
   return "demo";
 }

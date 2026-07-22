@@ -21,9 +21,9 @@ export async function GET(req: NextRequest) {
 
   let paid = false;
 
-  if (paymentMode() === "personal" && poc === "1") {
-    // POC: the buyer paid via the owner's personal link and self-confirmed.
-    // Honor-system unlock — acceptable for a proof of concept, not fraud-proof.
+  if ((paymentMode() === "personal" || paymentMode() === "applecash") && poc === "1") {
+    // POC: the buyer paid via the owner's personal link / Apple Cash and
+    // self-confirmed. Honor-system unlock — fine for a proof of concept.
     paid = true;
   } else if (stripeConfigured() && sessionId) {
     // A transient Stripe/network error here must NOT strand a paying guest —
