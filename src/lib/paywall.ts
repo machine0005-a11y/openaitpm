@@ -1,4 +1,5 @@
 import crypto from "node:crypto";
+import { PERSONAL_PAY_URL_DEFAULT } from "@/config/pay";
 
 // ---------------------------------------------------------------------------
 // Paywall: every idea page is locked until the visitor pays $0.99.
@@ -67,7 +68,8 @@ export function stripeConfigured(): boolean {
 // pay there (PayPal.me surfaces Apple Pay), then self-confirm to unlock. This is
 // honor-system by design: fine for a POC to a personal account, not fraud-proof.
 export function personalPayUrl(): string {
-  const url = process.env.PERSONAL_PAY_URL || "";
+  // Env var wins (Vercel), else the committed public default in config/pay.ts.
+  const url = process.env.PERSONAL_PAY_URL || PERSONAL_PAY_URL_DEFAULT || "";
   return /^https:\/\/[^\s]+$/i.test(url) ? url : "";
 }
 
