@@ -1,0 +1,33 @@
+{
+  "slug": "verizon-msg-your-call-filter-plus-trial-ends-soon-continue-identifying-unknown-c",
+  "name": "Verizon Msg Your Call Filter Plus Trial Ends Soon Continue Identifying Unknown C",
+  "status": "preview",
+  "tagline": "Verizon Msg Your Call Filter Plus Trial Ends Soon Continue Identifying Unknown C — Verizon Msg: Your Call Fi",
+  "thesis": "Verizon Msg Your Call Filter Plus Trial Ends Soon Continue Identifying Unknown C turns \"Verizon Msg: Your Call Filter Plus trial ends soon. Continue identifying unknown callers and more for $3.99/mo. go.vzw.com/callfilter\" into a working product. The first user gets a focused tool that nails the core job on day one, with a clear path from prototype to production.",
+  "audience": "Early adopters who feel this pain today and want a tool that already works.",
+  "sourceBranch": "idea/verizon-msg-your-call-filter-plus-trial-ends-soon-continue-identifying-unknown-c",
+  "repoPath": "src/content/ideas/verizon-msg-your-call-filter-plus-trial-ends-soon-continue-identifying-unknown-c.json",
+  "primaryCta": "Try it now",
+  "secondaryCta": "See how it works",
+  "proofPoints": [
+    "A working prototype exists the moment you text the idea.",
+    "Every page ships with a concrete next milestone, not a maybe.",
+    "Built and served automatically, end to end, with no manual steps."
+  ],
+  "heroImage": null,
+  "galleryImages": [],
+  "launchChecks": [
+    {
+      "label": "Idea page generated",
+      "state": "done"
+    },
+    {
+      "label": "Validate with first 10 real users",
+      "state": "active"
+    },
+    {
+      "label": "Add the most-requested integration",
+      "state": "next"
+    }
+  ]
+}
