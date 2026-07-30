@@ -129,6 +129,15 @@ export function listIdeaPages(): IdeaPage[] {
   return readIdeaFiles();
 }
 
+// Returns null when no checked-in content file backs this slug.
+// Use this for any PUBLIC route. The slug is attacker- and accident-controlled
+// text: rendering a generated page from an arbitrary slug published private
+// message text on 2026-07-30. Unknown slugs must 404, not self-generate.
+export function findIdeaPage(slugInput: string): IdeaPage | null {
+  const slug = normalizeIdeaSlug(slugInput);
+  return readIdeaFiles().find((idea) => idea.slug === slug) ?? null;
+}
+
 export function getIdeaPage(slugInput: string): IdeaPage {
   const slug = normalizeIdeaSlug(slugInput);
   return readIdeaFiles().find((idea) => idea.slug === slug) ?? buildGeneratedIdea(slug);
