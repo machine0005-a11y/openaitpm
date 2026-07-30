@@ -99,22 +99,44 @@ export function tick(state) {
   saveState(state);
 }
 
-// On first run, baseline so we ignore the existing backlog and only act on
-// texts that arrive AFTER startup.
-export function baseline(state) {
-  if (state.baselined) return state;
-  const msgs = loadInbox(config.inboxFile) || [];
+// Baseline on EVERY startup, not just the first, so we only ever act on texts
+// that arrive after we are running.
+//
+// Why this is not optional: on 2026-07-30 a restart after downtime replayed the
+// whole unprocessed inbox. It published pages built from private personal texts
+// and carrier spam, and auto-replied to real people who had never opted in.
+// Backlog replay has no legitimate use here. A message that arrived while we
+// were down is stale, and the sender is not waiting on a URL.
+// Set CATCH_UP_BACKLOG=1 to deliberately process history (never do this on a
+// personal line).
+// Must be called with REAL inbox data. Baselining against a missing inbox would
+// set the cursor to nothing and replay everything once the reader came up,
+// which is exactly the failure this guards against.
+export function baseline(state, msgs) {
+  const previous = state.lastRowId || 0;
   for (const m of msgs) state.lastRowId = Math.max(state.lastRowId, rowIdOf(m));
+  const skipped = msgs.filter((m) => rowIdOf(m) > previous).length;
   state.baselined = true;
   saveState(state);
-  log('[baseline] lastRowId=' + state.lastRowId);
+  log(`[baseline] lastRowId=${state.lastRowId}` + (skipped ? ` (skipped ${skipped} backlog messages)` : ''));
   return state;
 }
 
 export function run() {
   log(`[start] base=${config.baseUrl} number=${config.machineOneNumber} allow=${config.allowFrom.join(',') || 'anyone'}`);
-  const state = baseline(loadState());
+  const state = loadState();
+  // Re-baseline every process start unless explicitly asked to replay history.
+  const catchUp = process.env.CATCH_UP_BACKLOG === '1';
+  if (catchUp) log('[baseline] CATCH_UP_BACKLOG=1, will replay backlog from lastRowId=' + state.lastRowId);
+  else state.baselined = false;
+
   const loop = () => {
+    if (!state.baselined) {
+      const msgs = loadInbox(config.inboxFile);
+      if (msgs === null) { log('[wait] reader not up yet'); return; }
+      baseline(state, msgs);
+      return; // never process on the tick that establishes the cursor
+    }
     state._cursorAtTickStart = state.lastRowId;
     tick(state);
   };

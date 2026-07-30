@@ -18,6 +18,10 @@ export const config = {
 
   // Binaries.
   imsg: process.env.IMSG_BIN || '/opt/homebrew/bin/imsg',
+  // Outbound transport: imessage | sms | auto. 'auto' falls back to SMS for
+  // non-Apple recipients, who can already reach us because the paired iPhone
+  // forwards SMS/RCS into chat.db. Revert with IMSG_SERVICE=imessage.
+  imsgService: process.env.IMSG_SERVICE || 'auto',
   claude: process.env.CLAUDE_BIN || '/opt/homebrew/bin/claude',
   claudeModel: process.env.CLAUDE_MODEL || 'sonnet',
   // Image model: gpt-image-2 is the current top image generator on this key

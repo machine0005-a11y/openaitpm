@@ -1,13 +1,22 @@
-// sms.mjs — outbound iMessage. `imsg send` works without Full Disk Access.
+// sms.mjs — outbound guest replies. `imsg send` works without Full Disk Access.
+//
+// Transport: 'auto' lets imsg fall back to SMS when the recipient has no
+// iMessage. This matters more than it looks: the paired iPhone forwards SMS and
+// RCS into chat.db, so Android and non-Apple senders can already REACH us —
+// replying over 'imessage' only silently dropped them. 'auto' makes this a
+// phone product instead of an Apple product.
+// Cost note: outbound SMS bills to the Mac owner's carrier plan. Domestic US is
+// normally included; INTERNATIONAL replies may be charged per message.
+// Set IMSG_SERVICE=imessage to revert to the old Apple-only behavior.
 import { spawnSync } from 'node:child_process';
 import { config, log } from './config.mjs';
 
-// Send `text` to `to`. Returns true on success. Never throws.
+// Send `to` a message. Returns true on success. Never throws.
 export function sendSms(to, text) {
   if (!to) return false;
   const r = spawnSync(
     config.imsg,
-    ['send', '--to', to, '--text', text, '--service', 'imessage', '--json'],
+    ['send', '--to', to, '--text', text, '--service', config.imsgService, '--json'],
     { encoding: 'utf8' }
   );
   const out = (r.stdout || r.stderr || '').trim();
