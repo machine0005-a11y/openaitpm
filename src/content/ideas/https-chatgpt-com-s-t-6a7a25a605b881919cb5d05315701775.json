@@ -1,0 +1,33 @@
+{
+  "slug": "https-chatgpt-com-s-t-6a7a25a605b881919cb5d05315701775",
+  "name": "Https Chatgpt Com S T 6a7a25a605b881919cb5d05315701775",
+  "status": "preview",
+  "tagline": "Https Chatgpt Com S T 6a7a25a605b881919cb5d05315701775 — https://chatgpt.com/s/t_6a7a25a605b881919cb5d053157",
+  "thesis": "Https Chatgpt Com S T 6a7a25a605b881919cb5d05315701775 turns \"https://chatgpt.com/s/t_6a7a25a605b881919cb5d05315701775\" into a working product. The first user gets a focused tool that nails the core job on day one, with a clear path from prototype to production.",
+  "audience": "Early adopters who feel this pain today and want a tool that already works.",
+  "sourceBranch": "idea/https-chatgpt-com-s-t-6a7a25a605b881919cb5d05315701775",
+  "repoPath": "src/content/ideas/https-chatgpt-com-s-t-6a7a25a605b881919cb5d05315701775.json",
+  "primaryCta": "Try it now",
+  "secondaryCta": "See how it works",
+  "proofPoints": [
+    "A working prototype exists the moment you text the idea.",
+    "Every page ships with a concrete next milestone, not a maybe.",
+    "Built and served automatically, end to end, with no manual steps."
+  ],
+  "heroImage": null,
+  "galleryImages": [],
+  "launchChecks": [
+    {
+      "label": "Idea page generated",
+      "state": "done"
+    },
+    {
+      "label": "Validate with first 10 real users",
+      "state": "active"
+    },
+    {
+      "label": "Add the most-requested integration",
+      "state": "next"
+    }
+  ]
+}
