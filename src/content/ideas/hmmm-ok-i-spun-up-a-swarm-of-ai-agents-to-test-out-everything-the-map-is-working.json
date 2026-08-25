@@ -1,0 +1,33 @@
+{
+  "slug": "hmmm-ok-i-spun-up-a-swarm-of-ai-agents-to-test-out-everything-the-map-is-working",
+  "name": "Hmmm Ok I Spun Up A Swarm Of Ai Agents To Test Out Everything The Map Is Working",
+  "status": "preview",
+  "tagline": "Hmmm Ok I Spun Up A Swarm Of Ai Agents To Test Out Everything The Map Is Working — Hmmm ok I spun up a swarm",
+  "thesis": "Hmmm Ok I Spun Up A Swarm Of Ai Agents To Test Out Everything The Map Is Working turns \"Hmmm ok I spun up a swarm of ai agents to test out everything the map is working on my wide but I realized it may not be optimized for iPhone browsers gimme a bit\" into a working product. The first user gets a focused tool that nails the core job on day one, with a clear path from prototype to production.",
+  "audience": "Early adopters who feel this pain today and want a tool that already works.",
+  "sourceBranch": "idea/hmmm-ok-i-spun-up-a-swarm-of-ai-agents-to-test-out-everything-the-map-is-working",
+  "repoPath": "src/content/ideas/hmmm-ok-i-spun-up-a-swarm-of-ai-agents-to-test-out-everything-the-map-is-working.json",
+  "primaryCta": "Try it now",
+  "secondaryCta": "See how it works",
+  "proofPoints": [
+    "A working prototype exists the moment you text the idea.",
+    "Every page ships with a concrete next milestone, not a maybe.",
+    "Built and served automatically, end to end, with no manual steps."
+  ],
+  "heroImage": null,
+  "galleryImages": [],
+  "launchChecks": [
+    {
+      "label": "Idea page generated",
+      "state": "done"
+    },
+    {
+      "label": "Validate with first 10 real users",
+      "state": "active"
+    },
+    {
+      "label": "Add the most-requested integration",
+      "state": "next"
+    }
+  ]
+}
