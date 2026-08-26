@@ -1,0 +1,33 @@
+{
+  "slug": "at-a-glance-for-a-first-time-user-it-may-be-a-good-idea-to-provide-a-quick-tour",
+  "name": "At A Glance For A First Time User It May Be A Good Idea To Provide A Quick Tour",
+  "status": "preview",
+  "tagline": "At A Glance For A First Time User It May Be A Good Idea To Provide A Quick Tour — At a glance, for a first t",
+  "thesis": "At A Glance For A First Time User It May Be A Good Idea To Provide A Quick Tour turns \"At a glance, for a first time user, it may be a good idea to provide a quick tour about the features. Can be simple one-time pop up’s on the various buttons we have to engage user into the app instead of left alone to explore what each feature is.\" into a working product. The first user gets a focused tool that nails the core job on day one, with a clear path from prototype to production.",
+  "audience": "Early adopters who feel this pain today and want a tool that already works.",
+  "sourceBranch": "idea/at-a-glance-for-a-first-time-user-it-may-be-a-good-idea-to-provide-a-quick-tour",
+  "repoPath": "src/content/ideas/at-a-glance-for-a-first-time-user-it-may-be-a-good-idea-to-provide-a-quick-tour.json",
+  "primaryCta": "Try it now",
+  "secondaryCta": "See how it works",
+  "proofPoints": [
+    "A working prototype exists the moment you text the idea.",
+    "Every page ships with a concrete next milestone, not a maybe.",
+    "Built and served automatically, end to end, with no manual steps."
+  ],
+  "heroImage": null,
+  "galleryImages": [],
+  "launchChecks": [
+    {
+      "label": "Idea page generated",
+      "state": "done"
+    },
+    {
+      "label": "Validate with first 10 real users",
+      "state": "active"
+    },
+    {
+      "label": "Add the most-requested integration",
+      "state": "next"
+    }
+  ]
+}
