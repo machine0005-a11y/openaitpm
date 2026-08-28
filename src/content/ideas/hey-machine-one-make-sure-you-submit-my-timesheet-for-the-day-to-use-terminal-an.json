@@ -1,0 +1,33 @@
+{
+  "slug": "hey-machine-one-make-sure-you-submit-my-timesheet-for-the-day-to-use-terminal-an",
+  "name": "Hey Machine One Make Sure You Submit My Timesheet For The Day To Use Terminal An",
+  "status": "preview",
+  "tagline": "Hey Machine One Make Sure You Submit My Timesheet For The Day To Use Terminal An — Hey Machine One, make sur",
+  "thesis": "Hey Machine One Make Sure You Submit My Timesheet For The Day To Use Terminal An turns \"Hey Machine One, make sure you submit my timesheet for the day to use terminal and computer\" into a working product. The first user gets a focused tool that nails the core job on day one, with a clear path from prototype to production.",
+  "audience": "Early adopters who feel this pain today and want a tool that already works.",
+  "sourceBranch": "idea/hey-machine-one-make-sure-you-submit-my-timesheet-for-the-day-to-use-terminal-an",
+  "repoPath": "src/content/ideas/hey-machine-one-make-sure-you-submit-my-timesheet-for-the-day-to-use-terminal-an.json",
+  "primaryCta": "Try it now",
+  "secondaryCta": "See how it works",
+  "proofPoints": [
+    "A working prototype exists the moment you text the idea.",
+    "Every page ships with a concrete next milestone, not a maybe.",
+    "Built and served automatically, end to end, with no manual steps."
+  ],
+  "heroImage": null,
+  "galleryImages": [],
+  "launchChecks": [
+    {
+      "label": "Idea page generated",
+      "state": "done"
+    },
+    {
+      "label": "Validate with first 10 real users",
+      "state": "active"
+    },
+    {
+      "label": "Add the most-requested integration",
+      "state": "next"
+    }
+  ]
+}
