@@ -1,0 +1,33 @@
+{
+  "slug": "i-need-to-be-pleasured-what-can-you-do-to-assist",
+  "name": "I Need To Be Pleasured What Can You Do To Assist",
+  "status": "preview",
+  "tagline": "I Need To Be Pleasured What Can You Do To Assist — I need to be pleasured. What can you do to assist?",
+  "thesis": "I Need To Be Pleasured What Can You Do To Assist turns \"I need to be pleasured. What can you do to assist?\" into a working product. The first user gets a focused tool that nails the core job on day one, with a clear path from prototype to production.",
+  "audience": "Early adopters who feel this pain today and want a tool that already works.",
+  "sourceBranch": "idea/i-need-to-be-pleasured-what-can-you-do-to-assist",
+  "repoPath": "src/content/ideas/i-need-to-be-pleasured-what-can-you-do-to-assist.json",
+  "primaryCta": "Try it now",
+  "secondaryCta": "See how it works",
+  "proofPoints": [
+    "A working prototype exists the moment you text the idea.",
+    "Every page ships with a concrete next milestone, not a maybe.",
+    "Built and served automatically, end to end, with no manual steps."
+  ],
+  "heroImage": null,
+  "galleryImages": [],
+  "launchChecks": [
+    {
+      "label": "Idea page generated",
+      "state": "done"
+    },
+    {
+      "label": "Validate with first 10 real users",
+      "state": "active"
+    },
+    {
+      "label": "Add the most-requested integration",
+      "state": "next"
+    }
+  ]
+}
