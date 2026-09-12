@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#194d42">
+<meta name="description" content="A private, intentional-scrolling prototype. One screenshot, your priorities, three actions.">
+<title>Enough Family — make room for your day</title>
+<link rel="stylesheet" href="/style.css">
+<script type="module" src="/app.js"></script>
+</head>
+<body><main>
+<header><strong class="brand">enough.</strong><span class="badge">Prototype · guidance only</span></header>
+<h1>Keep the connection.<br>Get your day back.</h1>
+<p class="muted">One screenshot. Your priorities. Three practical actions.</p>
+<section aria-labelledby="start"><h2 id="start">Start with what you have</h2>
+<div class="grid"><label class="upload">Add a screenshot<input id="file" type="file" accept="image/png,image/jpeg,image/webp"></label><button id="demo" type="button" class="secondary">Try a sample</button></div>
+<small>Your own screenshot or one shared with permission. Crop private details first. PNG, JPG or WebP, up to 8 MB.</small>
+<img id="preview" hidden alt="Review your selected screenshot before extracting text">
+<button id="ocr" type="button" class="secondary" hidden>Read text on this device</button>
+<small id="ocrnote" hidden>Optional English OCR downloads code and language files from public CDNs. Pixels are processed in your browser. Check every value.</small>
+<details id="evidence" hidden><summary>Review extracted text</summary><pre id="raw"></pre></details>
+<div id="candidates" class="stack"></div>
+<label for="link">Or paste an Instagram link</label><input id="link" type="url" placeholder="https://www.instagram.com/…" autocomplete="off">
+<button id="checklink" type="button" class="secondary">Use as a reference</button>
+<small id="linknote">A reference link cannot reveal your feed or viewing time. No Instagram page is fetched.</small>
+</section>
+<form id="form">
+<section><h2>Make it about your life</h2><div class="grid">
+<label>Who?<select id="who"><option value="self">Myself</option><option value="family">Me and my teenager</option></select></label>
+<label>What?<select id="what"><option>Instagram</option><option>Instagram Reels</option></select></label>
+<label>When?<select id="when"><option value="breaks">Breaks / free time</option><option value="bedtime">Before bed</option><option value="work">Work / homework</option></select></label>
+<label>Where?<select id="where"><option value="sofa">Sofa / home</option><option value="bedroom">Bedroom</option><option value="desk">Desk</option><option value="other">Somewhere else</option></select></label>
+</div>
+<label>Why?<select id="why"><option value="time">More time for real life</option><option value="friends">Keep up with friends, not endless feeds</option><option value="content">See less unwanted content</option></select></label>
+<label id="family" class="check" hidden><input id="agreed" type="checkbox">My teenager knows about this and we are exploring it together. This is not secret monitoring.</label>
+</section>
+<section><h2>Confirm the numbers</h2><small>A Screen Time screenshot may show usage; a post screenshot does not. Confirm the app and reporting period. Partial weeks are not seven-day totals.</small>
+<div class="grid">
+<label>Usage shown, in minutes<input id="usage" type="number" min="0" max="10080" step="any" required placeholder="Example: 90"></label>
+<label>That number represents<select id="period"><option value="">Choose the period</option><option value="day">One day's total</option><option value="daily-average">Daily average</option><option value="week-total">Full seven-day total</option></select></label>
+<label>Your target, minutes/day<input id="target" type="number" min="0" max="1440" step="any" required placeholder="You choose"></label>
+<label>Available leisure minutes/day<input id="available" type="number" min="0" max="1440" step="any" required placeholder="Your estimate"></label>
+</div>
+<label class="check"><input id="confirmed" type="checkbox" required>I checked the values, app and reporting period. These are not verified automatically.</label>
+<button type="submit">Build my three-step plan</button>
+</section></form>
+<p id="status" role="status" aria-live="polite"></p>
+<section id="result" hidden aria-labelledby="resulttitle">
+<span id="sample" class="badge" hidden>Illustrative sample · not your data</span>
+<h2 id="resulttitle">Room for something better</h2><div id="metric" class="metric"></div><p id="math"></p><p id="summary"></p>
+<small>Potential change, not measured savings or a promise. Assumes the entered daily pattern repeats for seven days and you meet your target. Longer use is not automatically harmful.</small>
+<div id="cards"></div><button id="share" type="button">Share prototype, not my data</button>
+</section>
+<button id="clear" class="secondary" type="button">Clear this session</button>
+<footer><p>No login, analytics, saved plan, image-upload endpoint or automated likes. Ordinary request metadata may reach the hosting provider and optional OCR CDNs. This version provides guidance, not therapy or device blocking.</p>
+<p>iPhone restrictions require Screen Time setup or a separately authorized native app. This is not a native Share Sheet receiver.</p>
+<p>Sources: <a href="https://about.fb.com/news/2024/11/introducing-recommendations-reset-instagram/" target="_blank" rel="noopener noreferrer">Instagram controls</a> · <a href="https://developer.apple.com/videos/play/wwdc2021/10123/" target="_blank" rel="noopener noreferrer">Apple Screen Time</a></p></footer>
+</main></body></html>
